@@ -1,0 +1,275 @@
+<meta charset="utf-8" lang="en" /><style class="fallback">body{visibility:hidden;}</style>
+
+**Interfaces**
+    Interfaces and the List
+
+!!!
+    An interface declares a set of behaviors.  Class can chose to advertise that
+    they implement the interface.  Any class that makes this claim, must implement
+    all methods declared in the interface.[^abstract]
+
+* Storing collections (groups) of similar objects is a common programming task.
+  + A text document is a collection of paragraphs.  Each paragraph is a collection of words.  Each word is a collection of characters.
+  + The computer's file system is a collection of files.
+  + A browser's bookmark list contains a collection of URLs.
+  + etc...
+* You have already seen one mechanism for storing collections of objects: the array.
+* The [Java Collections Framework](http://docs.oracle.com/javase/8/docs/technotes/guides/collections/) provides a number of classes that can be used to store collections of data.
+* In this page we will:
+  + Briefly review arrays, discussing some disadvantages
+  + Introduce the concept of an **interface** in Java
+  + Introduce one interface and two classes that are part of the [Java Collections Framework](http://docs.oracle.com/javase/8/docs/technotes/guides/collections/):
+    - The [List&lt&#xFEFF;E>](http://docs.oracle.com/javase/8/docs/api/java/util/List.html) interface.
+    - The [ArrayList&lt&#xFEFF;E>](http://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html) class.
+    - The [LinkedList&lt&#xFEFF;E>](http://docs.oracle.com/javase/8/docs/api/java/util/LinkedList.html) class.
+
+# Arrays
+
+* An array is a collection of similar objects.  Actually, it's:
+  + a collection of primitives, all of the same type
+~~~~ Java
+int[] integers;
+integers = new int[20];
+~~~~
+
+
+* The first line declares a reference to an array of ints, called **integers**.
+* The second line allocates space for an array of twenty ints and makes **integers** point to this newly allocated array.
+* a collection of references, all of the same type
+~~~~ Java
+Integer[] integers;
+integers = new Integer[20];
+~~~~
+
+
+* The first line declares a reference to an array of Integer references, called **integers**.
+* The second line allocates space for an array of twenty references to Integer objects and makes **integers** point to this newly allocated array.
+* Each element in the array is currently referencing **null** since we haven't created any Integer objects.
+* The following loop will create twenty Integer objects and assign the references in the array to point to the newly created Integer objects:
+~~~~ Java
+for(int i=0; i < integers.length; ++i) {
+  integers[i] = new Integer(i);
+}
+~~~~
+
+
+* Arrays are nice because they allow you to store a collection of items in a group **and** act on all of the items in the group in the same way.  For example, consider the following method:
+~~~~ Java
+public static void display(String[] names, PrintStream out) {
+  for(int i=0; i < names.length; ++i) {
+    out.println(names[i]);
+  }
+}
+~~~~
+
+
+* We can call **display** as follows:
+~~~~ Java
+String[] names = {"Peter", "Paul", "Mary-Anne"};
+display(names, System.out);  // Note: System.out is a PrintStream object
+~~~~
+
+
+* The method will display all three names.  If **names** had twenty names in it, all twenty would be displayed.
+* If we wanted to do the same thing without an array, we'd need to hard-code the number of names, like this...
+~~~~ Java
+public static void display(String name1, String name2, String name3, PrintStream out) {
+  out.println(names1);
+  out.println(names2);
+  out.println(names3);
+}
+~~~~
+
+
+* I'm not going to show you what it would look like if we had twenty names because I don't want you to lose your lunch, but just thinking about it probably enough to make you nauseous.
+* Arrays are not so nice because they cannot be resized easily.  If we need to add an element to an array that is already full, we would need to create a larger array like this:
+1. Create a new, larger, array
+1. Copy over all the primitive values/references in the old array
+1. Reassign the reference to the original array so that it now points to the new array
+
+~~~~ Java
+/**
+  * Resizes an array of Strings
+  * @param array Array to be resized
+  * @param size Desired size for the array
+  * @return A reference to the newly sized array
+  */
+public static String[] resize(String[] array, int size) {
+  String[] newArray = new String[size];
+  // Since the size could be less than array.length, we need to make sure
+  //  we only go up to the smaller of the two values.
+  for(int i=0; i < array.length && i < size; ++i) {
+    newArray[i] = array[i];
+  }
+  return newArray;
+}
+~~~~
+
+
+* Wait, wouldn't it be nice if we could just start out with an empty array and then just add elements to it as needed?  Keep reading because the girls and boys at Sun Microsystems have already fulfilled your wildest dreams![^dreams]
+
+# Interfaces
+
+* The Java language includes a concept known as **interfaces**.
+* It's a fairly simple concept that we'll need in order to better understand collection types that are part of the [Java Collections Framework](http://docs.oracle.com/javase/8/docs/guide/collections/index.html).
+* An interface is basically a promise or contract.
+* An interface is a list of method signatures (method name, parameters passed to the method, and the type returned by the method, if anything).
+  + When a class is declared, it may promise to implement the interface.
+  + The compiler then makes sure that the class fulfills its promise by refusing to compile unless all of the methods declared in the interface are implemented in the class.
+* In much the same way as we can create a reference to an object, we can create a reference to an interface.
+* The reference acts as the gatekeeper for accessing the object to which the reference points.  Consider the following code:
+~~~~ Java
+  String word = new String("nonsense");
+  CharSequence charSeq = word;
+~~~~
+
+
+* The first line creates a reference to a String and makes it point to a newly created String object.
+* The second line creates a reference to a CharSequence and makes it point to the same String object as word.
+* Since the [String](http://docs.oracle.com/javase/8/docs/api/java/lang/String.html) class implements the [CharSequence](http://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html), the second line is valid code.
+* Both **word** and **charSeq** refer to the same object, but we can only access methods known to the CharSequence interface when using the **charSeq** reference.
+* The [CharSequence](http://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html) consists of four methods:
+  + [charAt(int)](http://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html#charAt%28int%29)
+  + [length()](http://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html#length%28%29)
+  + [subSequence(int, int)](http://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html#subSequence%28int,%20int%29)
+  + [toString()](http://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html#toString%28%29)
+* The following indicates which lines are illegal.  All of the legal lines of code function identically regardless of whether the method is called through **word** or **charSeq**.
+~~~~ Java
+  word.toString();
+  word.endsWith("sense");
+  word.length();
+  word.subSequence(1, 3);
+  word.substring(1, 3);
+  charSeq.toString();
+  charSeq.endsWith("sense");  // ILLEGAL
+  charSeq.length();
+  charSeq.subSequence(1, 3);
+  charSeq.substring(1, 3);    // ILLEGAL
+~~~~
+
+
+# Java Collections Framework
+
+* Because manipulating collections of objects is such a common task, Sun provides the [Java Collections Framework](http://docs.oracle.com/javase/8/docs/guide/collections/index.html).
+* The framework contains a number of interfaces and classes that various ways of storing and interacting with collections of data.
+* In CS-2852 you will explore the Java Collections Framework in much more detail.
+* In this course we will just touch on a few items.
+
+## List Interface
+
+* The [List&lt&#xFEFF;E>](http://docs.oracle.com/javase/8/docs/api/java/util/List.html) interface describes a contract for classes that provide an implementation for storing lists of information.
+* The **E** between the angle brackets indicates the type of references contained in the list.  For example [List&lt&#xFEFF;String>](http://docs.oracle.com/javase/8/docs/api/java/util/List.html) indicates that the list contains references to Strings.
+* Some relevant methods include:
+  + [add(E)](http://docs.oracle.com/javase/8/docs/api/java/util/List.html#add%28E%29) -- adds an object to the end of the list.
+  + [clear()](http://docs.oracle.com/javase/8/docs/api/java/util/List.html#clear%28%29) -- removes all elements from the list.
+  + [contains(E)](http://docs.oracle.com/javase/8/docs/api/java/util/List.html#contains%28E%29) -- returns true if the specified element is found in the list.
+  + [get(int)](http://docs.oracle.com/javase/8/docs/api/java/util/List.html#get%28int%29) -- returns the element at the specified location in the list.
+  + [isEmpty()](http://docs.oracle.com/javase/8/docs/api/java/util/List.html#isEmpty%28%29) -- returns true if no elements are in the list.
+  + [set(int, E)](http://docs.oracle.com/javase/8/docs/api/java/util/List.html#set%28int,%20E%29) -- replaces the element at the specified location with the specified element.
+  + [size()](http://docs.oracle.com/javase/8/docs/api/java/util/List.html#size%28%29) -- returns the number of elements in the list.
+* The following method does some silly stuff with a list of strings:
+~~~~ Java
+public static void silly(List&lt&#xFEFF;String> words) {
+  if(!words.isEmpty()) {
+    String word = words.get(0);
+    words.add(word.trim());
+    words.set(words.size()-1, "I'm last");
+  }
+  for(String word : words) {
+    System.out.println(word);
+  }
+}
+~~~~
+
+
+* I've introduced a new kind of for loop in the above code.  If you read it like this: "For each String, word, in the List of Strings, words, do the following: { blah blah blah }" you'll pretty much know what it does.
+* The loop will run words.size() times.
+* The first time in the loop, word is a reference to the first element in the list.
+* The second time in the loop, word is a reference to the second element in the list.
+* ...
+* The last time in the loop, word is a reference to the last element in the list.
+* Of course, all of this is pretty useless if we don't know about any classes that implement the [List&lt&#xFEFF;E>](http://docs.oracle.com/javase/8/docs/api/java/util/List.html) interface, since we can't do:
+~~~~ Java
+List&lt&#xFEFF;String> words = new List<>();
+~~~~
+
+
+## List Implementations
+
+* The [JCF](http://docs.oracle.com/javase/8/docs/guide/collections/index.html) provides a few classes that implement the [List&lt&#xFEFF;E>](http://docs.oracle.com/javase/8/docs/api/java/util/List.html) interface.
+* The [ArrayList&lt&#xFEFF;E>](http://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html) class.
+  + This is basically a souped up array.
+  + You can think of this class as containing one field that is a reference to an array and a number of methods that implement the [List&lt&#xFEFF;E>](http://docs.oracle.com/javase/8/docs/api/java/util/List.html) interface.
+  + There is really a bit more than this going on here, and you'll learn more about that in CS-2852.
+  + A simplified version of the [ArrayList&lt&#xFEFF;E>](http://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html) class might look something like this:
+~~~~ Java
+public class ArrayList&lt&#xFEFF;E> implements List&lt&#xFEFF;E> {
+  private E[] array;
+
+  public boolean isEmpty() {
+    return (null == array);
+  }
+
+  public void clear() {
+    array = null;
+  }
+
+  public E get(int index) {
+    return array[index];
+  }
+
+  public void set(int index, E obj) {
+    array[index] = obj;
+  }
+
+  public int size() {
+    return array.length;
+  }
+
+  public boolean contains(E target) {
+    boolean found = false;
+    for(int i=0; !found &amp;&amp; i < array.length; ++i) {
+      found = target.equals(array[i]);
+    }
+    return found;
+  }
+
+  public boolean add(E obj) {
+    E[] newArray = (E[])new Object[array.length+1];
+    for(int i=0; i < array.length; ++i) {
+      newArray[i] = array[i];
+    }
+    newArray[newArray.length-1] = obj;
+    array = newArray;
+    return true;
+  }
+} // end of ArrayList class
+~~~~
+
+
+* Again, this is a very simplified version of what really goes on.
+* The [LinkedList&lt&#xFEFF;E>](http://docs.oracle.com/javase/8/docs/api/java/util/LinkedList.html) class.
+* This class also implements the List interface.
+* Although you can interact with the class in the same way you would interact with an [ArrayList&lt&#xFEFF;E>](http://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html), the way that each class implements the functionality described by the List interface is quite different.
+* The [LinkedList&lt&#xFEFF;E>](http://docs.oracle.com/javase/8/docs/api/java/util/LinkedList.html) doesn't use an array to store the data internally.
+* You will study the internal structure of the [LinkedList&lt&#xFEFF;E>](http://docs.oracle.com/javase/8/docs/api/java/util/LinkedList.html) in CS-2852.
+* For now, it is sufficient to know that the [LinkedList&lt&#xFEFF;E>](http://docs.oracle.com/javase/8/docs/api/java/util/LinkedList.html) class implements the List interface.
+* Depending on your application, you may find that it is better to use a [ArrayList&lt&#xFEFF;E>](http://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html) while other times it is better to use an [LinkedList&lt&#xFEFF;E>](http://docs.oracle.com/javase/8/docs/api/java/util/LinkedList.html).
+* Since both class implement the List interface, you can easily modify which implementation you use by just changing the **new** operation.
+* The following code shows how you can use the **silly** method implemented above with either of these classes:
+~~~~ Java
+List&lt&#xFEFF;String> words = new ArrayList<>();
+// do a bunch of .add calls to populate the list
+silly(words);
+
+words = new LinkedList&lt&#xFEFF;String>();
+// do a bunch of .add calls to populate the list
+silly(words);
+~~~~
+
+
+[^abstract]: Actually, the class could be an abstract class and declare a method abstract, and then not bother to implement it.  Alternatively, the class could provide a really bad implementation, but well leave these comments as a footnote.
+
+[^dreams]: assuming your wildest dreams are about easily adding elements to a collection of items
+
+<!-- Markdeep: --><script src="../markdeep.js?taylorial"></script>

@@ -1,0 +1,108 @@
+<meta charset="utf-8" lang="en" /><style class="fallback">body{visibility:hidden;}</style>
+
+**Security First in Software**
+
+Software has been used to address all kinds of problems.  As software
+solutions continue to saturate every area of modern society, it is
+critical that the software be impervious to misuse.  Successfully protecting
+against misuse requires attention to security at all stages of software
+development.
+
+This tutorial lists a number of security principles and practices and discusses
+how beginning developers can apply these to software development.
+
+# Security Principles -- Be Mindful
+
+Creating secure software isn't easy.  You need to be aware of secure
+development principles and be mindful of their application.  Java platform
+comes with a security architecture that can protect against software from
+untrusted sources. No security architecture can defend against security
+exploits stemming from implementation defects in trusted code.
+
+ * **Integrity** -- Only authorized users can manipulate data via authorized methods and procedures.
+   - Rigorous encapsulation limits the damage that a miscreant can inflict.
+ * **Confidentiality** -- Unauthorized access to information is prevented.
+   - Leaking data can be disastrous even if the villain is unable to gain control of your software.
+ * **Availability** -- Authorized users can access the system.
+   - If adversaries can deny users access to your software, it may as well not exist.
+ * **Principle of Least Privilege** -- Grant minimal access rights to tools and data.
+   - Fine grain controls on access ensures that if a portion of your software is compromised, the pain is limited.
+ * **Economy of Mechanism** -- Systems should be designed as simple and as small as possible.
+   - Simplicity reduces the likelihood of design and implementation errors that could compromise security.
+ * **Open Design** -- System security should not be dependent on the secrecy of its design or implementation.
+   - Relying on secrets for security means that your security is only as good as your secrets.
+ * **Psychological Acceptability** -- The software should be as easy to use or access as if the security mechanisms weren't present.
+   - Humans are a rich attack vector for security breaches. Minimizing incentives for users' behavior to weaken security in response to frustrating software is critical.
+ * **Fail Secure** -- Limit the amount of information exposed when failing.
+   - If a hacker succeeds in causing your software to fail, don't give them a bonus by leaking additional information that could help them further exploit your software.
+ * **Plan for Failure** -- Have a plan for securing systems and recovering from suspected/known security breaches.
+   - Swift responses are critical to minimizing damage. Rushed responses can make things even worse.
+ * **Weakest Link** -- A system is only as strong as its weakest link.
+   - No component of security can be neglected.
+
+# Security Practices
+
+ * **Be defensive**
+   - Implement as if you are under attack.
+ * **Prefer having obviously no flaws rather than no obvious flaws**
+   - Avoid clever logic that makes flaws less obvious.
+ * **Avoid duplication**
+   - Maintaining consistency across duplicated code is tedious, and often doesn't happen.
+ * **Establish trust boundaries**
+   - Data that crosses boundaries should be sanitized and validated.
+ * **Encapsulate**
+   - Allocate behaviors and provide succinct interfaces.
+   - Fields should be private and accessors avoided.
+   - An interface/class/package/module should form a coherent set of behaviors.
+ * **Document security-related information**
+   - Required permissions
+   - Security-related exceptions, preconditions, postconditions
+ * **Beware of activities that may use disproportionate resources**
+   - Requesting large image sizes for vector graphics
+   - Integer overflows
+   - Infinite loops
+ * **Release resources in all cases**
+   - Treat every open operation as if it requires an explicit close operation.
+   - Ensure that any output buffers are flushed in the case that output was otherwise successful.  If the flush fails, the code should exit via an exception.
+ * **Purge sensitive information from exceptions**
+   - Exception objects may contain sensitive information.  This is useful when debugging, but could pose a security risk in production.  For example, a `FileNotFoundException` may contain the location of a configuration file with sensitive information.
+ * **Do not log highly sensitive information**
+   - E.g., Social Security numbers and passwords
+ * **Consider overwriting highly sensitive data from memory after use**
+   - Reduces risk of sensitive data exposure from sniffing memory before garbage collector acts.
+   - Can be difficult
+     + Cannot overwrite immutable fields
+     + Libraries may make additional copies of data
+ * **Generate valid formatting**
+   - Guards against attacks exploiting special characters as inputs, incorrect escaping, etc... to cause incorrect formatting.
+   - Use well-tested libraries for output -- If they don't exist, create simple classes with the sole purpose of cleanly handling formatting (so they are easier to test).
+ * **HTML/XML/SQL generation requires care**
+   - Sanitize untrusted data before including it in HTML, XML, or SQL.
+ * **Limit the extensibility of classes and methods**
+   - Design classes and methods for inheritance or declare them as `final`.
+   - Left non-final, a class or method can be maliciously overridden by an attacker.
+ * **Validate inputs**
+   - Inputs from untrusted sources must be validate before use.
+ * **Prevent constructrs from calling methods that can be overridden**
+   - Constructors that call overridable methods give attackers a reference to `this` before the object has been fully initialized.
+ * **Prefer immutability**
+   - Declaring things as `final` ensures that they can't be changed maliciously.
+ * **Ensure `public` fields are `final`**
+   - Only immutable values should be stored in `public` fields to prevent malicious changes.
+ * **Ensure `public static final` field values are constants**
+   - `public static final` means that the field can't be changed.  If the field is a reference, it just means that the reference can't point to a different object; however, it is still possible to interact with the reference, and if the reference points to an object that isn't immutable, the reference can be used to change the value of the object.
+ * **Create copies of mutable output values**
+   - Returning a reference to a field from an object gives the caller direct access to that internal field, even if it was declared `private`.  Making a copy of the field and returning a reference to that copy is safer.
+
+# Acknowledgement
+
+This document was inspired by [this presentation by Dr. Dennis](https://goo.gl/JDzAWk) and is in large part based on the first two sources below:
+
+ * [Secure Coding Guidelines for Java SE](http://www.oracle.com/technetwork/java/seccodeguide-139067.html)
+ * [Top 10 Secure Coding Practices](https://www.securecoding.cert.org/confluence/display/seccode/Top+10+Secure+Coding+Practices)
+ * [SEI CERT Oracle Coding Standard for Java](https://wiki.sei.cmu.edu/confluence/display/java/SEI+CERT+Oracle+Coding+Standard+for+Java)
+ * [Java Security Developer's Guide](https://docs.oracle.com/javase/9/security/java-security-overview1.htm)
+ * [Java Security Features Tutorial](https://docs.oracle.com/javase/tutorial/security/)
+ * [Java Security Resource Center](http://www.oracle.com/technetwork/java/javase/overview/security-2043272.html)
+
+<!-- Markdeep: --><script src="../markdeep.js?taylorial"></script>

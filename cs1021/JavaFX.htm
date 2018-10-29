@@ -1,0 +1,166 @@
+<meta charset="utf-8" lang="en" /><style class="fallback">body{visibility:hidden;}</style>
+
+**JavaFX**
+
+# JOptionPane Methods
+
+In SE1011 you were exposed to a few class methods from the 
+[JOptionPane](http://docs.oracle.com/javase/8/docs/api/javax/swing/JOptionPane.html) class.  A class method is a method that is declared as static and is called with the class name before the dot (instead of an object name).
+
+Here are some examples:
+
+~~~~ Java
+JOptionPane.showMessageDialog(null, "Hello.");
+~~~~
+
+Produces this dialog box: 
+![Show Message Dialog](showMessageDialog.png)
+
+There are two parameters passed to the method.
+
+* The first, null, is the parentComponent where the null indicates that the default Frame should be used as the parent.
+* The second, "Hello.", is the string to be displayed in the dialog box
+
+~~~~ Java
+JOptionPane.showInputDialog(null, "Enter a goofy number", 
+        "I am a title, see me roar", JOptionPane.ERROR_MESSAGE);
+~~~~
+
+Produces this dialog box: 
+![Show Input Dialog](showInputDialog.png)
+
+Here we have four parameters.  The first two are the same as in the showMessageDialog example.
+
+* The third, "I am a title, see me roar", is the string to be displayed in the title bar of the dialog box
+* The fourth, JOptionPane.ERROR_MESSAGE, is an integer value defined in the 
+[JOptionPane](http://docs.oracle.com/javase/8/docs/api/javax/swing/JOptionPane.html) class.  This specifies the type of icon to be displayed in the dialog box
+
+showInputDialog returns a String, but we are ignoring that value since we don't assign the returned value to a String variable.
+
+~~~~ Java
+if(JOptionPane.NO_OPTION == JOptionPane.showConfirmDialog(null, "Play another game?", "Confirmation",
+    JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)) {
+  System.out.println("Done");
+} else {
+  System.out.println("Continuing");
+}
+~~~~
+
+Produces this dialog box: 
+![Show Confirm Dialog](showConfirmDialog.png)
+
+If the user selects the "No" option, then "Done" will be displayed to the console.  Otherwise, "Continuing" is displayed to the console.
+
+We could list out what all of the parameters represent, but it would be better for you to get used to reading the 
+[Java documentation provided by Oracle](http://docs.oracle.com/javase/8/docs/api/index.html).  There is detailed 
+[documentation for the JOptionPane](http://docs.oracle.com/javase/8/docs/api/javax/swing/JOptionPane.html) class with a specific entry for the 
+[five parameter showConfirmDialog](http://docs.oracle.com/javase/8/docs/api/javax/swing/JOptionPane.html#showConfirmDialog%28java.awt.Component,%20java.lang.Object,%20java.lang.String,%20int,%20int%29) method used above.
+
+I encourage you to spend some time getting familiar with how to read Sun's documentation pages.  Once you get comfortable with how to interpret these pages, you'll find them very handy.
+
+~~~~ Java
+Object[] options = { "Bye", "Second", "Eric" };
+JOptionPane.showOptionDialog(null, "Game over; you're broke.", "Title",
+    JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
+    null, options, options[1]);
+~~~~
+
+Produces this dialog box: 
+![Show Option Dialog](showOptionDialog.png)
+
+This method allows you to present the user with an array of options and specify the default option.
+
+
+# JavaFX Overview
+
+JavaFX is a collection of packages that can be used to create programs with
+a graphical user interface.  The official documentation is available
+[here](http://docs.oracle.com/javase/8/javase-clienttechnologies.htm).
+
+## Application Class
+
+To create a JavaFX application we create a class that extends the
+[Application](https://docs.oracle.com/javase/8/javafx/api/javafx/application/Application.html) class.  The class contains an abstract method,
+[start()](https://docs.oracle.com/javase/8/javafx/api/javafx/application/Application.html#start-javafx.stage.Stage-), which must be overridden.
+The `start()` method must be passed the primary stage which defines
+the UI for the application.
+
+The `init()` and `stop()` may be overridden to provide
+initial set-up and tear-down instructions.  The implementations in the
+`Application` are empty.  When an instance of the subclass of
+`Application` in instantiated, `init()` is called first,
+then `start(Stage stage)` is called.  When the application is
+finished (either with an explicit call to `Platform.exit()`
+(preferred over `System.exit()`) or when the last window is closed
+(provided `Platform.implicitExit==true`)), `stop()`.
+is called.
+
+## Stage Class
+
+The 
+[Stage](https://docs.oracle.com/javase/8/javafx/api/javafx/stage/Stage.html)
+class is a JavaFX container that describes the UI for the application.
+The primary `Stage` object is created by the JVM and passed to the
+`Application.start()` method.  A minimal JavaFX application is shown below:
+
+~~~~ Java
+public class HelloWorld extends Application {
+
+    @Override
+    public void start(Stage stage) {
+        Label message = new Label("Hello World!");
+        Scene scene = new Scene(message);
+
+        stage.setTitle("Title bar"); 
+        stage.setScene(scene); 
+        stage.show(); 
+    }
+
+    public static void main(String[] args) {
+        Application.launch(args);
+    }
+}
+~~~~
+
+We need to import the appropriate `javafx.` statements (be
+sure to select the `javafx` packages and not other ones).  In
+the above code, the `start()` method creates a `Label`
+object and adds it to a `Scene`.  The scene of the stage is then
+set to this newly created scene.
+
+## Scene Class
+
+The `Scene` class is the container for the graphical
+user interface content.  The content is represented as a tree of
+**nodes** (called a scene graph) where each node is either a
+**branch** or a **leaf**.  When instantiated, the `Scene`
+is passed the root node of the tree.
+
+## Panes
+
+In the very simple example above we placed a control (`message`) directly
+onto the scene.  In non-trivial GUI applications we will make use of
+`Pane`s to organize the layout of our controls in the window.  There are a
+number of types of panes available for us to use, e.g., `VBox`, `HBox`,
+`FlowPane`, and `GridPane`.
+
+## Controls
+
+The `Control` class is the base class for all user interface
+controls.  A control is a node in the scene graph which can be manipulated
+by the user.  Since `Control` is a subclass of `Region`,
+they can be styled with CSS (Cascading Style Sheets).
+
+The `Label` class is a specific type of control.  A label is
+a non-editable text control that can be used to display text.
+
+There are many other types of controls available to use in JavaFX.
+For example,
+[Button](http://docs.oracle.com/javase/8/javafx/user-interface-tutorial/button.htm#CJHEEACB),
+[TextField](http://docs.oracle.com/javase/8/javafx/user-interface-tutorial/text-field.htm#BABBCEIG),
+[ScrollPane](http://docs.oracle.com/javase/8/javafx/user-interface-tutorial/scrollpane.htm#CBBFFBCH),
+[ListView](http://docs.oracle.com/javase/8/javafx/user-interface-tutorial/list-view.htm#CEGGEDBF),
+and 
+[many others](http://docs.oracle.com/javase/8/javafx/user-interface-tutorial/ui_controls.htm#JFXUI336).
+
+<!-- Markdeep: --><script src="../markdeep.js?taylorial"></script>

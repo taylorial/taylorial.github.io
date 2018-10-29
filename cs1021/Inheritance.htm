@@ -1,0 +1,214 @@
+<meta charset="utf-8" lang="en" /><style class="fallback">body{visibility:hidden;}</style>
+
+**Inheritance**
+
+!!!
+    In the world of Java every child is at least as good as his/her parent,
+    unless it messes something up.
+
+Object oriented languages such as Java provide a mechanism for reusing code known as inheritance.
+
+* Inheritance allows you to take an existing class and specialize it.
+* The original class is called the **super**, **base**, or **parent** class (these terms are used interchangeably).
+* The class that specializes the base class is called the **sub**, **derived**, or **child** class (these terms are used interchangeably).
+* Inheritance is useful because it allows us to:
+  + reuse existing code without modifying the original code
+  + create a family of related classes
+  + treat objects from all the related classes in the same way
+
+# Object Class
+
+* All classes in Java are descendants of the [Object](http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html) class.
+* The Object class defines a number of methods, e.g., 
+  + [equals()](http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#equals%28java.lang.Object%29) which can be used to see if two objects have the same value.
+  + [toString()](http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString%28%29) which returns a String representation of the object.
+* Because every class is a descendant of the Object class, all other classes inherit these methods, i.e., it is possible to call toString() on an object from a class you wrote even if you didn't implement the toString() method.
+
+Suppose we have the following class defined:
+
+~~~~ Java
+public class A {
+
+}
+~~~~
+
+
+Even though the class has no methods explicitly implemented, we can still do the following:
+
+~~~~ Java
+A instance = new A();
+System.out.println(instance.toString());
+~~~~
+
+
+Running this code would produce something like this:
+
+~~~~ none
+packageName.A@82ba41
+~~~~
+
+
+* Calling toString() on the instance executes the implementation of toString() found in the Object class.
+* The string returned specifies the package name and class name, separated by a period, and then the memory address (in hexadecimal) where the object is stored.
+* Essentially, the Object class provides generic behavior for the toString() method... no matter what kind of object we have, we can always describe it with a string containing the package name, class name, and memory location where it is stored.
+* When we create a specialized class (one that inherits from Object), it may make sense to rewrite the functionality of toString() that was inherited from Object.
+* We can do this be **overriding** the definition of the toString() method like this:
+~~~~ Java
+public class A {
+  public String toString() {
+    return "This is an object from the silliest class I have ever seen";
+  }
+}
+~~~~
+
+
+
+Running the code below results in *This is an object from the silliest class I have ever seen*.
+
+~~~~ Java
+A instance = new A();
+System.out.println(instance.toString());
+~~~~
+
+* Calling toString() now executes the specialized version of the toString() method that has been customized for the subclass.
+
+
+# Class Declaration Syntax
+
+* Java assumes that we are inheriting from the Object class unless told otherwise.
+* The **extends** keyword is used explicitly identify a superclass.
+* Consider the following Shape class:
+~~~~ Java
+public class Shape {
+  private Color color;
+  private double xCoord;
+  private double yCoord;
+
+  public Shape() {
+    color = Color.WHITE;
+    xCoord = 0.0;
+    yCoord = 0.0;
+    System.out.println("Shape: constructor");
+  }
+
+  public void draw() {
+    System.out.println("Shape: draw");
+  }
+
+  public void erase() {
+    System.out.println("Shape: erase");
+  }
+
+  public void move() {
+    xCoord += 5.0;
+    yCoord += 5.0;
+    System.out.println("Shape: move");
+  }
+
+  public void zoom(double magnification) {
+    System.out.println("Shape: zoom");
+  }
+
+  public Color getColor() {
+    System.out.println("Shape: getColor");
+    return color;
+  }
+
+  public void setColor(Color color) {
+    this.color = color;
+    System.out.println("Shape: setColor");
+  }
+}
+~~~~
+
+* We can inherit from Shape to create a class that describes a particular type of shape. For example,
+~~~~ Java
+public class Circle extends Shape {
+  private double radius;
+
+  public Circle() {
+    super();
+    radius = 0.0;
+    System.out.println("Circle: constructor");
+  }
+
+  public void draw() {
+    System.out.println("Circle: draw");
+  }
+
+  public void erase() {
+    super.erase();
+    System.out.println("Circle: erase");
+  }
+
+  public void zoom(double magnification) {
+    radius *= magnification;
+    System.out.println("Circle: zoom");
+  }
+
+  public void setRadius(double radius) {
+    this.radius = radius;
+    System.out.println("Circle: setRadius");
+  }
+
+  public double getRadius() {
+    System.out.println("Circle: getRadius");
+    return radius;
+  }
+}
+~~~~
+
+
+* By extending Shape, our Circle class inherits the three fields from.
+* Because color, xCoord, and yCoord fields are declare as **private**, they are not visible in the Circle class, even though they exist as part of a Circle object.
+* Notice that the Circle constructor calls the Shape constructor by calling **super()**.  If a superclass has multiple constructors, we can specify the desired constructor by passing the correct parameters to **super()**.
+* The Circle class does not implement the getColor() and setColor() methods.  The implementations provided by the Shape class are inherited, i.e., used, by the Circle class.
+* The Circle class does implement its own versions of draw(), erase(), and zoom().  Rewriting the functionality of a superclass's method is called **overriding**.
+  + draw() and zoom() provide a completely new implementation for the Circle class
+  + erase() makes use of the Shape's erase() implementation by calling super.erase() and then adds some additional functionality.
+* getRadius() and setRadius() are additional methods that are only available to the Circle class.
+
+Can you figure out what the following program will display?
+
+~~~~ Java
+public static void main(String[] args) {
+  Shape shape = new Shape();
+  Circle circle = new Circle();
+  shape.move();
+  circle.move();
+  shape.draw();
+  circle.draw();
+  shape.zoom();
+  circle.zoom();
+  shape.erase();
+  circle.erase();
+  circle.getRadius();
+}
+~~~~
+
+
+Note:
+
+* shape.getRadius() would produce a compiler error because getRadius() is not defined in the Shape class.
+* A reference to a Shape may point to a Circle object since a circle can do everything that a shape can do.
+* A reference to a Circle may **not** point to a Shape object since a circle can do more than a shape (like setRadius()).
+
+# The is-a Lingo
+
+* Often inheritance is discussed using is-a terminology.
+* The terminology is used to help identify when it is appropriate to use inheritance in object oriented design.
+* When designed correctly, a subclass object **is a** superclass object.
+* In our previous example, it makes sense to say that a Circle is a Shape.
+* Using this terminology may clarify the notes above:
+  + A reference to a Shape may point to a Circle object since a circle is a shape.
+  + A reference to a Circle may **not** point to a Shape since a shape isn't necessarily a circle.
+
+# Visibility Modifiers
+
+* We've already discussed the **private** and **public** visibility modifiers.
+* Attributes (fields or methods) that are declared **public** are accessible to anyone.
+* Attributes that are declared **private** are only accessible to the class.
+* Attributes that are declared **protected** are accessible to the class and any descendent class.
+
+
+<!-- Markdeep: --><script src="../markdeep.js?taylorial"></script>

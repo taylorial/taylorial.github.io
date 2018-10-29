@@ -1,0 +1,147 @@
+<meta charset="utf-8" lang="en" /><style class="fallback">body{visibility:hidden;}</style>
+
+**Review II**
+    Review of Major CS1021 Topics
+
+!!!
+    Here we develop a simple game to review many of the topics covered in this course.
+
+
+# processMove() Implementations ([VIDEO](1021reviewII1.mp4))
+
+If the Player is currently in position (9, 1) and moving WEST, we must call `processMove()` on the tile at position (8, 1).  If the tile is a blank tile, then the Player should move to (8, 1) and keep going WEST.  In fact, regardless of which direction the Player is coming from, a blank tile will always return a `Move` object with the same direction as the move passed in and the position of the tile.  As a result, the `Tile.processMove()` method could be implemented as follows:
+
+~~~~ Java
+	public Move processMove(Move move) {
+		return new Move(move.getDirection(), position);
+	}
+~~~~
+
+
+If the Player is currently next to a `WinTile` object and headed in its direction, the `processMove()` method should be called on the `WinTile` object.  In this case, the `Move` returned by the method should have a direction of `Move.DIRECTION_WIN` and the same position as the `WinTile` object.  As a result, the `WinTile.processMove()` method could be implemented as follows:
+
+~~~~ Java
+	public Move processMove(Move move) {
+		return new Move(Move.DIRECTION_WIN, position);
+	}
+~~~~
+
+
+## __QUESTIONS/EXERCISES__
+
+1. Recall that `position` is an attribute from the `Tile` that gets inherited by the `WinTile` class.  In order for the `WinTile.processMove()` method to work, we need to make a minor modification to the `Tile` class.  What is that modification?
+
+# GameBoard.loadLevel() Implementation ([VIDEO](1021reviewII2.mp4))
+
+Loading the gameboard consists of the following steps:
+
+* Read in characters from file
+* Allocate space for gameboard 2D array
+* Create tiles from characters
+* Add tiles to gameboard
+* Connect action listener to each tile
+
+Here is a potential implementation:
+
+~~~~ Java
+	private void loadBoard(String filename) throws FileNotFoundException {
+		try (Scanner in = new Scanner(new FileInputStream(filename))) {
+			String level = in.nextLine();
+			int height = 1;
+			int width = level.length();
+			while(in.hasNextLine()) {
+				level += in.nextLine();
+				++height;
+			}
+			gameboard = new Tile[width][height];
+			for(int row=0; row < height; ++row) {
+				for(int col=0; col < width; ++col) {
+					char tileType = level.charAt(row*width + col);
+					Position pos = new Position(col, row);
+					Tile tile = null;
+					switch(tileType) {
+					case 'X':
+						tile = new WinTile(pos);
+						break;
+					case '@':
+					default:
+						tile = new Tile(pos);
+					}
+					gameboard[col][row] = tile;
+				}
+			}
+		}
+	}
+~~~~
+
+
+## __QUESTIONS/EXERCISES__
+
+1. Why are we reading the whole file into a string instead of just adding the tiles as we go?
+1. This method "`throws FileNotFoundException`."  What does this mean?
+1. What could we do instead of the `throws` declaration?
+1. Why is the `throws` declaration preferred over the alternative?
+1. What character will be displayed for the position where the Player is located?
+1. If the user clicks on the button where the Player is located, the program should not do anything.  Should we avoid adding an action listener to the tile where the Player is located?  Why or why not?
+1. What's up with the `case '@':` which doesn't appear to have any code associated with that case?
+1. We currently don't have a way to keep track of the Player.  How do you suggest we handle that?
+1. Should add a `throws IOException` to the `GameBoard` constructor to toss any IO exceptions back to the creator of the object, or handle it within the constructor?  Justify your answer.
+
+# GameBoard.createGUI() Implementation ([VIDEO](1021reviewII3.mp4))
+
+Creating the GUI just involves adding all the tiles to a `GridLayout` within the `JPanel`:
+
+~~~~ Java
+	private void createGUI() {
+		int width = gameboard.length;
+		int height = gameboard[0].length;
+		setLayout(new GridLayout(height, width));
+		for(int row=0; row < height; ++row) {
+			for(int col=0; col < width; ++col) {
+				add(gameboard[col][row]);
+			}
+		}
+	}
+~~~~
+
+
+## __QUESTIONS/EXERCISES__
+
+1. Explain how we are getting the width and height of the gameboard.
+
+# Event Handler
+
+In order to play the game, we need to keep track of the Player's position.  Once we know that, we can implement the `actionPerformed()` method for the event handler responding to button presses.  Here is a private inner class that handles when a tile on the gameboard is pressed.
+
+~~~~ Java
+	private class MoveHandler implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			// Check to see if Player is on the same row or same col
+			// If same row, processMove on tile one closer to me
+			//   than the current player
+			// If same col, processMove on tile one closer to me
+			//   than the current player
+		}
+	}
+~~~~
+
+
+## __QUESTIONS/EXERCISES__
+
+1. Add an attribute to the `GameBoard` class that keeps track of the Player's current position.
+1. Implement the `actionPerformed()` method for the `GameBoard::MoveHandler` class.
+1. Add a `GameBoard.numRows()` method that returns the number of rows in the loaded gameboard.
+1. Add a `GameBoard.numColumns()` method that returns the number of columns in the loaded gameboard.
+1. Modify `GameBoard.createGUI()` to use the above two methods.
+1. Modify the `Game` constructor to set the size of the `JFrame` based on the number of tiles on the gameboard.
+
+# Enterprise Architect Round Trips ([VIDEO](1021reviewII4.mp4))
+
+We can use Enterprise Architect to import our source code to create a UML class diagram with all of the classes.  To do this, we select **Tools -> Source Code Engineering -> Import Source Directory**.  We then select the `src` folder as the **Root Directory**, keep all the defaults, and click **OK**.
+
+![Figure [uml]: Maniacal Blocks UML Class Diagram](reviewUML.png)
+
+We can then make changes to the classes in the diagrams and synchronize our changes with the source files.  To do this, we select **Tools -> Source Code Engineering -> Synchronize Package Contents**.  We then select the **Forward engineering (model -> source)** to update the `.java` source files.  To update the UML class diagrams when changes are made in the source code, we select **Tools -> Source Code Engineering -> Synchronize Package Contents** and then select the **Reverse engineering (source -> model)**.
+
+<!-- Markdeep: --><script src="../markdeep.js?taylorial"></script>

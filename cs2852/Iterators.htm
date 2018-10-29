@@ -1,0 +1,129 @@
+<meta charset="utf-8" lang="en" /><style class="fallback">body{visibility:hidden;}</style>
+
+**Iterators**
+    I like to iterate, it's great.
+
+* Data structures typically contain a collection of elements.
+* It is often useful to be able to traverse that collection of elements.
+* It is possible to get an iterator from any collection that implements the [Iterable&lt&#xFEFF;T>](http://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html) interface.
+* The `Iterable&lt&#xFEFF;T>` interface is quite simple:
+~~~~ Java
+Iterator&lt&#xFEFF;T> iterator();
+~~~~
+
+* You may be wondering why you're seeing `&lt&#xFEFF;T>` instead of `&lt&#xFEFF;E>`.
+  + Skip these sub-bullets if you aren't the slight bit interested.
+  + The `E` in `List&lt&#xFEFF;E>` refers to the type of <b>e</b>lement in the list.
+  + The `T` in `Iterable&lt&#xFEFF;T>` refers to the <b>t</b>ype of element over which we can iterate.
+  + Okay... at least I gave you the option of skipping these sub-bullets.
+* So you're probably wondering what you can do with an iterator.  If not, you should be.
+* [`Iterator&lt&#xFEFF;E>`](http://docs.oracle.com/javase/8/docs/api/java/util/Iterator.html) is an interface consisting of three methods:
+  + `boolean hasNext()` -- returns `true` if another element exists in the collection
+  + `E next()` -- returns the next element in the collection
+  + `void remove()` -- removes, from the underlying collection, the last element returned by the iterator (the result of the most recent `next()` call)
+* That's all great, but who's going to implement the `Iterator&lt&#xFEFF;E>` interface?
+  + We need a class to implement the interface, but the class needs to be able to access the elements within the collection.
+  + Nested/Inner class to the rescue.[^inner]
+
+# Revisiting the Simplified ArrayList&lt&#xFEFF;E> Example
+
+* Here is how we could add the `Iterable&lt&#xFEFF;T>` interface to our [simplified ArrayList&lt&#xFEFF;E>](ArrayList.htm) class
+~~~~ Java
+  @Override
+  public Iterator&lt&#xFEFF;E> iterator() {
+    return new ArrayListIterator();
+  }
+
+  private class ArrayListIterator implements Iterator&lt&#xFEFF;E> {
+
+    private int position;
+
+    private boolean isLegalToRemove;
+
+    private ArrayListIterator(){
+      position = -1;
+      isLegalToRemove = false;
+    }
+
+    @Override
+    public boolean hasNext() {
+      return size() > (position+1);
+    }
+
+    @Override
+    public E next() {
+      if(!hasNext()){
+        throw new NoSuchElementException("No next element available");
+      }
+      isLegalToRemove = true;
+      return array[++position];
+    }
+
+    @Override
+    public void remove() {
+      if(!isLegalToRemove){
+        throw new IllegalStateException("Must call next() before remove()");
+      }
+      isLegalToRemove = false;
+      ArrayList.this.remove(position--);
+    }
+
+  } // End of ArrayListIterator class
+~~~~
+  
+* You might think that we'd need to change the class declaration to this:
+~~~~ Java
+public class ArrayList&lt&#xFEFF;E> implements List&lt&#xFEFF;E>, Iterable&lt&#xFEFF;E> {
+~~~~
+* .
+  + We don't need to do this because the `List&lt&#xFEFF;E>` interface extends the `Collection&lt&#xFEFF;E>` interface which extends the `Iterable&lt&#xFEFF;E>` interface.
+* Let's look at this code for a little bit...
+  + The `iterator()` method was part of the `ArrayList&lt&#xFEFF;E>` class before, we just hadn't implemented it [here](List).
+  + Our implementation just returns a reference to an object from the `ArrayListIterator` class -- the superhero inner class.
+  + The `ArrayListIterator` class and its constructor are declared `private` since nobody but the `ArrayList&lt&#xFEFF;E>` class has any business messing with the class directly.
+  + The `position` attribute keeps track of where we are in the collection.
+  + The `isLegalToRemove` attribute is used by the `remove` method, and we'll talk about it in a bit.
+  + The constructor forces us to begin one before the first element of the collection.
+  + `hasNext()` needs to make sure that the `position` is such that we still have at least one more element in the collection to traverse.
+    - We just make sure that we'll still have an element to return after incrementing the `position`.
+  + `next()` moves the iterator to the next element and returns a reference to it.
+    - First, we check to make sure that we have an element in the collection (if not we throw a `NoSuchElementException` exception).
+    - Second, we increment the `position` attribute.  Note: because we are using the pre-increment operator, `position` gets incremented before we evaluate the rest of the expression.  If we did `position++` instead, we would get an `ArrayIndexOutOfBoundsException` exception the first time we called `next()` because it would be trying this: `array[-1]`.
+    - Third, we return a reference to the next element in the collection.
+  + `remove()` is an optional method (meaning you can throw an `UnsupportedOperationException` exception instead of implementing it), but the `List&lt&#xFEFF;E>` interface provides a `remove(int index)` method that does just what we want, so we'll call it.[^implement]
+    - The `remove()` method should only be called if `next()` has been called since it the iterator was instantiated and since the last `remove()` call.
+    - As a result, we have introduced the `isLegalToRemove` flag to keep track of when it is legal to call `remove()`.
+      * `isLegalToRemove` is set to `false` in the constructor and whenever `remove()` is called.
+      * `isLegalToRemove` is set to `true` whenever `next()` is called.
+
+# Enhanced for Loop: The foreach Loop
+
+* Iterators are what make it possible for us to use the enhance `for` loop.
+* Consider:
+~~~~ Java
+    List&lt&#xFEFF;Integer> list = new ArrayList&lt&#xFEFF;>();
+    for(int i=0; i < 5; ++i) {
+      list.add((int)(Math.random()*25));
+    }
+
+    for(Integer number : list) {
+      System.out.println(number);
+    }
+~~~~
+
+  + The second `for` loop makes use of an interator to navigate the collection.
+  + It is equivalent to doing this:
+~~~~ Java
+    Iterator&lt&#xFEFF;Integer> itr = list.iterator();
+    while(itr.hasNext()) {
+      Integer number = itr.next();
+      System.out.println(number);
+    }
+~~~~
+    
+
+[^inner]: It's tough to take superhero seriously if it has a slash in its name, so I probably should have just said Nested class to the rescue OR Inner class to the rescue.
+
+[^implement]: Hopefully you didn't notice that we didn't actually implement that method.
+
+<!-- Markdeep: --><script src="../markdeep.js?taylorial"></script>

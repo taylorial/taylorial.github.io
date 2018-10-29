@@ -1,0 +1,373 @@
+<meta charset="utf-8" lang="en" /><style class="fallback">body{visibility:hidden;}</style>
+
+**Functional Programming**
+
+# Programming Models
+
+Software consists of two distinct components: what the program knows (data)
+and what the program knows how to do (operations).  Put simply[^simplified]:
+
+ * An object-oriented approach groups operations with data. 
+ * A functional approach treats operations as data.
+
+[^simplified]: This is an oversimplification that will be expanded upon below.
+
+A key principal of object-oriented design is to group data with
+operations.  This results in code that is modular and encapsulated.  It
+encourages code reuse through inheritance where child classes can specialize
+operations for more specific types of objects.  With object-oriented code,
+the functionality and the data are tightly coupled.
+
+Functional programming takes a significantly different approach.
+Functional programming allows operations to be treated just like data.  Here
+we can define functionality and then pass the functionality to a method
+where it is applied to a set of data.  The functional programming model
+is well suited for concurrent and event-driven programming tasks.
+Concurrency -- running portions of a task on multiple processors
+simultaneously -- has become increasingly important for performance
+reasons.
+
+Java is known as an object-oriented programming language because it was
+originally designed to facilitate writing object-oriented software.  Writing
+Java software using a functional approach has always been possible; however,
+it was not originally designed to facilitate it. As a result, writing Java
+using a functional approach was cumbersome in early versions of Java.
+
+More recent versions of Java (particularly Java 8) have brought several
+functional programming concepts to the Java language.  With Java 8 it is
+now much easier to design and implement software using a functional programming
+approach.  This allows us to use object-oriented techniques when
+appropriate and functional programming techniques when they make sense.
+
+# Functional Programming Characteristics
+
+Conceptually, we can think of functional programming as if each method
+acted like a mathematical function.  For a fixed set of inputs, the
+function returns the same value each time it is called.  This results in
+the following constraints:
+
+ * The function call can be replaced by the result.
+ * Functions are not allowed to have side effects.
+ * The compiler is allowed to rearrange the function invocations or run them
+   on different threads without changing the result.
+ * Program flow is driven by data dependencies rather than the sequence of
+   instructions.
+
+Functional programming requires data to be immutable.  If the value must change,
+a new piece of data is created with the new value.
+
+## First-Class Functions
+
+Functional programming involves first-class functions.  Put simply, we are
+able to treat a function like we would data.  Specifically:
+
+ * Functions can be assigned to variables.
+ * Functions can be passed as arguments to another function.
+ * Functions can be returned by other functions.
+
+A lambda expression is Java's implementation mechanism for first-class
+functions. Consider:
+
+```
+button.setOnAction(event -> {
+    // do some work
+});
+```
+
+Here the code between the curly braces defines the method
+`void handle(ActionEvent event)`.  Alternatively, we could assign the lambda
+expression to a variable like this:
+
+```
+EventHandler&lt&#xFEFF;ActionEvent> handler = (event -> {
+    // do some work
+});
+
+button.setOnAction(handler);
+```
+
+## Functional Interfaces
+
+A functional interface is an interface that declares a single abstract
+method.  Functional interfaces make use of the `@FunctionalInterface`
+annotation.  For example, the `EventHandler&lt&#xFEFF;T>` interface is a functional
+interface.  Its declaration looks like this:
+
+```
+@FunctionalInterface
+interface EventHandler&lt&#xFEFF;T> {
+    void handle(T event);
+}
+```
+
+Any functional interface may be implemented with a lambda expression.
+It is best to think of a lambda expression as an anonymous method rather
+than an object.
+
+## Higher-Order Functions
+
+Higher-order functions are functions that accept other functions as argument(s)
+or return a function as a result.  An example of a higher-order function
+that you've already seen is `setOnAction(EventHandler&lt&#xFEFF;ActionEvent> event)`
+which must be passed a function (an anonymous method that implements a functional
+interface).
+
+There are several higher-order functions that are commonly used with
+streams of data.  The
+[`Stream`](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html)
+interface in Java is often used when applying a functional programming
+approach to collections of data.  The interface includes the following
+methods:
+
+ * `count()` -- returns the number of elements in the stream.
+ * `distinct()` -- returns a stream consisting of the distinct elements of the stream.
+ * `limit(long maxSize)` -- returns a stream consisting of the elements in this stream, truncated to be no longer than `maxSize` in length.
+ * `skip(long count)` -- returns a stream consisting of the remaining elements of this stream after discarding the first `count` elements of this stream.
+ * `sorted()` -- returns a stream consisting of the elements of this stream, sorted according to natural order.
+
+In addition to these methods, there are several higher-order functions,
+i.e., methods that accept one or more functions as argument(s).
+
+### Predicate Interface
+
+One common type of function that is passed to higher-order functions is a
+predicate function -- a function that evaluates to a `boolean` value.
+Java provides a functional interface to help:
+[`Predicate&lt&#xFEFF;T>`](https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html). 
+
+We can create a predicate function by implementing this interface with a
+lambda expression.  The following defines a predicate function that returns
+true whenever the string on which the predicate is evaluated is longer than
+nine characters:
+
+```
+Predicate&lt&#xFEFF;String> longerThanNine = (word -> word!=null && word.length()>9);
+```
+
+The `Stream` interface declares these higher-order functions that require
+a predicate function:
+
+ * `allMatch(Predicate&lt&#xFEFF;? super T> predicate)` -- returns true if all elements in this stream match the predicate.
+ * `anyMatch(Predicate&lt&#xFEFF;? super T> predicate)` -- returns true if any elements in this stream match the predicate.
+ * `noneMatch(Predicate&lt&#xFEFF;? super T> predicate)` -- returns true if none of the elements in this stream match the predicate.
+ * `filter(Predicate&lt&#xFEFF;? super T> predicate)` -- returns a stream that contains only the elements that match the given predicate.  
+
+### Function Interface
+
+Another functional interface is the
+[`Function&lt&#xFEFF;T, R>`](https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html)
+interface.  This interface represents a function that accepts one argument, of
+type `T`, and produces a result, of type `R`.
+The `Stream` interface declares these higher-order functions that require
+a `Function`:
+
+ * `map(Function&lt&#xFEFF;? super T, ? extends R> mapper)` -- returns a stream consisting of the results of applying the given function to the elements of this stream.
+ * `mapToDouble(ToDoubleFunction&lt&#xFEFF;? super T> mapper)` -- returns a `DoubleStream` consisting of the results of applying the given function to the elements of this stream.
+ * `mapToInt(ToIntFunction&lt&#xFEFF;? super T> mapper)` -- returns a `IntStream` consisting of the results of applying the given function to the elements of this stream.
+
+### Consumer Interface
+
+Another functional interface is the
+[`Consumer&lt&#xFEFF;T>`](https://docs.oracle.com/javase/8/docs/api/java/util/function/Consumer.html)
+interface which represents an operation that accepts a single input, of type
+`T` and returns no result.  Unlike most other functional interfaces, this
+interface is expected to operate via side-effects.
+
+This can be used with the [`Stream.forEach(Consumer&lt&#xFEFF;? super T> action)`](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#forEach-java.util.function.Consumer-) method.
+For example, the following code
+
+```
+Consumer&lt&#xFEFF;String> prettyDisplay = (word -> System.out.println(word + ": " + word.length()));
+
+List&lt&#xFEFF;String> words = Arrays.asList("Gravity", "isn't", "just", "a", "good",
+        "idea", "it's", "the", "law");
+words.stream().forEach(prettyDisplay);
+```
+
+produces this result:
+
+```
+Gravity: 7
+isn't: 5
+just: 4
+a: 1
+good: 4
+idea: 4
+it's: 4
+the: 3
+law: 3
+```
+
+!!! Functional Programming and Parallism
+    Note that the order in which `forEach()` evaluates each element is not
+    guaranteed.  In fact, if the last line of the code above is replaced with
+    `words.parallelStream().forEach(prettyDisplay);`, the result could be:
+
+    ~~~~ none
+    idea: 4
+    good: 4
+    the: 3
+    law: 3
+    it's: 4
+    just: 4
+    a: 1
+    isn't: 5
+    Gravity: 7
+    ~~~~
+
+    By using a [`parallelStream()`](https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html#parallelStream--)
+    the evaluation of the `forEach()` method may be evaluated in parallel.
+    In this case, the original stream could be partitioned into `n` streams of `k` elements each (where `´n*k` is the total number of elements in the stream).
+    Each partitioned stream could be processed on a separate thread.  The resulting order in which the elements are processed is non-deterministic.
+
+    Functional programming has become more popular in recent years.  One of the
+    big reasons for this is the ease with which code can be modified to run
+    in a distributed fashion.  When working with really large datasets, being
+    able to distribute the work associated with a task across multiple
+    processes, computers, or even data centers means that we can buy/rent more
+    hardware to make our code run faster instead of having to buy/rent faster
+    hardware.
+
+    This is particularly important if we have a workload that may vary significantly
+    with time of day, for example.
+
+# Acting on Streams Using a Functional Approach
+
+There are several other methods in the `Stream` interface that you can investigate in more detail.
+The following are frequently used:
+
+ * `map()` -- apply a function to each element in the stream.
+ * `filter()` -- filter out elements in the stream that are not of interest.
+ * `reduce()` -- reduce the stream to a single value by successively applying a binary operation.  The binary operation combines pairs of elements.
+ * `collect()` -- used to collect all elements in the stream into a collection
+
+Note: the descriptions above are over-simplifications. Each of the first three operations create a new stream rather than changing the contents of the current stream.
+
+At this point, it may be good to see a few examples.
+
+## Filtering
+
+The following takes a stream of integers and produces a new list containing only
+the even integers:
+
+```
+Stream&lt&#xFEFF;Integer> numbers = Stream.of(3, 8, 7, 2, 1, 9, 8);
+List&lt&#xFEFF;Integer> evens = numbers.filter(num -> num%2==0)
+        .collect(Collectors.toList());
+```
+
+The following counts how many strings end in **tion**:
+
+```
+long count = Stream.of("happy", "discussion" /* ... */, "locomotion")
+        .filter(word -> word.endsWith("tion"))
+        .count();
+```
+
+## Filtering and Mapping
+
+The following takes a stream of `Shape`s and produces a new list of circles:
+
+```
+List&lt&#xFEFF;Circle> circles = Stream.of(new Circle(), new Rectangle(), new Circle(), new Triangle())
+        .filter(shape -> shape instanceof Circle)
+        .map(shape -> (Circle)shape)
+        .collect(Collectors.toList());
+```
+
+## Mapping and Reducing
+
+The following calculates the total area of all the shapes:
+
+```
+double totalArea = Stream.of(new Circle(), new Rectangle(), new Circle(), new Triangle())
+        .mapToDouble(shape -> shape.getArea())
+        .sum();
+```
+
+Note: we can specify the mapping function as a method reference instead of a
+lambda expression. (See the argument passed to `mapToDouble()` in the next
+example).  Like a lambda expression, a method reference is turned into an
+instance of a functional interface.
+The following calculates the average area of the shapes:
+
+```
+OptionalDouble averageArea = Stream.of(new Circle(), new Rectangle(), new Circle(), new Triangle())
+        .mapToDouble(Shape::getArea)
+        .average();
+```
+
+Note: `.average()` returns an [`OptionalDouble`](https://docs.oracle.com/javase/8/docs/api/java/util/OptionalDouble.html)
+since it is possible that this calculation doesn't make sense (if the list is empty).  We can check if the
+average was calculated by calling `averageArea.isPresent()`.  If it is, then we can get the value by
+calling `averageArea.getAsDouble()`.
+
+Since calculating statistics is pretty common, there is a [`DoubleSummaryStatistics`](https://docs.oracle.com/javase/8/docs/api/java/util/DoubleSummaryStatistics.html)
+class that can be used with `summaryStatistics()` to calculate several statistics:
+
+```
+List&lt&#xFEFF;Shape> shapes = Arrays.asList(new Circle(), new Rectangle(), new Circle(), new Triangle());
+DoubleSummaryStatistics areaStatistics = shapes.stream()
+        .mapToDouble(Shape::getArea)
+        .summaryStatistics();
+double totalArea = areaStatistics.getSum();       
+double averageArea = areaStatistics.getAverage();       
+double maximumArea = areaStatistics.getMax();       
+double minimumArea = areaStatistics.getMin();       
+long numberOfShapes = areaStatistics.getCount();       
+```
+
+# Lazy Evaluation
+
+One subtle but powerful concept related to streams is that streams are **lazy**.
+They are lazy in the following sense:
+
+> Computations on the source data are only performed when a terminal
+> stream operation (e.g., `.collect()`, `.reduce()`, `.count()`, etc...) is
+> performed **and** the source elements are only evaluated as needed.
+
+Consider the following `LifeGrid.countAliveCells()` method:
+
+```
+public int countAliveCells(){
+    int numAlive = 0;
+    for(List&lt&#xFEFF;Cell> row : cells) {
+        for(Cell cell : row) {
+            if(cell.isAlive()) {
+                numAlive++;
+            }
+        }
+    }
+    return numAlive;
+}
+```
+
+Implementing this method using a functional programming approach could look
+like:
+
+```
+public int countAliveCells(){
+    return (int)cells.parallelStream()
+        .flatMap(List::stream)
+        .filter(Cell::isAlive)
+        .count();
+}
+```
+
+The `cells` instance variable is a list of lists.  It looks like we:
+
+ * Convert the list of lists into a stream of lists (one stream for each row of cells),
+ * Then convert each list into a stream to make one long stream with all the cells in it,
+ * Then remove all cells that do not claim to be alive, and
+ * Finally count how many cells are in the resulting stream
+
+Because the stream is evaluated in lazily, the compiler can determine how
+best to optimize the order of operations.  It could make one long stream
+or chose to have each stream representing a row of cells be sent to a different
+processor where subtotal is tallied and then combined to produce the
+total count.
+
+Generally speaking, functional programming describes **what** we want
+done, but not **how** it should be done.  In the `countAliveCells()` example, the first approach specified exactly how to count the cells whereas the functional approach allows the compiler and/or runtime environment to optimize how the work gets done. 
+
+<!-- Markdeep: --><script src="../markdeep.js?taylorial"></script>

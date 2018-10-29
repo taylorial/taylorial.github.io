@@ -1,0 +1,91 @@
+<meta charset="utf-8" lang="en" /><style class="fallback">body{visibility:hidden;}</style>
+
+**Java Collection Framework**
+     Save the whales[^whales]
+
+* A text document is a collection of paragraphs.  Each paragraph is a collection of words.  Each word is a collection of characters.
+* The computer's file system is a collection of files.
+* A browser's bookmark list contains a collection of URLs.
+* etc...
+* You have already seen one mechanism for storing collections of objects: the [array](ArrayList).
+* The [Java Collections Framework](http://docs.oracle.com/javase/8/docs/technotes/guides/collections/) provides a number of classes that can be used to store collections of data.
+
+# Review of Interfaces
+
+* The Java language includes a concept known as **interfaces**.
+* It's a fairly simple concept that we'll need in order to better understand collection types that are part of the Java Collections Framework.
+* An interface is basically a promise or contract.
+* An interface is a list of method signatures (method name, parameters passed to the method, and the type returned by the method, if anything).
+  + When a class is declared, it may promise to implement the interface.
+  + You've already seen interfaces in action...
+    - An event handler class must implement the [EventHandler&lt&#xFEFF;E>](https://docs.oracle.com/javase/8/javafx/api/javafx/event/EventHandler.html) interface.
+    - A class declaration like the following promises that the class will implement the `EventHandler&lt&#xFEFF;ActionEvent>` interface:
+~~~~ Java
+private class ButtonEventHandler implements EventHandler&lt&#xFEFF;ActionEvent> {
+~~~~
+    - The `EventHandler&lt&#xFEFF;ActionEvent>` interface specifies that the following method must be implemented:
+~~~~ Java
+  public void handle(ActionEvent event)
+~~~~
+    - The compiler makes sure that the `ButtonEventHandler` class fulfills its promise by refusing to compile unless the `ButtonEventHandler` class implements that method.
+* In much the same way as we can create a reference to an object, we can create a reference to an interface.
+* The reference acts as the gatekeeper for accessing the object to which the reference points.  Consider the following code:
+~~~~ Java
+  String word = new String("nonsense");
+  CharSequence charSeq = word;
+~~~~
+  + The first line creates a reference to a String and makes it point to a newly created String object.
+  + The second line creates a reference to a `CharSequence` and makes it point to the same String object as word.
+  + Since the [`String`](http://docs.oracle.com/javase/8/docs/api/java/lang/String.html) class implements the [`CharSequence`](http://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html) interface, the second line is a valid statement.
+  + Both **word** and **charSeq** refer to the same object, but we can only access methods known to the CharSequence interface when using the **charSeq** reference.
+  + The `CharSequence` consists of four methods:
+    - [charAt(int)](http://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html#charAt%28int%29)
+    - [length()](http://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html#length%28%29)
+    - [subSequence(int, int)](http://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html#subSequence%28int,%20int%29)
+    - [toString()](http://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html#toString%28%29)
+  + The following indicates which lines are illegal.  All of the legal lines of code function identically regardless of whether the method is called through **word** or **charSeq**.
+~~~~ Java
+  word.toString();
+  word.endsWith("sense");
+  word.length();
+  word.subSequence(1, 3);
+  word.substring(1, 3);
+  charSeq.toString();
+  charSeq.endsWith("sense");  // ILLEGAL
+  charSeq.length();
+  charSeq.subSequence(1, 3);
+  charSeq.substring(1, 3);    // ILLEGAL
+~~~~
+
+# Java Collections Framework
+
+* Because manipulating collections of objects is such a common task, Oracle provides the Java Collections Framework (JCF).
+* The framework contains a number of interfaces and classes that various ways of storing and interacting with collections of data.
+
+## Collection Interface
+
+* The [`Collection&lt&#xFEFF;E>`](http://docs.oracle.com/javase/8/docs/api/java/util/Collection.html) interface is the root interface for the JCF.
+* The `Collection&lt&#xFEFF;E>` represents a group of objects called elements.
+* Collections may be ordered or unordered and may allow duplicate elements or may forbid duplicates.
+* The JCF does not actually provide any direct implementations for the `Collection&lt&#xFEFF;E>` interface.  Instead, the `Collection&lt&#xFEFF;E>` interface acts as a base interface for more specific types of interfaces.
+* Two subinterfaces of the `Collection&lt&#xFEFF;E>` interface are:
+  + [`List&lt&#xFEFF;E>`](http://docs.oracle.com/javase/8/docs/api/java/util/List.html) -- an ordered collection that allows duplicates.  The JCF provides the following implementations of this interface:
+    - [`ArrayList&lt&#xFEFF;E>`](http://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html)
+    - [`LinkedList&lt&#xFEFF;E>`](http://docs.oracle.com/javase/8/docs/api/java/util/LinkedList.html)
+  + [`Set&lt&#xFEFF;E>`](http://docs.oracle.com/javase/8/docs/api/java/util/Set.html) -- an unordered collection that forbids duplicates. The JCF provides the following implementations of this interface:
+    - [`TreeSet&lt&#xFEFF;E>`](http://docs.oracle.com/javase/8/docs/api/java/util/TreeSet.html)
+    - [`HashSet&lt&#xFEFF;E>`](http://docs.oracle.com/javase/8/docs/api/java/util/HashSet.html)
+    - [`PriorityQueue&lt&#xFEFF;E>`](http://docs.oracle.com/javase/8/docs/api/java/util/PriorityQueue.html)
+* We will cover most of these implementations this quarter.
+
+## Extending Interfaces
+
+* An interface can extend another interface.
+* A subinterface can declare additional methods and/or redefine methods declared in the superinterface.
+* Since an interface doesn't actually provide implementations for methods, redefining a method is a conceptual thing -- the definition in the subinterface should describe more specific behavior than the superclass.  For example:
+  + `Collection.remove(Object)` -- Removes a single instance of the specified element from this collection, if it is present.
+  + `List.remove(Object)` -- Removes the first occurence of the specified element from this list, if it is present.
+
+[^whales]: ... collect the whole set.
+
+<!-- Markdeep: --><script src="../markdeep.js?taylorial"></script>

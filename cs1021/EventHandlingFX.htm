@@ -1,0 +1,296 @@
+<meta charset="utf-8" lang="en" /><style class="fallback">body{visibility:hidden;}</style>
+
+**Event Handling in JavaFx**
+
+Writing <acronym title="Graphical User Interface">GUI</acronym> applications
+requires that program control be driven by the user's interaction with the
+<acronym title="Graphical User Interface">GUI</acronym>.  When the user
+moves the mouse, clicks on a button, or selects an item from a menu an "event"
+occurs.
+
+The [javafx.event](http://docs.oracle.com/javase/8/javafx/api/javafx/event/package-summary.html)
+package provides the basic framework for FX events.  The
+[Event](http://docs.oracle.com/javase/8/javafx/api/javafx/event/Event.html)
+class serves as the base class for JavaFX events.  Associated with each
+event is an event source, an event target, and an event type.
+
+ * Source -- <acronym title="Graphical User Interface)">GUI</acronym> objects (e.g., a [Button](https://docs.oracle.com/javase/8/javafx/api/javafx/scene/control/Button.html) object) which generates an [ActionEvent](https://docs.oracle.com/javase/8/javafx/api/javafx/event/ActionEvent.html) (e.g., when the button is clicked).  The source implements the [EventTarget](https://docs.oracle.com/javase/8/javafx/api/javafx/event/EventTarget.html) interface.
+ * Listener -- An object that **subscribes** (listens) for a particular type of event to occur.  The listener must implement an interface like [EventHandler](https://docs.oracle.com/javase/8/javafx/api/javafx/event/EventHandler.html) or [InvalidationListener](https://docs.oracle.com/javase/8/javafx/api/javafx/beans/InvalidationListener.html)[^invalidation].
+ * Type -- An additional classification that are used to specify the specific type of event.  For example, a [MouseEvent](https://docs.oracle.com/javase/8/javafx/api/javafx/scene/input/MouseEvent.html) has the following types: `ANY`, `MOUSE_CLICKED`, `MOUSE_PRESSED`, `MOUSE_RELEASED`, `MOUSE_MOVED`, `MOUSE_DRAGGED`, `MOUSE_ENTERED`, `MOUSE_EXITED`, `MOUSE_ENTERED_TARGET`, `MOUSE_EXITED_TARGET`, `DRAG_DETECTED`.
+
+The operating system or windowing system captures generated events and
+notifies the listener objects when a type of event they are listening for
+has occurred.  The operating system **notifies** the listener object by
+sending a message to (calling) the **event handling method**.  If no listener
+object is subscribed to listen for the event that occurred, the event
+is ignored.
+
+# Types of Events
+
+There are many subclasses of the `Event` class:
+
+ * [ActionEvent](http://docs.oracle.com/javase/8/javafx/api/javafx/event/ActionEvent.html) -- widely used to indicate things like when a button is pressed.
+ * [MouseEvent](http://docs.oracle.com/javase/8/javafx/api/javafx/scene/input/MouseEvent.html) -- indicates mouse activity.
+ * [DragEvent](http://docs.oracle.com/javase/8/javafx/api/javafx/scene/input/DragEvent.html) -- indicates a drag-and-drop gesture.
+ * [KeyEvent](http://docs.oracle.com/javase/8/javafx/api/javafx/scene/input/KeyEvent.html) -- indicates that a keystroke has occurred.
+ * [ScrollEvent](http://docs.oracle.com/javase/8/javafx/api/javafx/scene/input/ScrollEvent.html) -- indicates scrolling by mouse wheel, track pad, touch screen, etc...
+ * [TouchEvent](http://docs.oracle.com/javase/8/javafx/api/javafx/scene/input/TouchEvent.html) -- indicates a touch screen action
+
+# EventHandler I -- Separate Class
+
+The `EventHandler` interface is a functional interface with one method:
+`void handle(T event)`.  Here we will focus on enabling functionality when
+a button is pressed.  In order to do this, we need to:
+
+ * Create an object that implements the `EventHandler<ActionEvent>` interface
+ * Tell it to listen for events initiated by the button.  To do this we pass the object above to the `Button.setOnAction()` method
+ * The system notifies an event hanlder by calling the handler's `handle()` method.
+ * The `handle()` method is passed a reference to the `ActionEvent` object.
+
+## Sample Code
+
+Here is an example of a simple JavaFX application that has one button:
+
+~~~~ Java
+public class SimpleGUI extends Application {
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) {
+        Pane root = new StackPane();
+        Button clickMe = new Button("Click Me");
+        clickMe.setOnAction(new ClickMeHandler());
+        root.getChildren().add(clickMe);
+
+        primaryStage.setTitle("Simple GUI");
+        primaryStage.setScene(new Scene(root, 400, 300));
+        primaryStage.show();
+    }
+}
+~~~~
+
+Here we:
+
+ * Create a button that says "Click Me" on it
+ * Add an event handler to the button
+ * Add the button to a stack pane
+ * Set the title for the application
+ * Add the stack pane to a scene and add the scene to the stage
+ * Show the stage
+
+The `ClickMeHandler` class implements the `EventHandler` class:
+
+~~~~ Java
+public class ClickMeHandler implements EventHandler<ActionEvent> {
+    @Override
+    public void handle(ActionEvent event) {
+        Button button = (Button)event.getSource();
+        if(button.getEffect()==null) {
+            button.setEffect(new BoxBlur());
+        } else {
+            button.setEffect(null);
+        }
+    }
+}
+~~~~
+
+Here we:
+
+ * The `ClickMeHandler` class implements the `EventHandler` specifically for `ActionEvent`s
+ * We can get the source of the event by calling `getSource()`
+ * Since we know that the event source is a `Button`, we can cast it to a `Button`
+ * We then toggle placing a BoxBlur effect on the button
+
+# EventHandler II -- Inner Class
+
+Now let's add a label to the GUI.  Instead of blurring the button, let's blur the label when the button is clicked.  Now we have a problem.  Can you identify the problem?[^problem]
+
+The following code solves that problem.
+
+~~~~ Java
+public class SimpleGUI extends Application {
+
+    private Label label;
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) {
+        Pane root = new StackPane();
+        label = new Label("Here is some text that can be manipulated with the button above.");
+        Button clickMe = new Button("Click Me");
+        clickMe.setOnAction(new ClickMeHandler());
+        root.getChildren().addAll(label, clickMe);
+
+        primaryStage.setTitle("Simple GUI");
+        primaryStage.setScene(new Scene(root, 400, 300));
+        primaryStage.show();
+    }
+
+    private class ClickMeHandler implements EventHandler<ActionEvent> {
+        @Override
+        public void handle(ActionEvent event) {
+            if(label.getEffect()==null) {
+                label.setEffect(new BoxBlur());
+            } else {
+                label.setEffect(null);
+            }
+        }
+    }
+}
+~~~~
+
+This may seem strange, but we are actually declaring a class within another class.  Here `ClickMeHandler` is known as an **inner class**.
+
+ * An inner class is declared inside the body of the outer class, but outside of all methods.
+ * An inner class can access all members of the enclosing class (including those private guys).
+ * As a result, the `handle()` method has access to the `label` attribute of the `SimpleGUI` class.
+ * An inner class can be private to the outside world, i.e., an instance of an inner class cannot be instantiated (created) independently.
+ * You can have more than one inner class in an enclosing class
+
+# EventHandler III -- Anonymous Inner Class
+
+
+If we had more buttons, each button could have a corresponding inner class that implements an event handler for the button.  In all of these situations, it likely that we will only ever create one object from each of these inner classes.  If we are only going to create one object from the class, we can make use of an anonymous inner class.  Here's how:
+
+~~~~ Java
+public class SimpleGUI extends Application {
+
+    private Label label;
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) {
+        Pane root = new StackPane();
+        label = new Label("Here is some text that can be manipulated with the button above.");
+        Button clickMe = new Button("Click Me");
+        clickMe.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(label.getEffect()==null) {
+                    label.setEffect(new BoxBlur());
+                } else {
+                    label.setEffect(null);
+                }
+            }
+        });
+        root.getChildren().addAll(label, clickMe);
+
+        primaryStage.setTitle("Simple GUI");
+        primaryStage.setScene(new Scene(root, 400, 300));
+        primaryStage.show();
+    }
+}
+~~~~
+
+ * Notice that here we actually define the class right where we want to use it.
+ * One strange thing about the syntax is that it looks like we are instantiating an interface, i.e., `new EventHandler<ActionEvent>()`.
+ * Notice that the `{ ... }` block immediately following is the implementation of the inner class.
+
+# EventHandler IV -- Lambda Expression
+
+Hopefully the above discussion has helped you get a better understanding of the different approaches to handling events.  The following sample is similar to the one in the previous section, but here we replace the anonymous inner class with a lambda expression.
+
+~~~~ Java
+public class SimpleGUI extends Application {
+
+    private Label label;
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) {
+        Pane root = new StackPane();
+        label = new Label("Here is some text that can be manipulated with the button above.");
+        Button clickMe = new Button("Click Me");
+        clickMe.setOnAction(event -> {
+            if(label.getEffect()==null) {
+                label.setEffect(new BoxBlur());
+            } else {
+                label.setEffect(null);
+            }
+        });
+        root.getChildren().addAll(label, clickMe);
+
+        primaryStage.setTitle("Simple GUI");
+        primaryStage.setScene(new Scene(root, 400, 300));
+        primaryStage.show();
+    }
+}
+~~~~
+
+ * The `EventHandler` is a functional interface, i.e., it has only one method.
+ * Lambda expressions are a new syntax introduced in Java 8 that allows one to treat functionality as a method argument.
+ * Functional interfaces can be represented with a lambda expression.
+
+# Grand Finale
+
+In order to separate the code associated with handling the event, I recommend extracting it into a helper method.  The above class can be rewritten as:
+
+~~~~ Java
+public class SimpleGUI extends Application {
+
+    private Label label;
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) {
+        Pane root = new StackPane();
+        label = new Label("Here is some text that can be manipulated with the button above.");
+        Button clickMe = new Button("Click Me");
+        clickMe.setOnAction(event -> handleClickMe(event));
+        root.getChildren().addAll(label, clickMe);
+
+        primaryStage.setTitle("Simple GUI");
+        primaryStage.setScene(new Scene(root, 400, 300));
+        primaryStage.show();
+    }
+
+    private void handleClickMe(ActionEvent event) {
+        if(label.getEffect()==null) {
+            label.setEffect(new BoxBlur());
+        } else {
+            label.setEffect(null);
+        }
+    }
+
+}
+~~~~
+
+If the lambda expression is just a call to another method, we can replace
+the lambda expression with a method reference.  Here we would replace:
+
+~~~~ Java
+        clickMe.setOnAction(event -> handleClickMe(event));
+~~~~
+
+with:
+
+~~~~ Java
+        clickMe.setOnAction(this::handleClickMe);
+~~~~
+
+which makes the `handleClickMe(ActionEvent event)` method get called whenever
+the button generates an `ActionEvent`.
+
+[^invalidation]: The `InvalidationListener` is used for observable controls like
+sliders, menus, etc..  The [ChangeListener](https://docs.oracle.com/javase/8/javafx/api/javafx/beans/value/ChangeListener.html) interface may be used
+instead of the `InvalidationListener` if, in the listener, you
+need to know the new value of the item being observered.
+
+[^problem]: One of the problems with the approach taken in EventHandling I is that the event handler object does not have access to any GUI elements except the button (since we can get it by calling `getSource()`).
+
+<!-- Markdeep: --><script src="../markdeep.js?taylorial"></script>

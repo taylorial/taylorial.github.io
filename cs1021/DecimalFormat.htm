@@ -1,0 +1,73 @@
+<meta charset="utf-8" lang="en" /><style class="fallback">body{visibility:hidden;}</style>
+
+**Formating Numbers**
+
+The `DecimalFormat` class can be used to customize the way numbers
+are represented as strings.  If you have an appropriately
+configured `DecimalFormat` object, `formatter`, and `double`, `num`, with the
+value `12345.678`, calling `formatter.format(num)` could produce:
+
+ * 12345.678
+ * 12345.6780
+ * 12,345.69
+ * 00012345.678
+ * $12,345.68
+ * 1,234,567.8%
+
+In order to control the format of the output, a pattern is passed to the
+constructor of `DecimalFormat`.  For a more complete/accurate description of
+the functionality of the `DecimalFormat` class refer to the
+[Javadoc](https://docs.oracle.com/javase/9/docs/api/java/text/DecimalFormat.html).  What follows is a number of simple examples.
+
+# Digits after the Decimal
+
+~~~~ Java
+DecimalFormat formatter = new DecimalFormat("#.##");
+System.out.println(formatter.format(12345.678));
+System.out.println(formatter.format(123.4));
+~~~~
+produces:
+ * 12345.68 (notice that the 678 gets rounded to 68)
+ * 123.4
+
+# Zero Padding
+
+~~~~ Java
+DecimalFormat formatter = new DecimalFormat("0000.000");
+System.out.println(formatter.format(12345.678));
+System.out.println(formatter.format(123.4));
+~~~~
+produces:
+ * 12345.678
+ * 0123.400
+
+# Currency
+
+~~~~ Java
+DecimalFormat formatter = new DecimalFormat("$#,##0.00");
+System.out.println(formatter.format(12345.678));
+System.out.println(formatter.format(123.4));
+System.out.println(formatter.format(0.1234));
+~~~~
+produces:
+ * $1,2345.68
+ * $123.40
+ * $0.12
+
+# Percentages
+
+~~~~ Java
+DecimalFormat formatter = new DecimalFormat("#,###.##%");
+System.out.println(formatter.format(0.678));
+System.out.println(formatter.format(123.4111));
+formatter = new DecimalFormat("###%");
+System.out.println(formatter.format(0.678));
+System.out.println(formatter.format(123.4111));
+~~~~
+produces:
+ * 67.8%
+ * 12341.11%
+ * 68%
+ * 12341%
+
+<!-- Markdeep: --><script src="../markdeep.js?taylorial"></script>

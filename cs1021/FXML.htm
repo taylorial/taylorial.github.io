@@ -1,0 +1,89 @@
+<meta charset="utf-8" lang="en" /><style class="fallback">body{visibility:hidden;}</style>
+
+**FXML**
+
+# Declarative versus Imperative Syntax
+
+## Imperative Syntax
+
+In English grammar, an **imperative sentence** is
+a sentence that gives instructions that expresses a command.  With
+imperative programming you give step-by-step instructions to the
+compiler for what it should do.
+
+The GUI layout created in [EventHandlingFX](EventHandlingFX) uses an
+imperative syntax.  For example,
+
+~~~~ Java
+    @Override
+    public void start(Stage primaryStage) {
+        Pane root = new StackPane();
+        label = new Label("Here is some text that can be manipulated with the button above.");
+        Button clickMe = new Button("Click Me");
+        clickMe.setOnAction(this::handleClickMe);
+        root.getChildren().addAll(label, clickMe);
+
+        primaryStage.setTitle("Simple GUI");
+        primaryStage.setScene(new Scene(root, 400, 300));
+        primaryStage.show();
+    }
+~~~~
+
+Here we tell the compiler to:
+
+1. Create a `StackPane` object
+1. Create a `Label` object
+1. Create a `Button` object
+1. Attach the `handleClickMe()` method as a listener to the button
+1. Add the label and button to the stack pane
+1. Set the title for the window
+1. Set the scene for the stage to a newly created `Scene` object with the stack pane in it
+1. Show the stage
+
+The compiler is required to generate code that completes the tasks described
+in exactly this order.  This is a powerful way to tell the computer what I
+want to have happen.  However, the above instructions provide more specificity than
+I actually care about.  For example, the order of the first three steps
+do not really matter.  In fact, the order of most of these steps is
+arbitrary.  With an imperative programming approach, I must specify **how** to
+accomplish the desired task(s).
+
+## Declarative Syntax
+
+In English grammar, a **declarative sentence** is a sentence
+in the form of a statement.  Declarative sentences describe
+what is true.  Declarative sentences are the most common form
+of sentence since they communicate what currently is efficiently.
+
+Similarly, with declarative programming we write code that
+describes what we want but not necessarily how to get it.
+
+JavaFX provides a tool for declaratively describing GUI layouts.
+For example, the GUI layout above could be described using
+JavaFX's FXML as shown below:
+
+~~~~ Java
+<StackPane fx:controller="ClickMeController" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label fx:id="message" text="Here is some text that can be manipulated with the button above." />
+      <Button text="Click Me!" onAction="#handleClickMe" />
+   &lt&#xFEFF;/children>
+&lt&#xFEFF;/StackPane>
+~~~~
+
+We'll get into the details below, but you should see that we
+have declared that we have a `StackPane` that contains children
+within it: a `Label` and a `Button`.  Looking more closely,
+we see that the label contains the text "Here is some text
+that can be manipulated with the button above." and the button
+has "Click Me!" on it.
+
+The `fx:controller` attribute specifies the class containing
+controller code (code that describes how UI elements will
+respond to actions).  The `fx:id` specifies the name of the
+instance variable in the controller class that is associated
+with the label.  The `onAction` specifies the method in the
+controller class that will be called when the button is
+activated.
+
+<!-- Markdeep: --><script src="../markdeep.js?taylorial"></script>

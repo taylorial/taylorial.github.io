@@ -1,0 +1,138 @@
+<meta charset="utf-8" lang="en" /><style class="fallback">body{visibility:hidden;}</style>
+
+**GUI Basics**
+     Graphical User Interface Basics
+
+!!!
+    Programming in a windows environment involves creating a graphical user
+    interface.  Java provides many standard classes to help with this process.
+
+# JOptionPane Methods
+
+In SE1011 you were exposed to a few class methods from the [JOptionPane](http://docs.oracle.com/javase/8/docs/api/javax/swing/JOptionPane.html) class.  A class method is a method that is declared as static and is called with the class name before the dot (instead of an object name).
+
+Here are some examples:
+
+~~~~ Java
+JOptionPane.showMessageDialog(null, "Hello.");
+~~~~
+
+
+Produces the Show Message Dialog Box: ![Show Message Dialog Box](showMessageDialog.png)
+
+There are two parameters passed to the method.
+
+* The first, null, is the parentComponent where the null indicates that the default Frame should be used as the parent.
+* The second, "Hello.", is the string to be displayed in the dialog box
+~~~~ Java
+JOptionPane.showInputDialog(null, "Enter a goofy number", 
+        "I am a title, see me roar", JOptionPane.ERROR_MESSAGE);
+~~~~
+
+
+Produces the Show Input Dialog Box: ![Show Input Dialog Box](showInputDialog.png)
+
+Here we have four parameters.  The first two are the same as in the showMessageDialog example.
+
+* The third, "I am a title, see me roar", is the string to be displayed in the title bar of the dialog box
+* The fourth, JOptionPane.ERROR_MESSAGE, is an integer value defined in the [JOptionPane](http://docs.oracle.com/javase/8/docs/api/javax/swing/JOptionPane.html) class.  This specifies the type of icon to be displayed in the dialog box
+
+showInputDialog returns a String, but we are ignoring that value since we don't assign the returned value to a String variable.
+
+~~~~ Java
+if(JOptionPane.NO_OPTION == JOptionPane.showConfirmDialog(null, "Play another game?", "Confirmation",
+    JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)) {
+  System.out.println("Done");
+} else {
+  System.out.println("Continuing");
+}
+~~~~
+
+
+Produces the Show Confirm Dialog Box: ![Show Confirm Diaglog Box](showConfirmDialog.png)
+
+If the user selects the "No" option, then "Done" will be displayed to the console.  Otherwise, "Continuing" is displayed to the console.
+
+We could list out what all of the parameters represent, but it would be better for you to get used to reading the [Java documentation provided by Sun](http://docs.oracle.com/javase/8/docs/api/index.html).  There is detailed [documentation for the JOptionPane](http://docs.oracle.com/javase/8/docs/api/javax/swing/JOptionPane.html) class with a specific entry for the [five parameter showConfirmDialog](http://docs.oracle.com/javase/8/docs/api/javax/swing/JOptionPane.html#showConfirmDialog%28java.awt.Component,%20java.lang.Object,%20java.lang.String,%20int,%20int%29) method used above.
+
+I encourage you to spend some time getting familiar with how to read Sun's documentation pages.  Once you get comfortable with how to interpret these pages, you'll find them very handy.
+
+~~~~ Java
+Object[] options = { "Bye", "Second", "Eric" };
+JOptionPane.showOptionDialog(null, "Game over; you're broke.", "Title",
+    JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
+    null, options, options[1]);
+~~~~
+
+
+Produces the Show Option Dialog Box: ![Show Option Dialog Box](showOptionDialog.png)
+
+This method allows you to present the user with an array of options and specify the default option.
+
+
+# JFrame
+
+The [JFrame](http://docs.oracle.com/javase/8/docs/api/javax/swing/JFrame.html) class provides us with a content pane on which we can place a number of <acronym title="Graphical User Interface">GUI</acronym> components.  The content pane is a [Container](http://docs.oracle.com/javase/8/docs/api/java/awt/Container.html) object.  A Container is a generic [AWT](http://docs.oracle.com/javase/8/docs/api/java/awt/package-summary.html#package_description) object that allows multiple AWT components to be added to it.  In order to create a JFrame object and access its content pane, we need to do something like this:
+
+~~~~ Java
+JFrame frame = new JFrame("Title bar text");
+Container pane = frame.getContentPane();
+~~~~
+
+
+Once we have a content pane, we can start adding <acronym title="Graphical User Interface">GUI</acronym> components to it.  Some useful <acronym title="Graphical User Interface">GUI</acronym> components include: [JButton](http://docs.oracle.com/javase/8/docs/api/javax/swing/JButton.html), [JLabel](http://docs.oracle.com/javase/8/docs/api/javax/swing/JLabel.html), and [JTextField](http://docs.oracle.com/javase/8/docs/api/javax/swing/JTextField.html) (take a look at the "Direct Known Subclasses" of [JComponent](http://docs.oracle.com/javase/8/docs/api/javax/swing/JComponent.html) for others).
+
+In addition to adding components, the content pane has a number attributes that can be set.  These attributes are set using setter methods like [setSize()](http://docs.oracle.com/javase/8/docs/api/java/awt/Component.html#setSize%28int,%20int%29), [setLocation()](http://docs.oracle.com/javase/8/docs/api/java/awt/Component.html#setLocation%28int,%20int%29), [setBackground()](http://docs.oracle.com/javase/8/docs/api/java/awt/Component.html#setBackground%28java.awt.Color%29), [setDefaultCloseOperation()](http://docs.oracle.com/javase/8/docs/api/javax/swing/JFrame.html#setDefaultCloseOperation%28int%29), etc...
+
+Once all of the components have been added and the attributes have been set as desired, we must tell the JFrame object to be visible (by default, the object is not visible).  This is done via a call to [setVisible()](http://docs.oracle.com/javase/8/docs/api/java/awt/Component.html#setVisible%28boolean%29).
+
+We can create a window like this: ![Simple JFrame](simpleJFrame.png)
+
+~~~~ Java
+public static void main(String[] args) {
+  JFrame frame = new JFrame("Dog and Pony Show");
+  frame.setSize(250, 100);
+  frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+  frame.setLayout(new FlowLayout());
+  frame.add(new JLabel("Dog"));
+  frame.setVisible(true);
+}
+~~~~
+
+
+The code performs the following:
+
+* Creates a window by instantiating a JFrame object with a title of "Dog and Pony Show"
+* Sets the size of the window to 250 (width) x 100 (height)
+* Tells the program to exit once the window is closed
+* Use the [FlowLayout](http://docs.oracle.com/javase/8/docs/api/java/awt/FlowLayout.html) layout manager (adds components like a text editor typically adds text: left to right and wraps when there is too much on a line)
+* Add a text label with "Dog" to the window
+* Makes the window visible (displays it on the screen)
+
+# Extending JFrame
+
+Instead of creating a JFrame object and adding a bunch of components to it, we typically will extend the JFrame class.  The subclass is then responsible for managing the components within the JFrame.  The sample from above could be rewritten to produce the same result as follows:
+
+~~~~ Java
+public class SimpleWindow extends JFrame {
+
+  private final static int WIDTH = 250;
+  private final static int HEIGHT = 100;
+
+  public static void main(String[] args) {
+    JFrame gui = new SimpleWindow();
+  }
+
+  public SimpleWindow() {
+    setTitle("Dog and Pony Show");
+    setSize(WIDTH, HEIGHT);
+    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    setLayout(new FlowLayout());
+    add(new JLabel("Dog"));
+    setVisible(true);
+  }
+}
+~~~~
+
+
+<!-- Markdeep: --><script src="../markdeep.js?taylorial"></script>

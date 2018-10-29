@@ -1,0 +1,545 @@
+<meta charset="utf-8" lang="en" /><style class="fallback">body{visibility:hidden;}</style>
+
+**LinkedList**
+
+A `LinkedList` stores a collection of references to objects.
+
+# Overview
+
+A [`LinkedList`](https://docs.oracle.com/javase/8/docs/api/java/util/LinkedList.html) is a data structure that organizes the data contained within it by making each location, called a node, responsible for holding references to its immediate neighbors in the list (along with a reference to the actual data we wish to store in the list).  It's a fascinating data structure, but before we get too far, it's time for a quiz.
+
+    ![[images?](http://www.flickr.com/photos/yugen/3699756381/)](tp1.jpg)
+    ![[above](http://www.flickr.com/photos/juditk/5068482159/)](books2.jpg)
+    ![[about the](http://www.flickr.com/photos/red-hand-records/3523000114/)](nuts.jpg)
+    ![[similar](http://www.flickr.com/photos/usarmyafrica/4089237373/)](fire1.jpg)
+    ![[What is](http://www.flickr.com/photos/lazurite/4189008239/)](books1.jpg)
+
+If you answered that each individual is balancing an object on his/her head, you are half way to understanding the linked list.  Just for fun, we'll call each person in the photos above a **node**.  A node is something that can keep track of an object (by balancing it on his/her head, in this case).
+
+But nodes can do more than just keep track of an object.  Consider the following nodes...
+
+![http://www.flickr.com/photos/bijapuri/4737039561/](hands.jpg)
+
+Each node here is holding the hand of his/her two closest neighbors.  This is cool, but not nearly as cool as it would be if each was balancing an object on his/her head.  Shut your eyes and see if you can you imagine objects appearing on their heads?  If so, you've just realized two things: 1) pretty much how a linked list works and 2) that it really is cool.
+
+The `LinkedList` itself just manages how to get to the front of the chain of nodes and the back of the chain of nodes.  Essentially, the `LinkedList` contains two attributes: `head` -- a reference to the node at the beginning of the list and `tail` -- a reference to the node at the end of the list.
+
+## In Pictures
+
+Our `LinkedList` keeps track of the first (or `head`) node and the last (or `tail`) node.  Each node is responsible for holding hands with its neighbors.  Of course, if you don't have a neighbor, leaving your hand dangling in the air just looks stupid, so our stick figures put their hand(s) in their pocket(s) to signify that they don't have a neighbor.
+
+A `LinkedList` containing one star consists of a reference to the head and tail (which happen to be the same thing) and one node balancing a star on its head and both hands in its pockets.
+
+![LinkedList with One Element](llStickOne.png)
+
+A `LinkedList` with two stars in it consists of a head pointing to the first node and a tail pointing to the last node.  As expected, the two nodes hold hands because they are neighbors.  I can get to the second element in my list by either going directly to it (through the `tail` reference) or by going to the first element and asking it for its next neighbor.
+
+![LinkedList with Two Elements](llStickTwo.png)
+
+If we add a really fat star to the `LinkedList` above it will look something like this:
+
+![LinkedList with Three Elements](llStickThree.png)
+
+I can't get to the second element directly now.  I either have to go the the first element and ask to see its next neighbor or go to the last element and ask to see its previous neighbor.  Either way, it is bound to be a lot of fun, but I've heard it's hard to balance without a big toe, and these guys don't have any toes.  Having them balance stars on their heads seems like a lot to ask, even if they aren't real stars, so in the rest of this discussion we'll draw the `LinkedList` and Node objects in a way that describes what's going on in memory.
+
+## In Textbookish Pictures
+
+### Empty `LinkedList`
+
+![Empty LinkedList](llEmpty.png)
+
+### `LinkedList` with One Element
+
+![LinkedList with One Element](llOne.png)
+
+### `LinkedList` with Two Elements
+
+![LinkedList with Two Elements](llTwo.png)
+
+### `LinkedList` with Three Elements
+
+![LinkedList with Three Elements](llThree.png)
+
+## In Code
+
+In Java, we declare the `LinkedList&lt&#xFEFF;E>` to implement the `List&lt&#xFEFF;E>` interface and define an inner `Node` class like this:
+
+~~~~ Java
+public class LinkedList&lt&#xFEFF;E> implements List&lt&#xFEFF;E> {
+
+  private Node head;
+  private Node tail;
+
+  private class Node {
+    private E value;
+    private Node next;
+    private Node prev;
+
+    public Node(E val, Node nxt, Node prv) {
+      value = val;
+      next = nxt;
+      prev = prv;
+    }
+  }
+
+  public LinkedList() {
+    clear();
+  }
+
+  @Override
+  public void clear() {
+    head = null;
+    tail = null;
+  }
+  // ...
+~~~~
+
+# Introduction to add() (to the end)
+
+If the list is empty, adding an element involves
+
+ 1. creating a `Node` with no neighbors and the element referenced as its value.
+ 2. Pointing the `head` of our list to the newly created node
+ 3. Pointing the `tail` of our list to the newly created node
+
+You can see this in the code below and the graphic below the code. 
+
+If the list has at least one element, then we leave the `head` of the list alone, need to tell what used to be the last node in the list that it needs to point to the newly created node (steps 4 and 5 below).
+
+## In Code
+
+~~~~ Java
+  @Override
+  public boolean add(E element) {
+    Node newNode = new Node(element, null, tail);   // 1
+    if(head == null) {
+      head = newNode;                               // 2
+      tail = newNode;                               // 3
+    }else{
+      tail.next = newNode;                          // 4
+      tail = newNode;                               // 5
+    }
+    return true;
+  }
+~~~~
+
+## In Pictures
+
+Red indicates what it looked like before the addition and green indicates what it looks like after the addition.
+
+![Adding to an Empty LinkedList](llAddA.png)
+
+![Adding to a Non-Empty LinkedList](llAddB.png)
+
+## In Song
+
+<del>Fa la la la la</del>
+
+# isEmpty() and size()
+
+## In Code
+
+~~~~ Java
+  @Override
+  public boolean isEmpty() {
+    return head==null;
+  }
+
+  @Override
+  public int size() {
+    int count = 0;
+    Node walker = head;
+    while(walker!=null) {
+      walker = walker.next;
+      ++count;
+    }
+    return count;
+  }
+~~~~
+
+* We know the list is empty if and only if there is no first element (`head==null`), so that's a simple method to implement.
+* If you were paying attention earlier, you may have noticed that my `LinkedList` class doesn't keep track of its size.  As a result, any time `size()` is called, we must walk through all the elements in the list.
+* This makes size() a O(n) algorithm, but I've chosen to do it this way so we can focus on managing the links in the `LinkedList` and avoid getting distracted by incrementing and decrementing a size attribute.
+
+## Secret Time
+
+* If you've made it this far, you deserve to know at least one of my secrets.
+* I don't like doing the same thing over and over again.
+* I've noticed that dealing with a linked list means that I'll be walking through it frequently.
+* I've made a secret method to help with this[^secret]
+* Okay, so how do we keep a secret?[^private] We'll make it `private`.
+
+~~~~ Java
+  private Node walkTo(int index) {
+    if(index < 0) {
+      throw new IndexOutOfBoundsException("Index: " + index);
+    }
+    Node walker = head;
+    int i = 0;
+    try {
+      for(; i < index; ++i) {
+        walker = walker.next;
+      }
+    } catch(NullPointerException e) {
+      throw new IndexOutOfBoundsException("Index: " + index
+          + ", Size: " + i);
+    }
+    return walker;
+  }
+~~~~
+
+* I'm catching the `NullPointerException` and creating an `IndexOutOfBoundsException`, why?[^exception]
+* I can now get a reference to the $i^{th}$ node by calling `walkTo(i-1)`.
+* I'll use this secret to implement `get()` and `set()`:
+
+~~~~ Java
+  @Override
+  public E get(int index) {
+    Node node = walkTo(index);
+    if(node==null) {
+      throw new IndexOutOfBoundsException("Index: " + index
+          + ", Size: " + index);
+    }
+    return node.value;
+  }
+
+  @Override
+  public E set(int index, E element) {
+    Node node = walkTo(index);
+    if(node==null) {
+      throw new IndexOutOfBoundsException("Index: " + index
+          + ", Size: " + index);
+    }
+    E oldValue = node.value;
+    node.value = element;
+    return oldValue;
+  }
+~~~~
+* Notice that if `walkTo(i)` returns `null`, it means that `i` is one past the end of my list;  Therefore, I want to throw an `IndexOutOfBounds` exception.
+
+
+# Introduction to add() with an Index
+
+* The `List` interface contains an `add` method that specifies where in the list the element should be added.
+* The first step is for us to walk to the appropriate spot in the list using our handy-dandy, super-secrect `walkTo()` method. (step 1 in code)
+* Once there, we have three possibilities:
+  1. We are at the end of the list
+    - The `node` returned is `null` if we are at the end of the list because we will have just walked one step past the last node in the list.
+    - Since we already have a method implemented to add to the end of a list, we can just call it.
+  2. We are at the beginning of the list
+    - We know we are at the beginning if the `node` returned has a `prev` with `null` in it.
+    - Here we create a new node, connect it with what used to be the first element in the list, and update the `head` of the list (steps 2-4 in code)
+  3. If we are not at the beginning and not at the end, then we must be somewhere in the middle
+    - Here we create a new node and introduce it to its new neighbors, who are no longer neighbors (steps 5-7)
+
+## In Code
+
+~~~~ Java
+  @Override
+  public void add(int index, E element) {
+    Node node = walkTo(index);                                 // 1
+    if(node==null) {             // At end of list
+      add(element);
+    } else if(node.prev==null) { // At beginning of list
+      Node newNode = new Node(element, node, null);            // 2
+      node.prev = newNode;                                     // 3
+      head = newNode;                                          // 4
+    } else {                     // Somewhere in middle of list
+      Node newNode = new Node(element, node, node.prev);       // 5
+      node.prev = newNode;                                     // 6
+      newNode.prev.next = newNode;                             // 7
+    }
+  }
+~~~~
+
+## In Pictures
+
+![Adding to the Beginning of a LinkedList](llAddIndexA.png)
+
+![Adding to the Middle of a LinkedList](llAddIndexB.png)
+
+# Iterators and the `LinkedList`
+
+* The `List` interface provides for two types of iterator interfaces: `Iterator` and `ListIterator`.
+* A class that implements the `Iterator` interface must provide three methods:
+  + `boolean hasNext()` -- returns true if there is another element accessible to the iterator.
+  + `E next()` -- advances the iterator to the next element in the list and returns the value stored there.
+  + `void remove()` -- removes the element returned by the last call to `next()`.  Note: you can only call `remove()` if you have previously called `next()`.
+* A class that implements the `ListIterator` interface must do everything an `Iterator` does along with a number of other methods.  These include:
+  + `boolean hasPrevious()` -- returns true if there is a previous element accessible to the iterator.
+  + `E previous()` -- returns the value of the element the iterator is currently pointing to and moves the iterator to the previous element in the list.
+  + `int nextIndex()` -- returns the location of the next element seen by the iterator as an index value.
+  + `int previousIndex()` -- returns the current location of the iterator as an index value.
+  + `void add(E element)` -- inserts an element into the list at the current position of the iterator.
+  + `void set(E element)` -- replaces the element in the list at the current position of the iterator.
+* Since the `ListIterator` does everything an `Iterator` can do, we'll just implement the `ListIterator` and use it to provide functionality for both the `Iterator` and `ListIterator`.
+* We'll need to keep track of three things in our list iterator:
+  1. `location` -- Where the iterator is currently pointing (an actual reference to the `Node` in the list).
+  2. `index` -- Where the iterator is currently pointing (an integer corresponding to the location in the list).
+  3. `isModifiable` -- A `boolean` indicating whether we can call `remove()`, `add()`, or `set()`.
+* This class will be an inner class so it will have access to the `LinkedList`'s attributes.
+
+## In Code
+
+~~~~ Java
+  private class LLIterator implements ListIterator&lt&#xFEFF;E> {
+
+    private Node location;
+    private int index;
+    private boolean isModifiable;
+
+    private LLIterator() {
+      location = new Node(null, head, null);
+      index = -1;
+      isModifiable = false;
+    }
+~~~~
+
+* We'll continue on with more of this inner class in a moment, but let's take a look at the construtor first.
+* When an iterator starts out, it points to one element before the first element in the list (index of -1).
+* Since we don't have a `Node` sitting one element before the first element in the list, we need to create one and have it point to the first element in the list, i.e., the `head`.
+* Recall that the `Node` constructor takes in `(value, next, previous)` so the `location` of the iterator is a node with no value whose next node is the first node in the list.
+
+# ListIterator.hasNext/Previous()
+
+* If `location` doesn't have a next, then we are at the end of the list, so `hasNext()` is just a simple check:
+* The only time we don't have a previous element is when we are one position before the beginning of the list, so `hasPrevious()` is a simple check against our index position.[^hasnext]
+
+~~~~ Java
+    @Override
+    public boolean hasNext() {
+      return location.next!=null;
+    }
+
+    @Override
+    public boolean hasPrevious() {
+      return index!=-1;
+    }
+~~~~
+
+# ListIterator.next/previousIndex() and ListIterator.set()
+
+* `nextIndex()` and `previousIndex()` are pretty simple too.
+* Our implementation of `set()` doesn't bother to make sure I have a legal index before assigning `location.value` to the new element.  Can you see why it's not needed?
+
+~~~~ Java
+    @Override
+    public int nextIndex() {
+      return index+1;
+    }
+
+    @Override
+    public int previousIndex() {
+      return index;
+    }
+
+    @Override
+    public void set(E element) {
+      if(!isModifiable) {
+        throw new IllegalStateException("Must call next or previous before remove");
+      }
+      location.value = element;
+    }
+~~~~
+
+# ListIterator.next/previous()
+
+* Our implementation of `next()` calls `hasNext()` to make sure we have something to move to, and then makes the move.
+* `previous()` is slightly more complicated because we need to treat the situation where we are at the first element in the list with a bit more care.
+* Suppose I do the following:
+  + Create a list iterator (at index -1).
+  + Call next which advances the iterator to index 0 and returns the first element in the list.
+* At this point, I should be able to call `previous()` -- it should return the first element in the list and move to index -1.
+* That's all good, but to move to index -1, we need to create a temporary `Node` for the iterator to point to (exactly like we did in the constructor).
+
+~~~~ Java
+    @Override
+    public E next() {
+      if(!hasNext()) {
+        throw new NoSuchElementException("No next element available.");
+      }
+      isModifiable = true;
+      location = location.next;
+      ++index;
+      return location.value;
+    }
+
+    @Override
+    public E previous() {
+      if(!hasPrevious()) {
+        throw new NoSuchElementException("No next element available.");
+      }
+      E value = location.value;
+      if(index==0) {
+        location = new Node(null, head, null);
+        index = -1;
+        isModifiable = false;
+      } else {
+        location = location.prev;
+        --index;
+        isModifiable = true;
+      }
+      return value;
+    }
+~~~~
+
+# ListIterator.remove()
+
+* We now have all but `add()` and `remove()` implemented.
+* These two are the most complicated of the methods in this class because we need to handle things differently depending on the position of the iterator when add/remove is called.
+* `add()` will be left as an exercise for the reader.... enjoy.
+* In the code below, we have two conditionals.
+* The first conditional determines if the iterator is either:
+  + At the beginning of the list (1) in which case we update the `head` of the list to point to the second element in the list, or
+  + Not at the beginning of the list (2) in which case we update the previous node so that it's `next` now points to one after the iterator.
+* The second conditional determines if the iterator is either:
+  + At the end of the list (3) in which case we update the `tail` of the list to point to the second to last element in the list, or
+  + Not at the end of the list (4) in which case we update the next node so that it's `prev` now points to one before the iterator.
+
+## In Code
+
+~~~~ Java
+    @Override
+    public void remove() {
+      if(!isModifiable) {
+        throw new IllegalStateException("Must call next or previous before remove");
+      }
+      if(location.prev==null) {  // At beginning of list
+        LinkedList.this.head = location.next;        // 1
+      } else {                   // In middle of list
+        location.prev.next = location.next;          // 2
+      }
+      if(location.next==null) {  // At end of list
+        LinkedList.this.tail = location.prev;        // 3
+      } else {                   // In middle of list
+        location.next.prev = location.prev;          // 4
+      }
+      isModifiable = false;
+    }
+
+    @Override
+    public void add(E element) {
+      throw new UnsupportedOperationException("ListIterator.add() not supported.");
+    }
+
+  }
+~~~~
+
+## In Pictures
+
+![Removed the only element from a LinkedList](llRemoveItrA.png)
+
+![Removed the first element from a LinkedList](llRemoveItrB.png)
+
+![Removed an element from the middle of a LinkedList](llRemoveItrC.png)
+
+# Iterator-Related Methods in the `LinkedList`
+
+Meanwhile, back in the outer class, i.e., the `LinkedList` class, we've got more to do.  We can implement the iterator-related methods:
+
+~~~~ Java
+  @Override
+  public Iterator&lt&#xFEFF;E> iterator() {
+    return new LLIterator();
+  }
+
+  @Override
+  public ListIterator&lt&#xFEFF;E> listIterator() {
+    return new LLIterator();
+  }
+
+  @Override
+  public ListIterator&lt&#xFEFF;E> listIterator(int index) {
+    if(index < 0) {
+      throw new IndexOutOfBoundsException("Index: " + index);
+    }
+    ListIterator&lt&#xFEFF;E> itr = new LLIterator();
+    int i=0;
+    try {
+      for(; i < index; ++i) {
+        itr.next();
+      }
+    } catch(NoSuchElementException e) {
+      throw new IndexOutOfBoundsException("Index: " + index
+          + ", Size: " + i);
+    }
+    return itr;
+  }
+~~~~
+
+* Our `LLIterator` class provides all the functionality for the `Iterator` interface, so we can just return an `LLIterator` object for the first method.
+* The second method is equally simple to implement since the first two return an iterator that points to one before the start of the list.
+* The `listIterator(int index)` involves one additional step beyond just creating the iterator.  Here we need to advance the iterator to position `index-1`.
+  + If `index=0` the iterator should point to one before the start of the list (so that when you call `next()` you get the element at index 0.)
+  + If `index=1` the iterator should point to the start of the list (so that when you call `next()` you get the element at index 1.)
+  + If `index=20` the iterator should point to the twentieth of the list (so that when you call `next()` you get the element at index 20.)
+  + If the index passed in is outside of the range of legitimate values, an `IndexOutOfBoundsException` is thrown.
+
+# `LinkedList.remove()`
+
+* Now that we have the iterator defined, we can use it to help implement many of the remaining methods in the `LinkedList` class.
+* For example, to remove the element at a given index, we can just get an iterator at index (actually one before it), call next, and then use the iterator's remove method:
+
+~~~~ Java
+  @Override
+  public E remove(int index) {
+    ListIterator&lt&#xFEFF;E> itr = listIterator(index);
+    E value = itr.next();
+    itr.remove();
+    return value;
+  }
+~~~~
+
+* We can also use the iterator to navigate the list while we look for a match to a particular value:
+
+~~~~ Java
+  @Override
+  public boolean remove(Object target) {
+    boolean removed = false;
+    ListIterator&lt&#xFEFF;E> itr = listIterator();
+    while(!removed && itr.hasNext()) {
+      if(target.equals(itr.next())) {
+        itr.remove();
+        removed = true;
+      }
+    }
+    return removed;
+  }
+
+  @Override
+  public boolean contains(Object target) {
+    Iterator&lt&#xFEFF;E> itr = iterator();
+    boolean found = false;
+    while(!found && itr.hasNext()) {
+      found = target.equals(itr.next());
+    }
+    return found;
+  }
+
+  @Override
+  public int lastIndexOf(Object target) {
+    int index = size();
+    ListIterator&lt&#xFEFF;E> itr = listIterator(index);
+    boolean found = false;
+    while(!found && itr.hasPrevious()) {
+      found = target.equals(itr.previous());
+      --index;
+    }
+    if(!found) {
+      index = -1;
+    }
+    return index;
+  }
+~~~~
+
+* There are a few other methods that we haven't implemented here, but those will be left as an exercise.
+
+[^secret]: Later we'll see that an iterator is designed to provide very similar functionality, but we're going to build up to that gradually.
+
+[^private]: ... posting it on the internet for the world to see is probably not helping ensure secrecy here.
+
+[^exception]: Because `NullPointerException` would be caused by walking off the end of the list, which will only happen if we are given an index that is too large for our list.
+
+[^hasnext]: With our implementation, we can't easily use the index to implement `hasNext()` since we didn't include a `size` attribute in the `LinkedList` class.  We could call `size()`, doing something like:  `return index < size()-1;` but that wouldn't be very efficient.  Do you know why?  You should.
+
+<!-- Markdeep: --><script src="../markdeep.js?taylorial"></script>

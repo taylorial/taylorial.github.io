@@ -1,0 +1,140 @@
+<meta charset="utf-8" lang="en" /><style class="fallback">body{visibility:hidden;}</style>
+
+**Generics**
+
+!!!
+    The main purpose of generics is to generate compiler errors.... __this is a good thing__.
+
+# Why Generics
+
+First, a very brief history...  Generics were not part of the original design of the Java language.  Generics were added to the Java language in 2004 with the release of J2SE 5.0.
+
+Generics are said to provide static type safety for collections and eliminate the need for most typecasts.  Essentially, they provide a mechanism for the developer to express her intent and then allows the compiler to verify that she has not violated that intent.  Consider the following example:
+
+~~~~ Java
+Collection words = new ArrayList();
+words.add("first");
+words.add("second");
+words.add("third");
+for(Object word : words) {
+  System.out.println(word + " is " + ((String)word).length() + " in length.");
+}
+~~~~
+
+Here we're not making use of generics, so the compiler has no idea what we are storing in the collection.  As a result, we had to cast the `word` object reference to a `String` reference before we are able to call the `length()` method on the string in the collection.  That's not the big deal though.  The big deal is that I can add anything to this collection.  For example, the last `words.add("third")` could be replaced with: `words.add(3)` and the compiler is still happy.[^happy]
+
+With generics, we can be much more explicit in declaring our intented use for the collection:
+
+~~~~ Java
+Collection&lt&#xFEFF;String> words = new ArrayList&lt&#xFEFF;>();
+words.add("first");
+words.add("second");
+words.add("third");
+for(String word : words) {
+  System.out.println(word + " is " + word.length() + " in length.");
+}
+~~~~
+
+Here we have declared our intent to only store references to `String`s within our collection.  We no longer need to get `Object` references and then cast them to `String` references, but, more importantly, the compiler will be sad, perhaps even angry, if we try to do something stupid like: `words.add(3);`.  When do you want an angry compiler?  Anytime you are doing something stupid.  The compiler has now become your friend.  Instead of letting you do something stupid that would won't discover until later (perhaps much later), the compiler now cares so much about you that it won't let you proceed with your idiocy.
+
+!!!
+    Generics allow the compiler to become your good friend.  With generics you can tell the compiler about your dreams for the software you are developing and the compiler can tell you when you are doing things that will turn your dream into a nightmare.[^nightmare]
+
+# Define Your Own Class with Generic Support
+
+We can define our own classes that use generics.  In the declaration of the class, we need to add `&lt&#xFEFF;SomeLabel>` immediately after the class name.  For example, in our [simple `ArrayList&lt&#xFEFF;E>` implementation](ArrayList), we had:
+
+~~~~ Java
+public class ArrayList&lt&#xFEFF;E> implements List&lt&#xFEFF;E>, RandomAccess {
+~~~~
+
+* The `&lt&#xFEFF;E>` specified that `E` will be the identifier for our generic type.
+* When an `ArrayList` is declared, we can specify the type of data that will be stored within it.  E.g., `ArrayList&lt&#xFEFF;String>`.
+* The `E` in the definition of the class is replace with the actual type used in the declaration of the `ArrayList` (in this case, `String`).
+* Our attribute within our class was declared as:
+~~~~ Java
+  private E[] elements = null;
+~~~~
+* This says that we have a reference to an array of references and that each reference within the array is of type `E`.
+* In reality, the array is really an array of `Object` references; however, we cast this to an array of `E` references when the array is created[^array]
+~~~~ Java
+    E[] temp = (E[])new Object[size()+1];
+~~~~
+* As a result, the compiler can ensure that whenever we place an element in the array, it is compatible with the type of references intended to be stored in the array (`E`, or in our example, `String`).
+* By making use of generics we equip the compiler with the ability to ensure that we never add something to the `ArrayList` that isn't of type `E` (or a subclass).
+
+!!!
+    Compiler errors are good if they keep you from making mistakes.  It is much easier to find your mistakes if the compiler finds them for you.
+
+# Specifying Constraints on Generics
+
+Suppose we have a `Shape` hierarchy that consists of an abstract `Shape` class that includes an abstract `calculateArea` method.  In addition, there are a number of concrete subclasses: `Circle`, `Square`, `Triangle`, etc... that provide concrete implementations of the `calculateArea()` method.
+
+Consider the following implementation of a `totalArea()` method:
+
+~~~~ Java
+public static double totalArea(Collection&lt&#xFEFF;Shape> shapes) {
+    double totalArea = 0;
+    for(Shape shape : shapes) {
+        if(shape!=null) {
+            totalArea += shape.calculateArea();
+        }
+    }
+    return totalArea;
+}
+~~~~
+* By specifying a collection of `Shape`s we can loop through each shape without needing to cast each reference to a `Shape` reference before calling `calculateArea`.
+* The following code will work just fine with our `totalArea` method:
+~~~~ Java
+   List&lt&#xFEFF;Shape> shapes = new LinkedList&lt&#xFEFF;>();
+   for(int i=0; i < 10; ++i) {
+       shapes.add(new Circle(Math.random()));
+   }
+   System.out.println(totalArea(shapes));
+~~~~
+      where the constructor for the `Circle` class takes the radius of the circle as an argument.
+* We could have added `Square`s instead of `Circle`s or some combination of any concrete shapes in the hierarchy and things will continue function properly; however, the following will make a good day bad, or a bad day worse:
+~~~~ Java
+   List&lt&#xFEFF;Circle> shapes = new LinkedList&lt&#xFEFF;>();
+   for(int i=0; i < 10; ++i) {
+       shapes.add(new Circle(Math.random()));
+   }
+   System.out.println(totalArea(shapes));
+~~~~
+* Adding `Circle`s to a collection of `Circle`s is still a happy affair, but things turn gloomy when we try to call `totalArea()`.
+* The compiler won't let us make the call because `totalArea()` needs a collection of `Shape` references and we are passing it a collection of `Circle` references.
+  + Not so fast, you object.  A `Circle` **is a** `Shape`, you say?
+  + Right you are, but this still isn't allowed... and for good reason.
+  + Suppose we did allow this, once in the `totalArea` method, we have a collection of `Shape`s, so from within the method, I should be able to add `Square`s, `Triangle`s, and maybe even a `Rhombus`!  Once the method returns, I'm back to my collection of `Circle`s, but to my horror it's filled with shapes for which I don't know the plural name.  Is it rhombuses or rhombi?
+  + Whether it is rombuses or rhombi, it's just bad for them to be in my collection of circles, and so the compiler has graciously prevented me from making such a grave mistake.
+* Okay, fine.  But in this case, it sure would be nice if we could pass a collection of `Circle`s or whatever and not be required to have a collection of `Shape`s.
+* Bully for you for continuing to read this because now you are going to find out how.
+* Our current implementation over specifies what we can pass to `totalArea`.  It's as if the porridge is too hot.
+* We could underspecify it like this:
+~~~~ Java
+public static double totalArea(Collection shapes) {
+~~~~
+  
+
+but here the porridge is too cold...
+
+* Here anything could be passed in.
+* We'd also need to cast the references to `Shape` references before we called `calculateArea` and this could result in a `ClassCastException` at runtime (if somebody passed in something that wasn't a shape).
+* To make Goldilocks happy, we need to get the porridge just right:
+~~~~ Java
+public static double totalArea(Collection&lt&#xFEFF;? extends Shape> shapes) {
+~~~~
+* Here we make use of a generic wildcard.
+* The wildcard says anything goes, but then we constrain it by adding the `extends Shape`.
+* We are saying that `totalArea` should accept any collection as long as the collection is holding `Shape`s or references from any type that extends from `Shape` (like, `Circle`, `Square`, `Rhombus`, etc...).
+* We're now ready to let Goldilocks go break a chair.[^goldilocks]
+
+[^happy]: Well, as happy as a compiler can be...
+
+[^nightmare]: or something like that
+
+[^array]: from the implementation of `add()`
+
+[^goldilocks]: If you ask me, she was doing the bears a favor.  How is it possible that a baby bear could sit on a chair and **not** break it, but a little girl causes it to fall to pieces?
+
+<!-- Markdeep: --><script src="../markdeep.js?taylorial"></script>

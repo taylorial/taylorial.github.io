@@ -1,0 +1,157 @@
+<meta charset="utf-8" lang="en" /><style class="fallback">body{visibility:hidden;}</style>
+
+# Introduction
+
+The `format()` method allows one to send formatted output to
+an output stream.  At a minimum, the `format()` method accepts a 
+format string.  It may also accept a list of additional parameters that will
+be inserted into the format string.  Here is a simple example:
+
+```
+public static void main(String[] ignored) {
+  String pluralNoun = "cows";
+  String noun = "cabbage";
+  String color = "red";
+  int quantity = 5;
+  double percentage = 33.84;
+  System.out.format("The %d %s painted%n%f %% of the %s %s.",
+            quantity, pluralNoun, percentage, noun, color);
+}
+```
+
+which produces:
+
+```
+The 5 cows painted
+33.840000 % of the cabbage red.
+```
+
+A brief glance at the example likely has you thinking that there is
+something special about the **`%`** symbol, when used in
+a `format` string.  That's a good thought.  The **`%`**
+symbol is the first character in a **format specifier**.  In its
+simplest form, the format specifier consists of the percent symbol and
+a **conversion type character**.  The example above makes use of
+the following conversion type characters:
+
+ * **`%d`** &mdash; A signed decimal integer
+ * **`%s`** &mdash; A string
+ * **`%f`** &mdash; A real (floating point) number
+ * **`%n`** &mdash; A line feed (move to the next line)
+ * **`%%`** &mdash; A literal '**%**'
+
+When the `format()` statement is executed, the value(s) of
+the argument(s) passed to `format()` are inserted into the formatted
+string.
+
+These are the simpliest forms of format specifiers.  There are additional
+components that can be added to make produce a more specific form of
+output.
+
+# Specifying Minimum Width
+
+We can specify a minimum width for each format specifier like this:
+
+```
+public static void main(String[] ignored) {
+  System.out.println("12345678901234567890");
+  System.out.format("[%4d]%n", 13);
+  System.out.format("[%4d]%n", 13000);
+  System.out.format("[%8s]%n", "fun");
+  System.out.format("[%4f]%n", Math.PI);
+  System.out.format("[%18f]%n", Math.PI);
+}
+```
+
+which produces:
+
+```
+12345678901234567890
+[  13]
+[13000]
+[     fun]
+[3.141593]
+[          3.141593]
+```
+
+The width specifier sets the minimum width to be used by the data inserted
+into the output stream.
+
+ * The **13** is shifted two spaces to the right in order to expand
+      the width to four characters.
+ * The **13000** is already wider than four characters, so no
+      modification is made.
+ * Five spaces are added to **fun** so that it takes up 8 characters.
+ * `Math.PI` defaults to taking up 8 characters, so no
+      characters are added when a width of 4 is specified, but additional
+      characters are added when a width of 18 is specified.
+
+# Specifying Precision
+
+By default, `format()` displays floating point numbers (`%f`) with
+six digits after the decimal place.  This can be changed by including a
+precision specifier:
+
+```
+System.out.format("%6.2f%n", 5.5555);
+System.out.format("%.14f%n", Math.PI);
+```
+
+produces:
+
+```
+  5.56
+3.14159265358979
+```
+
+ * Although it is called the precision modifier, it just controls the
+      number of digits to the right of the decimal place.
+ * The number displayed is rounded appropriately (notice how,
+      **5.5555** got rounded to **5.56**).
+
+# Specifying Precision
+
+The format of the output can be further specified using one of the following
+flags:
+
+ * **-** &mdash; left-justify result
+ * **+** &mdash; include **+** sign for positive values
+ * **0** &mdash; zero-pad result
+ * **(** &mdash; enclose negative values in parentheses
+
+Examples:
+
+```
+System.out.format("[%-6.2f]%n", 5.55555);
+System.out.format("[%+6.2f]%n", 5.55555);
+System.out.format("[%06.2f]%n", 5.55555);
+System.out.format("[%(6.2f]%n", 5.55555);
+System.out.format("[%(6.2f]%n", -5.55555);
+```
+
+```
+[5.56  ]
+[ +5.56]
+[005.56]
+[  5.56]
+[(5.56)]
+```
+
+# Summary
+
+The format specifier is generally shown as follows:
+
+```
+%[argument_index$][flags][width][.precision]conversion
+```
+
+The items shown between square brackets are optional.  As a result,
+our format specifiers can be as simple as **%d** or as complicated
+as **%2$+13.7f**.  (Note: I'm using the optional `argument_index$`
+specifier even though we didn't go over it here.)
+
+This page touches on just a few of the possibilities available with
+`format()`.  You can find out a lot more about formatting
+output [here](http://docs.oracle.com/javase/8/docs/api/java/util/Formatter.html).
+
+<!-- Markdeep: --><script src="../markdeep.js?taylorial"></script>

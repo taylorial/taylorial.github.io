@@ -1,0 +1,219 @@
+<meta charset="utf-8" lang="en" /><style class="fallback">body{visibility:hidden;}</style>
+
+**Review I**
+    Review of Major CS1021 Topics
+
+!!!
+    Here we develop a simple game to review many of the topics covered in this course.
+
+In this sequence of tutorial pages we will be creating a game similar
+to the [Blocks Mania iOS game](www.youtube.com/watch?v=k4qAAs3wvqU).
+
+# Game Introduction ([VIDEO](1021reviewI1.mp4))
+
+The game consists of a tiled game board like the one shown below:
+
+![Figure [blocks]: Blocks Mania Screenshot](blocksmania.jpg)
+
+We will begin with a very simple game board that consists of: ![<kbd> </kbd> blank tile](blank.png) ![<kbd>@</kbd> the player](player.png) ![<kbd>X</kbd> end point](endpoint.png)
+
+~~~~
+ 0123456789
+0          
+1 X       @
+2          
+3          
+4          
+~~~~
+[Text Representation of Simple Level of the Gameboard]
+
+# Tile and Position Classes ([VIDEO](1021reviewI2.mp4))
+
+We will represent each spot on the gameboard with a tile.  Each tile is a button that can be pressed by clicking with the mouse.  Each tile keeps track of a position (column and row) and a type.  What follows is a first attempt at these classes.
+
+~~~~ Java
+public class Position {
+
+	public final int col;
+	public final int row;
+	
+	public Position(int col, int row) {
+		this.col = col;
+		this.row = row;
+	}
+}
+~~~~
+
+
+Since the `Position` class just describes the pairing of integers, I've made the attributes `public`.  Note also that I've declared the attributes as `final`.
+
+~~~~ Java
+public class Tile extends JButton {
+
+	private final Position position;
+	private final char type;
+	
+	public Tile(Position position) {
+		this(position, ' ');
+	}
+
+	public Tile(Position position, char type) {
+		super("" + type);
+		this.position = position;
+		this.type = type;
+	}
+}
+~~~~
+
+
+The `type` attribute is used to distinguish between different types of game tiles.  In the beginning stages of our development, this type will just be a character that will be displayed as the label for the button.
+
+## __QUESTIONS/EXERCISES__
+
+1. What are the advantages of declaring the `Position` attributes as `public`?
+1. What are the disadvantages of declaring the `Position` attributes as `public`?
+1. Since the type will be the same for every object from the `Tile` class, can you think of a better way to store this information?
+
+# Game Movement ([VIDEO](1021reviewI3.mp4))
+
+The video describes the intended behavior when the player makes a move.  If the tile at row: 1, col: 3 is clicked, the tile at row: 1, col: 8 should determine what should happen next.  If this tile is a blank tile, then the Player should be moved to position row: 1, col: 8, and the next move should be moved based on the tile at position row: 1, col: 7.
+
+~~~~
+ 0123456789
+0          
+1 X       @
+2          
+3          
+4          
+~~~~
+[Text Representation of Simple Level of the Gameboard]
+
+Therefore, we add the following method to the `Tile` class:
+
+~~~~ Java
+public class Tile extends JButton {
+	// ...	
+	public Move processMove(Move move) {
+		return move;
+	}
+}
+~~~~
+
+
+The `Move` class keeps track of the current position and direction that the Player is moving.  The direction is defined as one of a number of class constants:
+
+~~~~ Java
+public class Move {
+	public final static int DIRECTION_NORTH = 0;
+	public final static int DIRECTION_SOUTH = 1;
+	public final static int DIRECTION_WEST = 2;
+	public final static int DIRECTION_EAST = 3;
+	public final static int DIRECTION_STOP = 4;
+	public final static int DIRECTION_WIN = 5;
+	public final static int DIRECTION_LOSE = 6;
+	
+	private final int direction;
+	private final Position position;
+	
+	public Move(int direction, Position position) {
+		this.direction = direction;
+		this.position = position;
+	}
+	
+	public int getDirection() {
+		return direction;
+	}
+	
+	public Position getPosition() {
+		return position;
+	}
+
+}
+~~~~
+
+
+## __QUESTIONS/EXERCISES__
+
+1. Which class constant directions are not required to implement the `Tile.processMove()` method?
+1. Implement the `processMove()` method for the `Tile` class that represents a blank tile.
+1. The `position` and `direction` attributes are declared `final`.  What implications does this have on how objects from the `Move` class can be used?
+
+# Gameboard Class ([VIDEO](1021reviewI4.mp4))
+
+A `GameBoard` class is used to manage the GUI of each level of the game.  The `GameBoard` is a `JPanel` that contains a grid of buttons.
+
+~~~~ Java
+public class GameBoard extends JPanel {
+	
+	private Tile[][] gameboard;
+	
+	public GameBoard(String filename) {
+		loadGame(filename);
+		createGUI();
+	}
+
+	private void createGUI() {
+		// Use GridLayout
+		// Add tiles to JPanel
+	}
+
+	private void loadLevel(String filename) {
+		// Read in characters from file
+		// Allocate space for gameboard 2D array
+		// Create tiles from characters
+		// Add tiles to gameboard
+		// Connect action listener to each tile
+	}
+}
+~~~~
+
+
+## __QUESTIONS/EXERCISES__
+
+1. Implement the `loadLevel()` method for the `GameBoard` class.
+1. Implement the `createGUI()` method for the `GameBoard` class.
+
+# Game and WinTile Classes ([VIDEO](1021reviewI5.mp4))
+
+For now, the `Game` class will just create a game using the first level of the game.  Eventually it will need to manage multiple levels and the transition between levels.
+
+~~~~ Java
+public class Game extends JFrame {
+
+	public static void main(String[] ignored) {
+		JFrame game = new Game();
+		game.setVisible(true);
+	}
+	
+	public Game() {
+		super("Maniacal Blocks");
+		this.setSize(300, 200);
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		add(new GameBoard("levels/level1.txt"));
+	}
+}
+~~~~
+
+
+~~~~ Java
+public class WinTile extends Tile {
+
+	public WinTile(Position position) {
+		super(position, 'X');
+	}
+	
+	@Override
+	public Move processMove(Move move) {
+		return move;
+	}
+}
+~~~~
+
+
+## __QUESTIONS/EXERCISES__
+
+1. The `EndTile` class in the video has been renamed `WinTile` here.  Why?
+1. Implement the `processMove()` method for the `WinTile` class.
+1. Modify the `Game` class to add a panel that shows the number of moves made and contains a <kbd>RESTART</kbd> button.
+
+<!-- Markdeep: --><script src="../markdeep.js?taylorial"></script>

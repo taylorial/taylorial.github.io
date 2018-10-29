@@ -1,0 +1,306 @@
+<meta charset="utf-8" lang="en" /><style class="fallback">body{visibility:hidden;}</style>
+
+**File I/O**
+     File Input and Output
+
+The [File](http://docs.oracle.com/javase/8/docs/api/java/io/File.html) class from java.io package is used to represent a file in Java.
+
+# File Class
+
+* A file can represent a file or a directory/folder.
+* Representing a file:
+  + In the current directory
+~~~~ Java
+File inFile = new File("stuff.txt");
+~~~~
+
+    
+* In a specified directory directory:
+~~~~ Java
+File inFile = new File("D:/data/stuff.txt");
+~~~~
+
+* Representing a directory:
+~~~~ Java
+File directory = new File("D:/data");
+~~~~
+
+* Here are a few methods that will likely prove useful to you:
+  + inFile.exists() -- true if inFile is correctly associated with a file or directory
+  + inFile.isFile() -- true if inFile is correctly associated with a file
+  + inFile.isDirectory() -- true if inFile is correctly associated with a directory
+  + inFile.list() -- returns an array of strings naming the files and directories in the directory associated with inFile (or null, if not a directory)
+
+The following example code will display a does not exist message if the stuff.txt file is not in the current directory.
+
+~~~~ Java
+File inFile = new File("stuff.txt");
+if(!inFile.exists()) {
+  System.out.println("stuff.txt does not exist");
+}
+~~~~
+
+
+The following example code will display a list of all of the filenames (but not subdirectory names) of the files in the specified directory.
+
+~~~~ Java
+    public static void listDirectory(String name) {
+        Path path = Paths.get(name);
+        DirectoryStream<Path> directory = null;
+        try {
+            directory = Files.newDirectoryStream(path);
+            for (Path p : directory) {
+                System.out.println(p);
+            }
+        } catch (IOException e) {
+            System.err.println("An IO Exception occurred");
+        }
+        // NOTE: Not closing DirectoryStream
+    }
+~~~~
+
+
+As noted in the comment, this code does not free up the resources associated with the directory stream.  The following example makes use of the try/using directive introduced in Java 7:
+
+~~~~ Java
+    public static void listDirectory(String name) {
+        try (DirectoryStream<Path> directory = Files.newDirectoryStream(path)) {
+            for (Path p : directory) {
+                System.out.println(p);
+            }
+        } catch (IOException e) {
+            System.err.println("An IO Exception occurred");
+        }
+    }
+~~~~
+
+
+# Streams of Data
+
+* File input and output is managed through data streams.
+* These file streams function in much the same way as the console input and output streams do.
+* There are a variety of standard streams provided in Java
+* Low-level file I/O for raw byte I/O, similar to System.in.read() and System.out.write()
+  + [FileInputStream](http://docs.oracle.com/javase/8/docs/api/java/io/FileInputStream.html) -- reads raw **bytes**
+  + [FileOutputStream](http://docs.oracle.com/javase/8/docs/api/java/io/FileOutputStream.html) -- writes raw **bytes**
+* High-level file I/O for I/O of primitive data types
+  + [DataInputStream](http://docs.oracle.com/javase/8/docs/api/java/io/DataInputStream.html) -- reads primitive data types
+  + [DataOutputStream](http://docs.oracle.com/javase/8/docs/api/java/io/DataOutputStream.html) -- writes primitive data types
+* Text file I/O for I/O of text
+  + [Scanner](http://docs.oracle.com/javase/8/docs/api/java/util/Scanner.html) -- reads and parses text
+  + [PrintWriter](http://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html) -- writes text
+* Object file I/O for I/O of arbitrary object data
+  + [ObjectInputStream](http://docs.oracle.com/javase/8/docs/api/java/io/ObjectInputStream.html) -- reads arbitrary object data
+  + [ObjectOutputStream](http://docs.oracle.com/javase/8/docs/api/java/io/ObjectOutputStream.html) -- writes arbitrary object data
+
+# Low-Level File I/O
+
+* **Low**-Level refers to techniques being closer to what the computer understands whereas **High**-Level refers to techniques being abstracted away from how the computer understands them.
+* Typically High-Level is more intuitive for humans but usually requires more steps (for the computer anyway) to accomplish.
+* Low-Level file I/O involves reading and writing **byte** chunks of data.
+* Writing involves use of the FileOutputStream.write() method which can accept either a byte value (specified as an int) or an array of bytes.
+* The following code appends some data to a file.  The file is created if it did not exist prior to running this code:
+~~~~ Java
+    public static void writeBytes3(Path path, boolean append) {
+        try (FileOutputStream out = new FileOutputStream(path.toFile(), append)) {
+            out.write('a');
+            out.write('d');
+            out.write(1000000);
+            out.write(-1000000);
+            byte[] byteArray = { 5, 20, 32, 'C', 'T' };
+            out.write(byteArray);
+            System.out.println("Data written");
+        }
+        catch(FileNotFoundException e) {
+            System.err.println("File not found");
+            System.err.println(e.getMessage());
+        }
+        catch(IOException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+~~~~
+
+* Reading involves use of a FileInputStream.read() method.  Two of these are:
+  + FileInputStream.read() which returns the byte (as an int) that it read.
+  + FileInputStream.read(byte[] b) which reads up to b.length bytes from the input stream and places them in the byte array.  The method returns the number of bytes that it read from the input stream.
+* The following code reads some data from a file:
+~~~~ Java
+    public static void readBytes(Path path) {
+        try (FileInputStream in = new FileInputStream(path.toFile())) {
+            int i = in.read();
+            int j = in.read();
+            int k = in.read();
+            int l = in.read();
+            int m = in.read();
+            byte[] byteArray = new byte[5];
+            int count = in.read(byteArray);
+            if(5!=count) {
+                System.err.println("Couldn't find five bytes in the file.  Only read " + count);
+            }
+            System.out.println("Data read");
+            System.out.println("" + i + " " + j + " " + k + " " + l + " " + m);
+        }
+        catch(FileNotFoundException e) {
+            System.err.println("File not found");
+            System.err.println(e.getMessage());
+        }
+        catch(IOException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+~~~~
+
+
+# High-Level File I/O
+
+* High-level file I/O involves making use of an additional layer of classes to add "improved" functionality.
+
+* The [DataInputStream](http://docs.oracle.com/javase/8/docs/api/java/io/DataInputStream.html) makes use of a [FileInputStream](http://docs.oracle.com/javase/8/docs/api/java/io/FileInputStream.html) object to do the actual work.
+
+
+* The DataInputStream class provides methods to read primitive data types:
+  + readBoolean()
+  + readByte()
+  + readChar()
+  + readInt()
+  + readDouble()
+  + readFloat()
+  + read(byte[] b) -- same as FileInputStream's method
+* The [DataOutputStream](http://docs.oracle.com/javase/8/docs/api/java/io/DataOutputStream.html) makes use of a [FileOutputStream](http://docs.oracle.com/javase/8/docs/api/java/io/FileOutputStream.html) object to do the actual work.
+* The DataOutputStream class provides methods to write primitive data types:
+  + writeBoolean()
+  + writeByte()
+  + writeChar()
+  + writeInt() -- writes four bytes, high byte first
+  + writeLong() -- writes eight bytes, high byte first
+  + writeDouble() -- converts to long using Double.doubleToLongBits then uses writeLong()
+  + writeFloat() -- converts to long using Float.floatToIntBits then uses writeInt()
+  + writeChars() -- Writes a String
+* What follows is an example.
+~~~~ Java
+    public static void writePrimitives(Path path, boolean append) {
+        try (FileOutputStream out = new FileOutputStream(path.toFile(), append);
+             DataOutputStream dOut = new DataOutputStream(out)) {
+            dOut.writeInt(43);
+            dOut.writeBoolean(false);
+            dOut.writeDouble(Math.PI);
+            System.out.println("Data written");
+        }
+        catch(FileNotFoundException e) {
+            System.err.println("File not found");
+            System.err.println(e.getMessage());
+        }
+        catch(IOException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    public static void readPrimitives(Path path) {
+        try (FileInputStream in = new FileInputStream(path.toFile());
+             DataInputStream dIn = new DataInputStream(in)) {
+            int i = dIn.readInt();
+            boolean j = dIn.readBoolean();
+            double k = dIn.readDouble();
+            System.out.println("Data read");
+            System.out.println("" + i + " " + j + " " + k);
+        }
+        catch(FileNotFoundException e) {
+            System.err.println("File not found");
+            System.err.println(e.getMessage());
+        }
+        catch(IOException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+~~~~
+
+
+# Text File I/O
+
+* Often times we may prefer to store data in a file as text instead of raw binary data.
+* Doing so makes it possible for someone to read and interpret the data file created by our Java program.
+* In much the same way as we display text to the console (using System.out.print() or System.out.println()), we can send text to a file.
+* A [PrintWriter](http://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html) object has all of the same functionality as System.out.
+* In fact, [System.out](http://docs.oracle.com/javase/8/docs/api/java/util/System.html#out) is an object from the PrintStream class which is very similar to the PrintWriter class... Yes, that's right, System.out is an object (and so is [System.in](http://docs.oracle.com/javase/8/docs/api/java/util/System.html#in)).
+* The following code creates an input file (if a directory with the same name doesn't already exist) and writes one line of text to it:
+~~~~ Java
+    public static void writeText(String filename) {
+        try (PrintWriter out = new PrintWriter(filename)) {
+            out.println("This is so much fun!");
+            System.out.println("Data written");
+        }
+        catch(FileNotFoundException e) {
+            System.err.println("File not found");
+            System.err.println(e.getMessage());
+        }
+    }
+~~~~
+
+* System.in is an InputStream object.
+* The easiest way to read information from the keyboard is to attach a [Scanner](http://docs.oracle.com/javase/8/docs/api/java/util/Scanner.html) object to the System.in input stream.
+* In much the same way, we can read text data from a file by attaching a Scanner object to a FileInputStream.
+* The following code creates a file, writes some text to it, and then reads and displays each word on a separate line.
+~~~~ Java
+    public static void readText(Path path) {
+        try (Scanner in = new Scanner(path)) {
+            System.out.println("Reading data:");
+            while(in.hasNextLine()) {
+                System.out.println(in.nextLine());
+            }
+        }
+        catch(FileNotFoundException e) {
+            System.err.println("File not found");
+            System.err.println(e.getMessage());
+        }
+        catch(IOException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+~~~~
+
+
+# Object File I/O
+
+* If we want to store the value of an object in a file, one way would be to store the value of each field.
+* This may require a significant amount of code to accomplish.
+* However, each object in our Java program is stored in memory as a bunch of ones and zeros.
+* What if we could just write this "memory footprint" to a file automatically.
+* That's the idea behind Object File I/O.
+* [ObjectOutputStream](http://docs.oracle.com/javase/8/docs/api/java/io/ObjectOutputStream.html) provides a writeObject() method
+* The data is stored in binary form.
+* The code following creates a file and saves three objects (an Integer, String and Date) in it:
+~~~~ Java
+try (FileOutputStream fos = new FileOutputStream("test3.dat");
+     ObjectOutputStream out = new ObjectOutputStream(fos)) {
+
+    out.writeInt(178);
+    out.writeObject("I am a string");
+    out.writeObject(new Date());
+}
+~~~~
+
+* [ObjectInputStream](http://docs.oracle.com/javase/8/docs/api/java/io/ObjectInputStream.html) provides a readObject() method
+* The following code reads the three values back into objects:
+
+~~~~ Java
+try (FileInputStream fis = new FileInputStream("test3.dat");
+     ObjectInputStream in = new ObjectInputStream(fis)) {
+
+    int i = in.readInt();
+    String phrase = (String)in.readObject();
+    Date date = (Date)in.readObject();
+}
+~~~~
+
+* Notice that the value returned from the readObject() call must be cast to the appropriate type of object.
+* Any kind of object can be saved in this way as long as the class declaration includes "implements Serializable" e.g.,
+~~~~ Java
+class SomeSillyClass implements Serializable {
+  // ...
+}
+~~~~
+
+* The class doesn't have to actually implement any additional methods (except under special situations when a class may be required to have a custom implementation of readObject and writeObject)
+
+<!-- Markdeep: --><script src="../markdeep.js?taylorial"></script>

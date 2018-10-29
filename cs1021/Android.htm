@@ -1,0 +1,101 @@
+<meta charset="utf-8" lang="en)<style class="fallback">body{visibility:hidden;}</style>
+
+**Android Studio**
+    Installing Android Studio
+
+Mobile development for Android is typically done in Java, but it requires
+a specialized set of tools.  This page describes how to install Android
+Studio.
+
+# Installing Java JDK
+
+If you have not already done so, download and install the [Java 8 JDK](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html).  Note: Be sure you have the JDK, not just the SDK.
+
+## Configuring Java JDK
+
+On Windows machines, you'll need to set the `JAVA_HOME`
+environment variable.  There are multiple ways to do this.  One way is
+to: 
+
+1. Type `environment` in the search bar of the Control Panel  
+      [![Control Panel](controlPanel1.png)](controlPanel1.png)
+1. Click "Edit the system environment variables"
+1. Then click "Environment Variables" on the `Advanced` tab  
+      [![Control Panel](controlPanel2.png)](controlPanel2.png)
+1. Then click "New..." under the `System variables` section  
+      [![Control Panel](controlPanel3.png)](controlPanel3.png)
+1. Enter **`JAVA_HOME`** for the `Variable name` and
+      enter the appropriate path to the location of the JDK installation
+      for the `Variable value`  
+      [![Control Panel](controlPanel4.png)](controlPanel4.png)  
+      and click `OK`
+
+If that doesn't work, try: `System -> Advanced System Settings -> Environment Variables` instead.
+
+# Installing Android Studio
+
+To begin, download Android Studio from [here](http://developer.android.com/sdk/index.html) and then run the executable to install Android Studio.  Follow these steps through the installation process:
+
+1. Select **`Next >`** on the `Welcome to the Android
+      Studio Setup` window
+1. Ensure that all boxes are checked and click **`Next >`** on
+      the `Choose Components` window
+      [![Android](android1.png)](android1.png)
+1. Select **`I Agree`** if you agree to the license agreement
+1. Change the `Android SDK Installation Location` to **`D:\Android`** and click **`Next >`**  
+      [![Android](android2.png)](android2.png)
+1. Select **`Next >`** on the `Configuration Settings
+      / Emulator Setup` window using the recommended RAM allotment
+1. Select **`Install`**
+1. Select **`Next >`** once the installation is completed
+1. Select **`Finish`** to end the installation process
+
+# Running Android Studio
+
+The first time you run Android Studio, you should do the following:
+
+1. If prompted, set the Android SDK path to **`D:\Android`**  
+      [![Android](android3.png)](android3.png)
+1. From the `Welcome to Android Studio` window select **`Configure`**  
+      [![Android](android4.png)](android4.png)
+1. Then select **`SDK Manager`**  
+      [![Android](android5.png)](android5.png)
+1. Click on `Install X packages...` to install the appropriate updates
+1. Read and accept the licenses (if you agree) and then click `Install` (this will take awhile)
+
+# Make/Open a Project
+
+See lab assignment for details.[^lab]
+
+# Create Virtual Device
+
+An Android Virtual Device (AVD) can be used to emulate a physical Android device.  When
+Android Studio is installed, it creates a default AVD.  You will need to modify our BIOS
+settings in order to use the default AVD which uses Intel Virtualization 
+Technology.[^bios]
+Alternatively, you can create an AVD that does not require BIOS changes and/or an AVD that
+emulates a different physical Android device.  You can create an AVD that emulates a
+Nexus 7 tablet that does not require virtualization technology.
+
+1. Click on the `AVD Manager` icon in the toolbar  
+      [![Android](android6.png)](android6.png)
+1. Click on `Create Virtual Device`
+1. Select `Tablet` and `Nexus 7` and then click `Next`  
+      [![Android](android7.png)](android7.png)
+1. Select the first option with `armeabi-v7a` in the ABI column and then click `Next`  
+      [![Android](android8.png)](android8.png)
+1. Click on `Show Advanced Settings` and scroll down to adjust the RAM requirement to 712 MB and then click `Finish`  
+      [![Android](android9.png)](android9.png)
+
+[^lab]: Or figure it out yourself.
+
+[^bios]: If you plan to do extensive Android development and can modify the BIOS on your computer to allow hardware emulation, you should select the `Performance (Intel...` option as well.  
+To enable hardware emulation on the HP ZBook:
+1. Press and hold <kbd>F10</kbd> on a fresh boot to enter the BIOS Setup
+1. Select `Advanced` at the top center of the screen
+1. Select `Device Configurations`
+1. Scroll down and ensure that `Virtualization Technology (VTx)` is selected
+1. Select `Exit` and `Yes` to "Save Changes?"
+
+<!-- Markdeep: --><script src="../markdeep.js?taylorial"></script>
+

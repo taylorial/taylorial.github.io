@@ -1,0 +1,107 @@
+<meta charset="utf-8" lang="en" /><style class="fallback">body{visibility:hidden;}</style>
+
+**UML Class Diagrams**
+
+Unified Modeling Language (UML) class diagrams provide a quick summary of
+a class and can also be used to denote relationships between classes.
+
+* The most basic UML class diagram consists of one class.
+* In each class the following are specified:
+  + The class name
+  + Attributes (a.k.a., fields or characteristics) of the class or instance from the class.
+  + Behaviors (a.k.a., methods or member functions) of the class or instance from the class.
+
+![Figure [student]: Simple Class Diagram](student.png)
+
+# Associations
+
+* Often there are relationships between classes and/or objects.
+* One very general relationship is known as an **association** which links two objects.
+
+![Figure [studentCity]: Associations](studentCity.png)
+
+* Here we denote the relationship between a `Student` instance and a `City` instance (representing the student's hometown).
+* The **role name** (found next to the arrow) corresponds to the attribute name, `hometown` (in the `Student` class).
+* Since the `hometown` attribute in the `Student` class can hold a reference to a `City` object, it provides a way to navigate from a student to his/her home town.
+* Here the arrow head on the association indicates a one-way navigation from student to hometown.
+* The diagram does not denote a way to navigate from a city to all the students who consider it their home town.
+* Some associations may involve objects from the same class.
+* For example:
+
+![Figure [studentBuddy]: Self Associations](studentBuddy.png)
+
+* Here the `buddy` attribute in one `Student` instance can hold a reference to another `Student` instance.
+
+# Aggregation
+
+* Some associations imply a "whole-part" relationship.
+* Consider the relationship between `Section` objects and `Student` objects:
+
+![Figure [section]: Aggregation](section.png)
+
+* The unfilled (open) diamond on the `Section` side of the association line denotes that the students belong to (or make up) the section object.
+* This kind of association is called an **aggregation**.
+* The **0..*** on the `Student` side indicates that there can be zero or more students in a section.
+* This is called the **multiplicity** of the participation of the `Student` object(s) in this aggregation.
+* Aggregation is made up of objects that can be shared or exchanged (they are not "owned" by the aggregating object).
+
+# Composition
+
+* Some "whole-part" relationships represent an even stronger link.
+
+![Figure [course]: Composition](course.png)
+
+* The filled (closed) diamond on the `Course` side of the association line denotes that the sections belong exclusively to a course and cannot exist independently.
+* This kind of association is called a **composition**.
+
+# Dependency
+
+* Often times one class may make use of another class.
+* This is known as a **dependency** since one class is dependent upon another class.
+* We represent such a dependency with a dashed line with an arrow.  The arrow points to the class that is depended upon.
+* For example, if a `BankAccount` class makes use of methods from the `Math` class in order to calculate interest, we could represent that as follows:
+
+![Figure [bankDependency]: Dependency](bankDependency.png)
+
+# Inheritance
+
+* The inheritance relationship is shown in UML class diagrams using an open arrow from the subclass to the superclass.
+* The open arrow signifies that the superclass is a **generalization** of the subclass.
+* Here is the UML class diagram for the `Shape` and `Circle` classes described on the [Inheritance](Inheritance) page.
+* In addition, a `Rectangle` class is shown.
+* The two fields of the `Rectangle` class are declared as protected which is signified with the **#** symbol.
+
+![Figure [inheritanceShape]: Inheritance](inheritanceShape.png)
+
+# Abstract Classes/Methods
+
+* The name of an abstract class is *italicized*.
+* In addition, abstract methods are *italicized*.
+* For example, `draw`, `erase`, and `zoom` are abstract methods in the abstract `Shape` class below.
+
+![Figure [abstractShape]: Abstract Class](abstractShape.png)
+
+# Interfaces
+
+* The name of an interface is *italicized* and **&laquo;interface&raquo;** is placed above the interface name.
+* A dashed line going from a class to an interface, terminating with an open arrow signifies that the class implements the interface.
+* For example, the following diagram indicates that the `LoginScreen` class implements the `Serializable` interface.
+
+![Figure [interface]: Interface](interface.png)
+
+# Example Diagram
+
+![Figure [desktopItemUML]: Example UML Class Diagram](desktopItemUML.png)
+
+* The name of an abstract class appears in italics.  See `DesktopItem`.
+* The name of an interface appears in italics and is preceded by `&laquo;interface&raquo;`.  See `Group`.
+* The name of an abstract method appears in italics.  See `DesktopItem.erase()`.
+* The name of a class (static) attribute is underlined.  See `MyApp.main(String[])`.
+* The inheritance relationship is shown using a line with an open arrow pointing from the subclass to the superclass.
+* A class implementing an interface is shown using a dotted line with an open arrow pointing from the class to the interface it implements.
+* A class may indicate that it makes use of another class/interface using a dotted line with an arrow pointing to the class that is used.
+* A class indicates that it is contains object(s) from another class as a field using a line.  (See line from `Folder` to `DesktopItem`)
+  + At the end of the line next to the class that contains the field should be a solid diamond.
+  + At the end of the line next to the class that is contained, a number, or range of numbers, indicates how many of the objects are contained.  In this example, the `Folder` can contain zero or more `DesktopItem`s.
+
+<!-- Markdeep: --><script src="../markdeep.js?taylorial"></script>

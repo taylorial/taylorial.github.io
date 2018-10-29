@@ -1,0 +1,330 @@
+<meta charset="utf-8" lang="en" /><style class="fallback">body{visibility:hidden;}</style>
+
+**Review IV**
+    Review of Major CS1021 Topics
+
+!!!
+    Here we develop a simple game to review many of the topics covered in this course.
+
+
+# [VIDEO](1021-0-1b.mp4)
+
+# Game Class
+
+Here we make the `Game` class implement the `ActionListener` interface so that the game can be notified by the gameboard when the level has been won or lost.  In addition, we make the following changes/additions:
+
+* Inset the game board within the center of a border layout with the level number shown in the northern panel.
+* Add two buttons at the start of the game that allow the user to select Text or Icon versions of the game.
+* Includes a `changeLevel()` method that loads a level and creates the appropriate gameboard.
+* Add code to load the next level whenever a level is completed or reload the same level whenever the level is lost.
+
+~~~~ Java
+public class Game extends JFrame implements ActionListener {
+
+	private int level = 1;
+	private int tileHeight;
+	private int tileWidth;
+	private JPanel gamePlay;
+	
+	public Game(String title) {
+		super(title);
+		this.setSize(360, 200);
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setLayout(new BorderLayout());
+		gamePlay = new JPanel();
+		gamePlay.setLayout(new BorderLayout());
+		gamePlay.add(new JLabel("Maniacal Blocks"), BorderLayout.NORTH);
+		JPanel startGame = new JPanel();
+		startGame.setLayout(new FlowLayout());
+		JButton textPlay = new JButton("Text");
+		textPlay.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				try {
+					changeLevel();
+				} catch (IOException e) {
+					add(new JLabel("Could not load any levels, this game is useless."));
+				}
+			}
+		});
+		startGame.add(textPlay);
+		JButton iconPlay = new JButton("Icon");
+		iconPlay.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				try {
+					Tile.TEXT_MODE = false;
+					changeLevel();
+				} catch (IOException e) {
+					add(new JLabel("Could not load any levels, this game is useless."));
+				}
+			}
+		});
+		startGame.add(iconPlay);
+		gamePlay.add(startGame, BorderLayout.CENTER);
+		add(gamePlay);
+	}
+	
+	public void changeLevel() throws IOException {
+		GameBoard gameboard = new GameBoard("levels/level" + level + ".txt", this);
+		gamePlay.remove(((BorderLayout)gamePlay.getLayout()).getLayoutComponent(BorderLayout.CENTER));
+		gamePlay.remove(((BorderLayout)gamePlay.getLayout()).getLayoutComponent(BorderLayout.NORTH));
+		gamePlay.add(new JLabel("level " + level), BorderLayout.NORTH);
+		gamePlay.add(gameboard, BorderLayout.CENTER);
+		add(gamePlay);
+		tileHeight = Tile.TEXT_MODE ? 30 : Tile.PLAYER_ICON.getIconHeight();
+		tileWidth = Tile.TEXT_MODE ? 20 : Tile.PLAYER_ICON.getIconWidth()+2;
+		this.setSize(gameboard.numColumns()*tileWidth, gameboard.numRows()*tileHeight);
+		this.pack();
+		this.invalidate();
+	}
+	
+	public static void main(String[] args) {
+		JFrame game = new Game("Maniacal Blocks");
+		game.setVisible(true);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getID()==Move.DIRECTION_WIN) {
+			level++;
+			try {
+				changeLevel();
+			} catch (IOException ex) {
+				// All done
+				JOptionPane.showMessageDialog(this, "You completed all the levels");
+				JOptionPane.showMessageDialog(this, "Don't forget to study for your finals");
+				this.setVisible(false);
+				this.dispose();
+			}
+		}
+		if(e.getID()==Move.DIRECTION_LOSE) {
+			try {
+				changeLevel();
+			} catch (IOException ex) {
+				JOptionPane.showMessageDialog(this, "Major LOSER");
+				this.setVisible(false);
+				this.dispose();
+			}
+		}
+	}
+	
+}
+~~~~
+
+
+# MoveHandler Implementation
+
+The `MoveHandler` class has been updated to use a timer to move the player across the gameboard.  In addition, an `enableTiles()` method was added to the `GameBoard` so that the tiles would not be active while the player is moving across the board.
+
+~~~~ Java
+	private void enableTiles(boolean enable) {
+		for(Tile[] rows : gameboard) {
+			for(Tile tile : rows) {
+				tile.setEnabled(enable);
+			}
+		}
+	}
+	private class MoveHandler implements ActionListener {
+		private static final int TIMER_DELAY = 100;
+		private Timer timer;
+		private Move currentMove;
+
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			Tile tile = (Tile)event.getSource();
+			Position clickPos = tile.getPosition();
+			if(!playerPos.equals(tile.getPosition())
+					&& (clickPos.row==playerPos.row || clickPos.col==playerPos.col)) {
+				determineMove(clickPos);
+				timer = new javax.swing.Timer(TIMER_DELAY, new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						currentMove = processMove(currentMove);
+						if(currentMove.getDirection()==Move.DIRECTION_WIN) {
+							JOptionPane.showMessageDialog(GameBoard.this, "Winner");
+							if(listener!=null) {
+								listener.actionPerformed(new ActionEvent(this, Move.DIRECTION_WIN, "win"));
+							}
+							timer.stop();
+						} else if(currentMove.getDirection()==Move.DIRECTION_LOSE) {
+							JOptionPane.showMessageDialog(GameBoard.this, "Loser");
+							if(listener!=null) {
+								listener.actionPerformed(new ActionEvent(this, Move.DIRECTION_LOSE, "lose"));
+							}
+							timer.stop();
+						} else if(currentMove.getDirection()==Move.DIRECTION_STOP) {
+							enableTiles(true);
+							timer.stop();
+						}
+					}
+				});
+				enableTiles(false);
+				timer.start();
+			}
+		}
+
+		private void determineMove(Position clickPos) {
+			if(clickPos.col<playerPos.col) {
+				currentMove = new Move(Move.DIRECTION_WEST, playerPos);
+			} else if(clickPos.col>playerPos.col) {
+				currentMove = new Move(Move.DIRECTION_EAST, playerPos);
+			} else if(clickPos.row<playerPos.row) {
+				currentMove = new Move(Move.DIRECTION_NORTH, playerPos);
+			} else if(clickPos.row>playerPos.row) {
+				currentMove = new Move(Move.DIRECTION_SOUTH, playerPos);
+			}
+		}
+
+		private Move processMove(Move move) {
+			int nextCol = playerPos.col;
+			int nextRow = playerPos.row;
+			gameboard[nextCol][nextRow].restoreLooks();
+			switch (move.getDirection()) {
+			case Move.DIRECTION_NORTH:
+				--nextRow;
+				break;
+			case Move.DIRECTION_SOUTH:
+				++nextRow;
+				break;
+			case Move.DIRECTION_EAST:
+				++nextCol;
+				break;
+			case Move.DIRECTION_WEST:
+				--nextCol;
+				break;
+			}
+			Move newMove = null;
+			try {
+				newMove = gameboard[nextCol][nextRow].processMove(move);
+			} catch(ArrayIndexOutOfBoundsException e) {
+				newMove = new Move(Move.DIRECTION_LOSE, playerPos);
+			}
+			gameboard[newMove.getPosition().col][newMove.getPosition().row].playerLooks();
+			playerPos = newMove.getPosition();
+			return newMove;
+		}
+	}
+~~~~
+
+
+# Tile Classes
+
+Here are a few of the `Tile` classes in their "final" form:
+
+## Tile Class
+
+~~~~ Java
+public class Tile extends JButton {
+
+	protected final Position position;
+	private static final Icon ICON = new ImageIcon(GameBoard.assetFolder + "/blank.png");
+	public static final Icon PLAYER_ICON = new ImageIcon(GameBoard.assetFolder + "/player.png");
+	private static final char TYPE = ' ';
+	public static boolean TEXT_MODE = true;
+
+	public Tile(Position position) {
+		if(!TEXT_MODE) {
+			setBorderPainted(false); 
+		}
+		setMargin(new Insets(0, 0, 0, 0));
+		setContentAreaFilled(false); 
+		setFocusPainted(false); 
+		this.position = position;
+		restoreLooks();
+	}
+
+	public Move processMove(Move move) {
+		return new Move(move.getDirection(), position);
+	}
+
+	public void restoreLooks() {
+		if(TEXT_MODE) {
+			setText("" + TYPE);
+		} else {
+			setIcon(ICON);
+		}
+	}
+
+	public void playerLooks() {
+		if(TEXT_MODE) {
+			setText("@");
+		} else {
+			setIcon(PLAYER_ICON);
+		}
+	}
+
+	public Position getPosition() {
+		return position;
+	}
+}
+~~~~
+
+
+## WinTile Class
+
+~~~~ Java
+public class WinTile extends Tile {
+
+	private static final Icon ICON = new ImageIcon(GameBoard.assetFolder + "/win.png");
+	private static final char TYPE = 'X';
+	
+	public WinTile(Position position) {
+		super(position);
+	}
+	
+	@Override
+	public Move processMove(Move move) {
+		return new Move(Move.DIRECTION_WIN, position);
+	}
+	
+	@Override
+	public void restoreLooks() {
+		if(TEXT_MODE) {
+			setText("" + TYPE);
+		} else {
+			setIcon(ICON);
+		}
+	}
+	
+}
+~~~~
+
+
+## VerticalTunnel Class
+
+~~~~ Java
+public class VerticalTunnel extends Tile {
+
+	private static final Icon ICON = new ImageIcon(GameBoard.assetFolder + "/vTunnel.png");
+	private static final char TYPE = 'H';
+	
+	public VerticalTunnel(Position position) {
+		super(position);
+	}
+
+	@Override
+	public Move processMove(Move move) {
+		Move nextMove = new Move(Move.DIRECTION_STOP, move.getPosition());
+		if(move.getDirection()==Move.DIRECTION_NORTH || move.getDirection()==Move.DIRECTION_SOUTH) {
+			nextMove = super.processMove(move);
+		}
+		return nextMove;
+	}
+	
+	@Override
+	public void restoreLooks() {
+		if(TEXT_MODE) {
+			setText("" + TYPE);
+		} else {
+			setIcon(ICON);
+		}
+	}
+	
+}
+~~~~
+
+
+# Javadoc and Jar Generation [VIDEO](1021-0-lb.mp4)
+
+We can use Eclipse to generate documentation webpages of the javadoc.  We can also create a `.jar` file that contains all the class files needed to run our program.
+
+<!-- Markdeep: --><script src="../markdeep.js?taylorial"></script>

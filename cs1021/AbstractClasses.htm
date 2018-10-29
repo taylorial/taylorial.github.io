@@ -1,0 +1,240 @@
+<meta charset="utf-8" lang="en" /><style class="fallback">body{visibility:hidden;}</style>
+
+**Abstract Classes**
+
+An abstract class typically serves as a parent for multiple subclasses.  The abstract class can implement some behaviors to be inherited by the subclasses and declare other behaviors that the subclass must implement.[^subclass]
+
+!!!
+    This page assumes that you have an understanding of [inheritance](Inheritance) and [interfaces](ListInterface).  Please review those pages first.
+
+* Inheritance is useful because it allows us to:
+  + take an existing class and specialize it
+  + reuse existing code without modifying the original code
+  + create a family of related classes
+  + treat objects from all the related classes in the same way
+* Interfaces are useful because they allow us to:
+  + group a set of similar classes, similar in the sense that they all provide implementations of a common set of methods
+  + treat objects from all classes that implement the interface in the same way
+* Abstract classes provide a compromise between inheritance and interfaces.
+* Abstract classes are useful because they allow us to do all of the things we can do with inheritance and do not require that we implement every method declared in the abstract class.
+* Abstract classes are just like regular classes in that they can:
+  + declare fields within the class
+  + declare methods for the class
+  + extend other classes by making use of inheritance
+* Abstract classes are similar to interfaces in that we can declare that a method should exist without actually implementing it.
+* Abstract classes follow the same rules as interfaces with regard to reference and object creation:
+  + We can declare references from an abstract class.
+  + We cannot create objects from an abstract class.
+* In Java, we can only inherit from one super class, regardless of whether that super class is declared as abstract or not.
+
+# Abstract Class Declaration
+
+* A class is abstract if the `abstract` keyword appears immediately before the class name in the class declaration.
+* An abstract method is a method that is declared `abstract`.
+* A method is declared as abstract by placing the `abstract` keyword prior to the return type in the method declaration.
+* No implementation is provided for an abstract method.  Instead of an implementation enclosed within curly braces, an abstract method's declaration ends with a semicolon.  E.g.,
+~~~~ Java
+public abstract void draw();
+~~~~
+
+* Any class with one or more abstract methods must be declared as an abstract class.
+* A class is identified as an abstract class by making use of the `abstract` keyword.
+
+# Abstract Class Example
+
+Since there really isn't such a thing as a generic shape, we could rewrite our `Shape` class example from the [inheritance](Inheritance) page.  Each particular type of shape (like a rectangle or a circle) will need to provide its own implementation of the `draw()`, `erase()`, and `zoom()`, so we declare them as `abstract` in the `Shape` class, and don't bother to create a dummy implementation.
+
+~~~~ Java
+import java.awt.Color;
+
+public abstract class Shape {
+
+  private Color color;
+  protected double xCoord;
+  protected double yCoord;
+
+  public Shape() {
+    color = Color.WHITE;
+    xCoord = 0.0;
+    yCoord = 0.0;
+    System.out.println("Shape: constructor");
+  }
+
+  public abstract void draw();
+
+  public abstract void erase();
+
+  public Color getColor() {
+    System.out.println("Shape: getColor");
+    return color;
+  }
+
+  public void move() {
+    xCoord += 2.0;
+    yCoord += 2.0;
+    System.out.println("Shape: move");
+  }
+
+  public void setColor(Color color) {
+    this.color = color;
+    System.out.println("Shape: setColor");
+  }
+
+  public abstract void zoom(double magnitude);
+
+}
+~~~~
+
+
+Just as an interface is only useful if there exists a class that implements the interface, an abstract class is only useful if there is another class that extends it and implements all of the abstract methods.
+
+Making the `Shape` class abstract does not require us to modify the `Circle` and `Rectangle` classes (except that we no longer call the `Shape`'s `erase()` method within the subclass' `erase()` methods
+
+~~~~ Java
+public class Circle extends Shape {
+
+  private double radius;
+
+  public Circle() {
+    super();
+    radius = 0;
+    System.out.println("Circle: constructor");
+  }
+
+  public void draw() {
+    System.out.println("Circle: draw");
+  }
+
+  public void erase() {
+    radius = 0;
+    System.out.println("Circle: erase");
+  }
+
+  public double getRadius() {
+    System.out.println("Circle: getRadius");
+    return radius;
+  }
+
+  public void setRadius(double radius) {
+    this.radius = radius;
+    System.out.println("Circle: setRadius");
+  }
+
+  public void zoom(double magnitude) {
+    radius *= magnitude;
+    System.out.println("Circle: zoom");
+  }
+
+}
+~~~~
+
+
+~~~~ Java
+public class Rectangle extends Shape {
+
+  protected double height;
+  protected double width;
+
+  public Rectangle() {
+    super();
+    height = 0.0;
+    width = 0.0;
+    System.out.println("Rectangle: constructor");
+  }
+
+  public void draw() {
+    System.out.println("Rectangle: draw");
+  }
+
+  public void erase() {
+    height = 0.0;
+    width = 0.0;
+    System.out.println("Rectangle: erase");
+  }
+
+  public void zoom(double magnitude) {
+    height *= magnitude;
+    width *= magnitude;
+    System.out.println("Rectangle: zoom");
+  }
+
+}
+~~~~
+
+
+
+# Details on References
+
+In order to understand the rationale behind abstract classes, let's rehash some rules regarding references...
+
+* When a reference is declared, its type is specified.
+* A reference can have a type that is:
+  + a class
+~~~~ Java
+Circle ref1;
+~~~~
+
+* an abstract class
+~~~~ Java
+Shape ref2;
+~~~~
+
+* an interface
+~~~~ Java
+List<Shape> ref3;
+~~~~
+
+* The type of the reference determines which attributes (methods and fields) are available to be called via the reference.
+* This type-checking can be (and is) done at compile time.
+* The reference type determines the object types to which it can refer:
+  + a class (abstract or not) reference may refer to objects that are the same type as the reference or to objects from any class that is a subclass (or subsubclass, subsubsubclass, etc...) of the reference type.
+  + an interface reference may refer to objects from any class that implements the interface.
+* Note: A reference to a subclass cannot refer to an object from a super class.  Why do you think this rule exists?
+
+# Polymorphism
+
+* When the program is running, the particular implementation of code that gets executed does not depend on the reference type.
+* Instead, it depends on the actual object to which the reference is pointing.
+* Consider the following code (`readShapes()` is some method that reads shape data from a file and returns a list of shapes):
+~~~~ Java
+List<Shape> shapes = readShapes("shapeData.txt");
+for(Shape shape : shapes) {
+  shape.zoom(Math.random()*10.0);
+}
+~~~~
+
+* This will loop through all of the different shapes read in from the file and apply a random magnification factor to each shape.
+* Each `Shape` subclass has its own implementation of the `zoom()` method (`Circle` applies the magnification to the radius while `Rectangle` applies the magnification to the height and width).
+* If the first shape in the list of shapes is a `Circle`, the `Circle` version should be called.
+* If the first shape in the list of shapes is a `Rectangle`, the `Rectangle` version should be called.
+* The compiler can't predict what kind of shape the `Shape` reference will be referring to.
+* This must be determined at run-time.
+* The process of determining the appropriate version of code to run depending on the actual object that is receiving the method call is known as **polymorphism**.
+* Polymorphic behavior is default in Java, but some languages, like C++, do not enable polymorphism by default.
+* In summary,
+  + The reference type determines what object a reference can refer to and what attributes can be access via the reference.  These rules are enforce by the compiler when the code is compiled.
+  + The object type rather than the reference type determines which implementation of a method is executed.  This is determined by the Java Virtual Machine when the code is run.
+
+# Why Abstract Classes are Useful
+
+* One might ask why we should even bother with abstract classes.
+* After all, if we had an abstract class, we could implemented as a concrete (non-abstract) class by:
+  1. Not bothering to declare all of the abstract methods.
+  1. Implement all of the abstract methods in the abstract class (so that it is no longer abstract).
+* The first alternative stinks.  Can you guess why?
+  + Qbvat guvf jbhyq znxr vg vzcbffvoyr sbe hf gb eha gur fnzcyr pbqr va gur Cbylzbecuvfz frpgvba orpnhfr mbbz() jbhyq abg or qrpynerq va gur Funcr pynff, naq gurersber, pbhyqa'g or pnyyrq guebhtu n Funcr ersrerapr.[^rot13]
+* The second alternative smells too (although probably not as much).
+  + Providing dummy implementations would mean that someone could extend the class and not realize that they need to provide an overridden implementation for a method.
+  + If the dummy implementation threw an exception (we'll get to this soon, be patient), it would be pretty clear that something wasn't right, but the exception wouldn't get thrown until we tried to run the program.
+  + Declaring the method as abstract, instead of providing a dummy implementation, makes it possible for the compiler to catch these errors.
+* Ultimately, we want to write our code so that it conveys our intent.  By declaring an abstract class as abstract we are making it clear that we do not intend to create objects from the class.
+
+[^subclass]: Unless the subclass is an abstract class, in which case it is not required to implement any of the abstract methods declared in the super class.
+
+[^rot13]: The answer is ROT13 encrypted so that you don't see the answer before 
+thinking about it.  Since its likely not worth the hassle to ROT13 
+decrypt the answer, I'm providing it here as well:  Doing this would 
+make it impossible for us to run the sample code in the Polymorphism 
+section because `zoom()` would not be declared in the `Shape` class, and therefore, couldn't be called through a `Shape` reference.
+
+<!-- Markdeep: --><script src="../markdeep.js?taylorial"></script>

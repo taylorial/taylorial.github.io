@@ -1,0 +1,485 @@
+<meta charset="utf-8" lang="en" /><style class="fallback">body{visibility:hidden;}</style>
+
+**Event Handling**
+
+!!!
+    Writing event driven code is require for building useful graphical user
+    interfaces.  When a user interacts with the GUI, an event is triggered.
+    This page describes the mechanism provided by the Java language for responding
+    to events.
+
+Writing <acronym title="Graphical User Interface">GUI</acronym> applications requires that program control be driven by the user's interaction with the <acronym title="Graphical User Interface">GUI</acronym>.  When the user moves the mouse, clicks on a button, or selects an item from a menu an "event" occurs.
+
+Event driven programs contain two specific types of objects:
+
+* Source objects -- <acronym title="Graphical User Interface">GUI</acronym> objects (e.g., a [JButton](http://docs.oracle.com/javase/8/docs/api/javax/swing/JButton.html) object) which generates an event (e.g., when the button is clicked).
+* Listener objects -- An object that <em class="u">subscribes</em> (listens) for a particular type of event to occur.
+
+The operating system or windowing system captures generated events and notifies the listener objects when a type of event they are listening for has occurred.  The operating system <em class="u">notifies</em> the event listener object by sending a message to (calling) the <em class="u">event handling method</em>.  If no event listener object is subscribed to listen for the event that occurred, the event is ignored.
+
+
+# Types of Events
+
+There are many different kinds of events
+
+<table class="striped2">
+  <tr>
+    <th>Event Trigger                                     </th><th> Event Listener Type    </th>
+  </tr><tr>
+    <td>Click a button                                    </td><td>[ActionListener](http://docs.oracle.com/javase/8/docs/api/java/awt/event/ActionListener.html)</td>
+  </tr><tr>
+    <td>Press <em>Enter</em> while typing in a text field </td><td>[ActionListener](http://docs.oracle.com/javase/8/docs/api/java/awt/event/ActionListener.html)</td>
+  </tr><tr>
+    <td>Choose a menu item                                </td><td>[ActionListener](http://docs.oracle.com/javase/8/docs/api/java/awt/event/ActionListener.html)</td>
+  </tr><tr>
+    <td>Close a frame (main window)                       </td><td>[WindowListener](http://docs.oracle.com/javase/8/docs/api/java/awt/event/WindowListener.html)</td>
+  </tr><tr>
+    <td>Press mouse button while hovering over a component</td><td>[MouseListener](http://docs.oracle.com/javase/8/docs/api/java/awt/event/MouseListener.html)</td>
+  </tr><tr>
+    <td>Move mouse over a component                       </td><td>[MouseMotionListener](http://docs.oracle.com/javase/8/docs/api/java/awt/event/MouseMotionListener.html)</td>
+  </tr><tr>
+    <td>Component becomes visible                         </td><td>[ComponentListener](http://docs.oracle.com/javase/8/docs/api/java/awt/event/ComponentListener.html)</td>
+  </tr><tr>
+    <td>Component gets keyboard focus                     </td><td>[FocusListener](http://docs.oracle.com/javase/8/docs/api/java/awt/event/FocusListener.html)</td>
+  </tr><tr>
+    <td>Table/List selection changes                      </td><td>[ListSelectionListener](http://docs.oracle.com/javase/8/docs/api/java/awt/event/ListSelectionListener.html)</td>
+  </tr><tr>
+    <td>Any property in a component changes*              </td><td>[PropertyChangeListener](http://docs.oracle.com/javase/8/docs/api/java/awt/event/PropertyChangeListener.html)</td>
+  </tr>
+</table>
+
+*For example, the text associated with a label in a component changes.
+
+# Action Events I
+
+One of the most common type of events is an action event.
+
+* An **Action Listener** object is an object that can register to be notified of an action event.
+* The term **subscribe** is often used to describe the process of registering to be notified.
+* To subscribe an Action Listener object to an Action Event source, the event source's `addActionListener` method must be called.
+* The `addActionListener` must be passed a reference to the Action Listener object so that it knows how to notify the listener when an event occurs.
+* The system notifies an Action Listener by calling the listener's `actionPerformed()` method.
+* The `actionPerformed` method must be passed a reference to the Action Event object.
+
+
+## Sample Code
+
+Here is an example of a <acronym title="Graphical User Interface">GUI</acronym> class that is an Action Listener:
+
+~~~~ Java
+public class SimpleWindow extends JFrame implements ActionListener {
+
+  private final static int WIDTH = 250;
+  private final static int HEIGHT = 100;
+  private JButton btnShow;
+  private JButton btnHide;
+  private JLabel ponyLabel;
+
+  public static void main(String[] args) {
+    JFrame gui = new SimpleWindow();
+  }
+
+  public SimpleWindow() {
+    setTitle("Dog and Pony Show");
+    setSize(WIDTH, HEIGHT);
+    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    setLayout(new FlowLayout());
+    add(new JLabel("Dog"));
+    btnShow = new JButton("Show");
+    btnShow.addActionListener(this);
+    add(btnShow);
+    btnHide = new JButton("Hide");
+    btnHide.addActionListener(this);
+    add(btnHide);
+    ponyLabel = new JLabel("");
+    add(ponyLabel);
+    setVisible(true);
+  }
+
+  @Override
+  public void actionPerformed(ActionEvent event) {
+        ponyLabel.setText(ponyLabel.getText() + "Pony");
+  }
+}
+~~~~
+
+
+The <acronym title="Graphical User Interface">GUI</acronym> looks like this:
+
+![Figure [gui]: Dog and Pony Show GUI](dogNPonyShow.png)
+
+The class contains two Action Sources (btnShow and btnHide).  In order for the <acronym title="Graphical User Interface">GUI</acronym> class to be an action listener, it must implement the [ActionListener](http://docs.oracle.com/javase/8/docs/api/java/awt/event/ActionListener.html) interface.  This is accomplished by:
+
+* Adding `implements ActionListener` just prior to the opening curly brace for the class, and
+* Implementing the `actionPerformed` method.
+
+This is not a good way to design your code because the <acronym title="Graphical User Interface">GUI</acronym> class now serves two purposes: 1) describe the layout of the window and 2) describe the functionality of the components of the window.  Next we will attempt to separate the Action Listener from the <acronym title="Graphical User Interface">GUI</acronym> class.
+
+
+# Identifying the Event Source
+
+The sample above displays "Pony" whenever either button is pressed.  In fact, the same message would be displayed even if the something other than an Action Event occurred.  We can ensure that the event source was a JButton with the following modification:
+
+~~~~ Java
+public void actionPerformed(ActionEvent event) {
+  if(event.getSource() instanceof JButton) {
+        ponyLabel.setText(ponyLabel.getText() + "Pony");
+  }
+}
+~~~~
+
+
+The `getSource()` method returns a reference to the source of the event that triggered the call to actionPerformed.  The conditional will be true if the source object is an instance of JButton, i.e., if the source object is an object from the JButton class (or a subclass of JButton).  We can do even better than this though.  The following modification allows us to determine exactly which button was the source of the event.
+
+~~~~ Java
+public void actionPerformed(ActionEvent event) {
+  if (event.getSource() instanceof JButton) {
+    JButton eventSrc = (JButton) event.getSource();
+    if (eventSrc == btnShow) {
+      ponyLabel.setText(ponyLabel.getText() + "Pony");
+    } else if (eventSrc == btnHide) {
+      ponyLabel.setText("");
+    }
+  }
+}
+~~~~
+
+* Here we first make sure that the event source is a JButton object.
+* Then we create a reference to a JButton object and make it refer to the source object.
+  + Note that `getSource()` can return an instance from any class.  We explicitly type cast it here.
+  + Because of the first if statement, we know that `getSource()` will return a reference to a JButton object, but if the source object was not of type JButton, the reference returned would be `null`.
+* Essentially, the reference `eventSrc` stores a location in memory where the source object is found.
+* Similarly, `btnShow` and `btnHide` store the location in memory where the Quit button and Help buttons are found.
+* If the value of `eventSrc` and `btnShow` are the same, then both references refer to the same object, and we know that the source of the event was the Show button.
+
+Alternatively, we could use `getActionCommand()` to get the text of the source object instead of getting a reference to the source object.  This would look something like this:
+
+~~~~ Java
+public void actionPerformed(ActionEvent event) {
+  if (event.getSource() instanceof JButton) {
+    String command = event.getActionCommand();
+    if (command.equals("Show")) {
+      ponyLabel.setText(ponyLabel.getText() + "Pony");
+    } else if (command.equals("Hide")) {
+      ponyLabel.setText("");
+    }
+  }
+}
+~~~~
+
+
+We now know how to handle events in our code; however, our <acronym title="Graphical User Interface">GUI</acronym> class handles two distinct tasks:
+
+* UI layout
+* Event handling
+
+This is not a good software design.  Separating these tasks into to distinct classes is a better design decision.
+
+Also, for <acronym title="Graphical User Interface">GUI</acronym> classes with a lot of components, the logic associated with the `actionPerformed()` method could get pretty complicated with lots of if statements required to identify the component that caused the event.
+
+
+# Action Events II
+
+Given the problems identified with implementing the `ActionListener` in the <acronym title="Graphical User Interface">GUI</acronym> class, we will explore making separate classes to handle action events.  We can replicate the functionality of the example in the previous section by creating an separate action listener class:
+
+~~~~ Java
+public class ButtonEventHandler implements ActionListener {
+
+  private SimpleWindow window;
+
+  public ButtonEventHandler(SimpleWindow window) {
+    this.window = window;
+  }
+
+  @Override
+  public void actionPerformed(ActionEvent event) {
+    if (event.getSource() instanceof JButton) {
+      JButton eventSrc = (JButton) event.getSource();
+      if (eventSrc == window.btnShow) {
+        window.ponyLabel.setText(window.ponyLabel.getText() + "Pony");
+      } else if (eventSrc == window.btnHide) {
+        window.ponyLabel.setText("");
+      }
+    }
+  }
+}
+~~~~
+
+
+Unfortunately, in order for us to make this code work, `ButtonEventHandler` must be able to access the JButton and ponyLabel attributes of the SimpleWindow class.  We'll need to modify our SimpleWindow class as follows:
+
+~~~~ Java
+public class SimpleWindow extends JFrame {
+
+  private final static int WIDTH = 250;
+  private final static int HEIGHT = 100;
+  public JButton btnShow;                // ALERT: bonehead move
+  public JButton btnHide;                // ALERT: bonehead move
+  public JLabel ponyLabel;               // ALERT: bonehead move
+
+  public static void main(String[] args) {
+    JFrame gui = new SimpleWindow();
+  }
+
+  public SimpleWindow() {
+    ButtonEventHandler btnHandler = new ButtonEventHandler(this);
+    setTitle("Dog and Pony Show");
+    setSize(WIDTH, HEIGHT);
+    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    setLayout(new FlowLayout());
+    add(new JLabel("Dog"));
+    btnShow = new JButton("Show");
+    btnShow.addActionListener(btnHandler);
+    add(btnShow);
+    btnHide = new JButton("Hide");
+    btnHide.addActionListener(btnHandler);
+    add(btnHide);
+    ponyLabel = new JLabel("");
+    add(ponyLabel);
+    setVisible(true);
+  }
+}
+~~~~
+
+
+The modifications are:
+
+* Removed the `implements ActionListener` specification after the class declaration and removed the `actionPerformed()` method since the ButtonEventHandler class now does this work.
+* Make the `btnShow`, `btnHide`, and `ponyLabel` fields public so that ButtonEventHandler can access them.
+* Created a ButtonEventHandler object in the constructor and use it to register our action listener subscriptions instead of `this` (the SimpleWindow object).
+
+Notice:
+
+* If we had a bunch of other <acronym title="Graphical User Interface">GUI</acronym> components in our SimpleWindow class, we could either update the ButtonEventHandler class or we could create another event handler class in much the same way as ButtonEventHandler.  For example, we could create MenuEventHandler, to handle menu events.  Menu events would subscribe using a MenuEventHandler object and button events could subscribe using a ButtonEventHandler object.
+* We could have left `btnShow`, `btnHide`, and `ponyLabel` private and created getter methods to return references to them, but this too is a bonehead move because in both cases we are exposing the button attributes to everyone.  As a result, anyone else who is using our SimpleWindow class could come along and mess with our buttons without first getting permission from us.
+
+
+# Action Events III
+
+Action Events II is a step in the right direction, but it violates one of the tenants of Object Oriented programming: *don't let others see or mess with your private attributes*.  We can overcome this weakness by making use of an inner class.
+
+
+## Inner Classes
+
+* An inner class is a class that is defined inside the same java file (inside the enclosing class).
+* An inner class can access all members of the enclosing class (including those private guys).
+* An inner class can be private to the outside world, i.e., an instance of an inner class cannot be instantiated (created) independently.
+* You can have more than one inner class in an enclosing class
+
+For example:
+
+~~~~ Java
+public class Outer {
+
+  private int outerAttr = 0;
+  private Inner in;
+
+  private class Inner {
+    private int innerAttr = 0;
+
+    private void doStuff() {
+      ++innerAttr;
+      --outerAttr;
+    }
+  }
+
+  public static void main(String[] args) {
+    Outer out = new Outer();
+    out.displayStuff();
+  }
+
+  public Outer() {
+    in = new Inner();
+  }
+
+  public void displayStuff() {
+    System.out.println("Inner: " + in.innerAttr + " Outer: " + outerAttr);
+    in.doStuff();
+    System.out.println("Inner: " + in.innerAttr + " Outer: " + outerAttr);
+  }
+}
+~~~~
+
+
+Will produce:
+
+~~~~ none highlight
+Inner: 0 Outer: 0
+Inner: 1 Outer: -1
+~~~~
+
+
+
+## Sample Code
+
+Making use of the [getActionCommand()](http://docs.oracle.com/javase/8/docs/api/java/awt/event/ActionEvent.html#getActionCommand%28%29) method of the [ActionEvent](http://docs.oracle.com/javase/8/docs/api/java/awt/event/ActionEvent.html) object passed to [actionPerformed()](http://docs.oracle.com/javase/8/docs/api/java/awt/event/ActionListener.html#actionPerformed%28java.awt.event.ActionEvent%29), we no longer need the references to the buttons to be attributes of the class.  We can declare them locally in the `SimpleWindow` class's constructor.
+
+~~~~ Java
+public class SimpleWindow extends JFrame {
+
+  private final static int WIDTH = 250;
+  private final static int HEIGHT = 100;
+  private JLabel ponyLabel;
+
+  public class ButtonEventHandler implements ActionListener {
+
+    @Override
+    public void actionPerformed(ActionEvent event) {
+      if (event.getSource() instanceof JButton) {
+        String command = event.getActionCommand();
+        if (command.equals("Show")) {
+          ponyLabel.setText(ponyLabel.getText() + "Pony");
+        } else if (command.equals("Hide")) {
+          ponyLabel.setText("");
+        }
+      }
+    }
+  }
+
+  public static void main(String[] args) {
+    JFrame gui = new SimpleWindow();
+  }
+
+  public SimpleWindow() {
+    ButtonEventHandler btnHandler = new ButtonEventHandler();
+    setTitle("Dog and Pony Show");
+    setSize(WIDTH, HEIGHT);
+    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    setLayout(new FlowLayout());
+
+    add(new JLabel("Dog"));
+
+    JButton btnShow = new JButton("Show");
+    btnShow.addActionListener(btnHandler);
+    add(btnShow);
+
+    JButton btnHide = new JButton("Hide");
+    btnHide.addActionListener(btnHandler);
+    add(btnHide);
+
+    ponyLabel = new JLabel("");
+    add(ponyLabel);
+
+    setVisible(true);
+  }
+}
+~~~~
+
+
+!!!
+    * The `ponyLabel` must be declared as an attribute of the `SimpleWindow` class because it needs to be referenced by the object of the `ButtonEventHandler` inner class.
+    * We have modified the text associated with the action command for the **Show** button by using the [setActionCommand](http://docs.oracle.com/javase/8/docs/api/javax/swing/AbstractButton.html#setActionCommand%28java.lang.String%29) (just to show that it could be done, not because it is a great idea in this case).
+
+# Action Events IV
+
+We've seen a number of ways to handle events.  One additional technique that is worth mentioning is to create a separate inner class handler for each event.  Continuing on with our example from above, we have two buttons that we need to listen for.  We could create a separate inner class for each like this:
+
+~~~~ Java
+public class SimpleWindow extends JFrame {
+
+  private final static int WIDTH = 250;
+  private final static int HEIGHT = 100;
+  private JLabel ponyLabel;
+
+  private class ShowButtonHandler implements ActionListener {
+
+    @Override
+    public void actionPerformed(ActionEvent event) {
+      ponyLabel.setText(ponyLabel.getText() + "Pony");
+    }
+  }
+
+  private class HideButtonHandler implements ActionListener {
+
+    @Override
+    public void actionPerformed(ActionEvent event) {
+      ponyLabel.setText("");
+    }
+  }
+
+  public static void main(String[] args) {
+    JFrame gui = new SimpleWindow();
+  }
+
+  public SimpleWindow() {
+    setTitle("Dog and Pony Show");
+    setSize(WIDTH, HEIGHT);
+    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    setLayout(new FlowLayout());
+
+    add(new JLabel("Dog"));
+
+    JButton btnShow = new JButton("Show");
+    btnShow.addActionListener(new ShowButtonHandler());
+    btnShow.setActionCommand("Add pony");
+    add(btnShow);
+
+    JButton btnHide = new JButton("Hide");
+    btnHide.addActionListener(new HideButtonHandler());
+    add(btnHide);
+
+    ponyLabel = new JLabel("");
+    add(ponyLabel);
+
+    setVisible(true);
+  }
+}
+~~~~
+
+
+* The `actionPerformed` methods are significantly simplified because they don't need to worry about figuring out the source of the event (since it should only be listening to one source).
+
+# Action Events V
+
+Hopefully the above discussion has helped you get a better understanding of the different approaches to handling events.  The following sample is similar to the one in the previous section, but here we make use of an anonymous inner class to handle the Show button and a lambda expression to handle the Hide button.
+
+~~~~ Java
+public class SimpleWindow extends JFrame {
+
+  private final static int WIDTH = 250;
+  private final static int HEIGHT = 100;
+  private JLabel ponyLabel;
+
+  public static void main(String[] args) {
+    JFrame gui = new SimpleWindow();
+  }
+
+  public SimpleWindow() {
+    setTitle("Dog and Pony Show");
+    setSize(WIDTH, HEIGHT);
+    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    setLayout(new FlowLayout());
+
+    add(new JLabel("Dog"));
+
+    JButton btnShow = new JButton("Show");
+    // Use anonymous inner class to define the action listener
+    btnShow.addActionListener(new ActionListener() {
+                                  @Override
+                                  public void actionPerformed(ActionEvent e) {
+                                      ponyLabel.setText(ponyLabel.getText() + "Pony");
+                                  }
+                              });
+    btnShow.setActionCommand("Add pony");
+    add(btnShow);
+
+    JButton btnHide = new JButton("Hide");
+    // Use a lambda expression to define the action listener
+    btnHide.addActionListener(e -> {
+        ponyLabel.setText("");
+    });
+    add(btnHide);
+
+    ponyLabel = new JLabel("");
+    add(ponyLabel);
+
+    setVisible(true);
+  }
+}
+~~~~
+
+
+* An anonymous inner class is an inner class without a name.  It is defined where it is instantiated.
+* A lambda expression new syntax introduced in Java 8 that allows one to treat functionality as a method argument.  In particular, an interface with only one required method can be described using a lambda expression.
+
+<!-- Markdeep: --><script src="../markdeep.js?taylorial"></script>

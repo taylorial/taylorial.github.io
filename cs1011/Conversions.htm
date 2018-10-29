@@ -1,0 +1,64 @@
+<meta charset="utf-8" lang="en" /><style class="fallback">body{visibility:hidden;}</style>
+
+**Type Conversions**
+
+It is often necessary convert a value from one type to another.  For example, we may want to represent an `int` as a `double` or a `double` as a `String`.
+
+# Automatic Type Promotion
+
+When it makes sense, Java automatically converts primitive types.  For
+example, in the following code, `3` is an `int`
+literal that is being assigned to `x`, which is a primitive of
+type `double`.  Since converting from `int` to
+`double` will not lose information, the conversion is automatic.
+
+~~~~ Java
+double x = 3;
+~~~~
+
+# Type Casting Primitives
+
+Consider the following code that attempts to store a `double`
+literal in a primitive of type `int`:
+
+~~~~ Java
+int i = 3.14;
+~~~~
+
+This actually generates a compiler error because such an assignment will
+result in the loss of information (`0.14` cannot be stored in
+`i`).  If we truly want to do such an assignment, we must make
+that explicitly clear to the compiler by type casting.  In the code below
+we explicitly cast the `3.14` to an `int` so that
+we can then assign it to `i`.
+
+~~~~ Java
+int i = (int)3.14;
+~~~~
+
+# String to Primitive Conversions
+
+If a string contains the value of a primitive, we can convert the string
+to a primitive representation by using a class method from the appropriate
+primitive wrapper class.  Some examples:
+
+~~~~ Java
+int i = Integer.parseInt("-819");
+double x = Double.parseDouble("2.718");
+boolean b = Boolean.parseBoolean("true");
+~~~~
+
+# Primitive to String Conversions
+
+Converting a primitive value into a `String` is easily
+accomplished by concatenating the primitive value to a `String`.
+If we just want the primitive value in string form without any additional
+characters, we can concatenate the primitive to an empty string.  Some
+examples:
+
+~~~~ Java
+String intAsString = "" + 3;
+String doubleAsString = "" + 1.618;
+~~~~
+
+<!-- Markdeep: --><script src="../markdeep.js?taylorial"></script>

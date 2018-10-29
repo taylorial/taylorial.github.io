@@ -1,0 +1,72 @@
+<meta charset="utf-8" lang="en" /><style class="fallback">body{visibility:hidden;}</style>
+
+**Java Primitives**
+
+Java primitives are types that are built into the Java language.  When a primitive is declared, a fixed amount of memory is reserved on the stack to store its value.  
+
+Primitives represent integer values, floating-point values, character values, and boolean values.
+
+# Integer Types
+
+The declaration `int number;` causes four bytes to be reserved on the stack to store a signed integer value that is no smaller than -2,147,483,648 and no larger than 2,147,483,647.
+
+Similarly, `byte number;` causes one byte to be reserved on the stack to store a signed integer value.  Since one byte contains eight bits, there are 256 unique combinations of eight zeros and ones.  Since a `byte` represents a signed integer, a byte can represent an integer value no smaller than -128 and no larger than 127.  The range of the `int` type is a result of the number of unique values that can be represented by 32 bits.
+
+The table below shows the amount of space used to store each primitive integer type and the range of values that each type can represent.
+
+|   Type  | Storage |           `MIN_VALUE`         |          `MAX_VALUE`         |
+| -------:| -------:|:-----------------------------:|:----------------------------:|
+|  `byte` |  8 bits | $         -128              $ | $            127           $ |
+| `short` | 16 bits | $        -32,768            $ | $          32,767          $ |
+|  `int`  | 32 bits | $     -2,147,483,648        $ | $       2,147,483,647      $ |
+| `long`  | 64 bits | $ \approx -9 \times 10^{18} $ | $ \approx 9 \times 10^{18} $ |
+
+# Floating-Point Types
+
+Java has two primitive types that can store floating-point values, i.e., values containing a decimal place.  The bits used to represent a floating-point number of split into three groups.  As a crude approximation, one bit is used to indicate whether the number is positive or negative.  The remaining bits are divided into two sets.  One set of bits represents the actual digits in the number while the other set of bits represents the location of the decimal place.  If we have more bits for the first set, we get more digits of precision.
+
+|   Type   | Storage | Precision |            `MIN_VALUE`           |           `MAX_VALUE`           |
+| --------:| -------:| ---------:|:--------------------------------:|:-------------------------------:|
+|  `float` | 32 bits |  6 digits | $ \approx 1.2 \times 10^{-38}  $ | $ \approx 3.4 \times 10^{38}  $ |
+| `double` | 64 bits | 15 digits | $ \approx 2.2 \times 10^{-308} $ | $ \approx 1.8 \times 10^{308} $ |
+
+More precisely, the representation of `float` follows the IEEE 754 standard which specifies that the first bit represents the sign (0 for possitive and 1 for negative).  The next eight bits represent the exponent.  The last 23 bits hold the mantissa, a.k.a, the significand.  This results in a float representation of: $ sign \times mantissa \times 2^{exponent} $.  Even this is a bit of a simiplication.  More details are available [here](https://blog.demofox.org/2017/11/21/floating-point-precision/) or [here](https://www.ibm.com/developerworks/library/j-math2/index.html).  A `double` uses 52 bits for the mantissa and 12 bits for the exponent.
+
+If you are interested, the <a href="https://books.google.com/books?id=Lq4yDwAAQBAJ&pg=PA28&lpg=PA28&dq=3.14%3D(%E2%88%921)0%E2%88%971.57%E2%88%972(128%E2%88%92127)&source=bl&ots=Eue3xPFE97&sig=wlIbpZlirJhzx4Sfr-HBrIbQWzM&hl=en&sa=X&ved=0ahUKEwjS3diu0MnWAhXK5yYKHR6yAv8Q6AEIKDAA#v=onepage&q=IEEE%20754%20standard&f=false">Game Engine Black Book: Wolfenstein 3D</a> has a nice visualization of how these values are stored.
+
+# Automatic Type Conversions
+
+Java will automatically convert from one primitive type to another in certain situations.  For example, `3 + 3.8` requires an `int` and a `double` to be added.  Before the addition can take place both addends must be of the same type.  In this case, Java automatically promotes the `int` literal `3` to a `double` (`3.0`) and then performs the addition.  Whenever one primitive type is available, but another primitive type is needed, a check is automatically performed to see if automatic type conversion is possible.  If it is not possible, a compiler error generated.
+
+*********************************************************
+* 8        16        32      64       32        64      *
+* byte --> short --> int --> long --> float --> double  *
+*********************************************************
+
+The following figure shows which automatic type conversions are possible.  If the primitive available is to the left of the primitive that is required, automatic type conversion is done.
+
+Some examples:
+
+~~~~ Java
+byte b = 22;
+char c = 'a';
+short s = 3333;
+int i = 44444;
+long l = 5555555555L;
+float f = 6.67F;
+double d = Math.PI;
+i = c; // VALID: char left of int
+l = f; // INVALID: float NOT left of long
+d = b; // VALID: byte left of double
+f = i + c; // VALID: char left of int -> result of addition is int which is left of float
+~~~~
+
+# Charater Type
+
+The `char` primitive represents a single character.  Sixteen bits are used to represent `char`s following the 16-bit Unicode standard.  Java will automatically convert a `char` to any type that a `short` can be automatically converted to, but no primitive time will be automatically converted to a `char`.
+
+# Boolean Type
+
+The `boolean` primitive represents a `true`/`false` value.  It can be stored in as little as one bit.  Java does not perform any automatic type conversions on the `boolean` type.
+
+<!-- Markdeep: --><script src="../markdeep.js?taylorial"></script>

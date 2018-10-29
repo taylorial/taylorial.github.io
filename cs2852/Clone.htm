@@ -1,0 +1,285 @@
+<meta charset="utf-8" lang="en" /><style class="fallback">body{visibility:hidden;}</style>
+
+**Cloneable Interface**
+    Making deep copies of objects.
+
+Unless special attention is given, copying objects typically results in shallow copies.  Consider the following class:
+
+~~~~ Java
+import java.awt.Color;
+import java.awt.Point;
+
+public class Shape {
+  private Color color;
+  private Point center;
+
+  public Shape(int x, int y, Color color) {
+    this(new Point(x, y), color);
+  }
+
+  protected Shape(Point center, Color color) {
+    this.center = center;
+    this.color = color;
+  }
+
+  // ...
+}
+~~~~
+
+The following code will create two references that point to the same shape
+object.
+
+~~~~ Java
+Shape s1 = new Shape(0, 0, Color.BLACK);
+Shape s2 = s1;
+~~~~
+
+If we wanted two distict objects we could do the following:
+
+~~~~
+Shape s1 = new Shape(0, 0, Color.BLACK);
+Shape s2 = new Shape(0, 0, Color.BLACK);
+~~~~
+
+We now have two distinct objects that contain the same values.  We can do this by just replicating the construction of the object.  Now suppose we have an object `s1` and we want to make a copy of it.  We could add a constructor to the `Shape` class to help with this:
+
+~~~~ Java
+public class Shape {
+  // ...
+
+  public Shape(Shape original) {
+    this(original.center, original.color);
+  }
+}
+~~~~
+
+This constructor is called a copy constructor since it is designed to make a copy of the objet.  Now we can make a copy of a shape by doing the following:
+
+~~~~ Java
+Shape s1 = new Shape(0, 0, Color.BLACK);
+Shape s2 = new Shape(s1);
+~~~~
+
+Please note that these two techniques **do not** produce identical results.  The following images show the results of running the debugger on the above code.  **Question**:  which code corresponds to which figure?[^whichfig]
+
+![Figure [clonedeepa]: Deep Enough[^deep] Copy](cloneShapeDeepA.png)
+![Figure [cloneshallow]: Shallow Copy](cloneShapeShallow.png)
+
+The problem with a shallow copy is that we haven't really made a copy of the object.  We've just made a copy of the shell of the object, the attributes within the object are still shared by multiple objects.  We can modify the copy constructor as follows in order ensure that a deep copy is made:
+
+~~~~ Java
+public class Shape {
+  // ...
+
+  public Shape(Shape original) {
+    this(new Point(original.center), 
+         new Color(original.color.getRed(),
+                   original.color.getGreen(),
+                   original.color.getBlue(),
+                   original.color.getAlpha()));
+  }
+}
+~~~~
+
+Notice that here we are using a copy constructor from the `Point` class to make a copy of that attribute (instead of just having the `center` reference refer to the same object that the `center` reference in `original` refers to).  We are also making a copy of the `Color` object, but since the `Color` class doesn't have a copy constructor, our approach is slightly different.  The debugger confirms that `s1` and `s2` are now completely independent objects:
+
+![Figure [clonedeep]: Deep Copy](cloneShapeDeep.png)
+
+# Why Do We Care About Deep Copies?
+
+Suppose that the following methods are added to the `Shape` class:
+
+~~~~ Java
+public class Shape {
+  // ...
+  public void setX(int x) {
+    center.setLocation(x, center.getY());
+  }
+
+  public void setY(int y) {
+    center.setLocation(center.getX(), y);
+  }
+
+  public void setColor(Color color) {
+    this.color = color;
+  }
+
+  @Override
+  public String toString() {
+    return "Shape at (" + center.getX() + ", " + center.getY() 
+           + ") with color: (" + color.getRed() + ", " 
+           + color.getGreen() + ", " + color.getBlue() + ")";
+  }
+}
+~~~~
+
+Consider running the following code:
+
+~~~~ Java
+  Shape s1 = new Shape(0, 0, Color.BLACK);
+  Shape s2 = new Shape(s1);
+  s1.setX(8);
+  System.out.println(s1 + "\n" + s2);
+~~~~
+
+Using our first attempt at a copy constructor will produce the following output:
+
+~~~~
+Shape at (8.0, 0.0) with color: (0, 0, 0)
+Shape at (8.0, 0.0) with color: (0, 0, 0)
+~~~~
+
+Clearly, the `setX()` changed the center location for both shapes, while using our second attempt at a copy constructor ensures that the center location of only the first shape is changed:
+
+~~~~
+Shape at (8.0, 0.0) with color: (0, 0, 0)
+Shape at (0.0, 0.0) with color: (0, 0, 0)
+~~~~
+
+# Copying with Class Hierarchies
+
+Now suppose we have the following additional class:
+
+~~~~ Java
+import java.awt.Dimension;
+
+public class Rectangle extends Shape {
+  protected Dimension size;
+
+  public Rectangle(int x, int y, Color color, int width, int height) {
+    super(x, y, color);
+    size = new Dimension(width, height);
+  }
+
+  @Override
+  public String toString() {
+    String string = super.toString();
+    return "(" + size.getWidth() + ", " + size.getHeight() + ") Rectangle" + string.substring(5);
+  }
+
+  public void setSize(int width, int height) {
+    size.setSize(width, height);
+  }
+}
+~~~~
+
+Similarly, we could create a copy constructor for the `Rectangle` class that makes a deep copy of the object:
+
+~~~~ Java
+public class Rectangle extends Shape {
+  //...
+  public Rectangle(Rectangle original) {
+    super(original);
+    size = new Dimension(original.size);
+  }
+}
+~~~~
+
+Suppose we have the following program:
+
+~~~~ Java
+public static void main(String[] ignored) {
+  String option = JOptionPane.showInputDialog(null, "Enter '1' for a shape, anything else for a rectangle");
+  if(option!=null || !option.isEmpty()) {
+    Shape s1 = null;
+    Shape s2 = null;
+    if(option.charAt(0)=='1') {
+      s1 = new Shape(0, 0, Color.BLACK);
+    } else {
+      s1 = new Rectangle(0, 0, Color.BLACK, 1, 1);
+    }
+    // Want to make a copy of s1 here
+    // ...
+  }
+}
+~~~~
+
+We can make a copy of the shape, but it's a bit cumbersome because we need to figure out if we need to use the copy constructor for the `Shape` or for the `Rectangle`:
+
+~~~~ Java
+    // Want to make a copy of s1 here
+    if(s1 instanceof Shape) {
+      s2 = new Shape(s1);
+    } else {
+      s2 = new Rectangle(s1);
+    }
+~~~~
+
+Some experts suggest that this is the best way to go about making deep copies of objects in Java; however, Java does provide a slightly more attractive option.  We'll discuss this technique shortly, but using it allows us to simplify the copying process by replacing the above code with just one line:
+
+~~~~ Java
+    // Want to make a copy of s1 here
+    s2 = s1.clone();
+~~~~
+
+The `clone()` method should be implemented in such a way as to return a deep copy of the object used to call the method.  When implemented correctly, this is ideal since we have an easy way to make a deep copy of any object, even if we don't know its specific type.  Unfortunately, it's easy to implement `clone` incorrectly, and many do, making it less reliable.  The next section describes the correct way to implement `clone`.
+
+# Cloneable and Object.clone()
+
+The `Object` class has a `protected` method, `clone()` which returns an `Object`.  Since the method is `protected`, it is not available to the public unless a child class overrides it and makes it public.
+
+If the creator of a class wishes to provide the clone functionality shown in the previous `Shape` example, the following steps must be followed:
+
+1. Mark the `Shape` class as implementing the `Cloneable` interface.
+1. Override the `clone` method declaring the method as `public`.
+
+## Marking class as `Cloneable`
+
+The `Cloneable` interface is an interesting interface because it does not have any methods associated with it.  It is a **marker interface** much like the `Serializable` interface that is used to provide run-time information to the JVM.  A `CloneNotSupportedException` exception is thrown if `Object`'s `clone()` method is called on an instance that does not implement the `Cloneable` interface.
+
+## Overriding the `clone()` Method
+
+Here is an implementation of the `Shape.clone()` method:
+
+~~~~ Java
+public class Shape implements Cloneable {
+  // ...
+  @Override
+  public Shape clone() {
+    Shape clone = null;
+    try {
+      clone = (Shape)super.clone();
+      clone.center = (Point)center.clone();
+      clone.color = new Color(color.getRed(),
+                              color.getGreen(),
+                              color.getBlue(),
+                              color.getAlpha());
+    } catch (CloneNotSupportedException e) {
+      // shouldn't happen
+    }
+    return clone;
+  }
+  // ...
+}
+~~~~
+
+The first thing we need to do within the `try` block is to call the super constructor.  All implementations of `clone()` should do this.  We want to do this so that we eventually make it all the way back to to `Object.clone()`.  From the [`Object` class Javadoc](http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#clone%28%29):
+
+> The method clone for class Object performs a specific cloning operation. First, if the class of this object does not implement the interface Cloneable, then a CloneNotSupportedException is thrown. Note that all arrays are considered to implement the interface Cloneable. Otherwise, this method creates a new instance of the class of this object and initializes all its fields with exactly the contents of the corresponding fields of this object, as if by assignment; the contents of the fields are not themselves cloned. Thus, this method performs a "shallow copy" of this object, not a "deep copy" operation. 
+> 
+>     -- [`Object` class Javadoc](http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#clone%28%29)
+
+In this case, `super.clone()` actually returns a `Shape` object that is a shallow copy of the original object.  In order to make it a deep copy, we need to make deep copies of all the attributes of the `Shape` object.  On the next line, we make a clone of the `Point` object; however, we don't make a clone of the `Color`.  Since the `Color` class doesn't implement the `Cloneable` interface, we aren't able to call `clone`.  Instead, we use a constructor to create a copy of the color attribute.
+
+Since the `Shape` and `Point` classes implement the `Cloneable` interface, we should never end up in the `catch` block; however, we need to have the `try`/`catch` block since `Object.clone()` declares that it may throw a `CloneNotSupportedException` exception.
+
+If the `Cloneable` interface is implemented for the super class, implementing `clone()` in the subclass is straight forward:
+
+~~~~ Java
+public class Rectangle extends Shape {
+  // ...
+  @Override
+  public Rectangle clone() {
+    Rectangle clone = (Rectangle)super.clone();
+    clone.size = (Dimension)size.clone();
+    return clone;
+  }
+  // ...
+}
+~~~~
+
+[^whichfig]: Since the copy constructor implementation only makes a copy of the references of the attributes of a `Shape` object, it produces the shallow copy.
+
+[^deep]: Strictly speaking, this isn't completely a deep copy because we did not make a deep copy of the `color` attribute.  It turns out that it is deep enough though.  The reason for this is because the `color` attribute is immutable (a constant).  Since its value cannot be changed, there is no risk that changes to the attributes of `s1` will inadvertently change the attributes of `s2`.
+
+<!-- Markdeep: --><script src="../markdeep.js?taylorial"></script>

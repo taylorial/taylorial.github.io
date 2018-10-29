@@ -1,0 +1,126 @@
+<meta charset="utf-8" lang="en" /><style class="fallback">body{visibility:hidden;}</style>
+
+**Review III**
+    Review of Major CS1021 Topics
+
+!!!
+    Here we develop a simple game to review many of the topics covered in this course.
+
+
+# [VIDEO](1021-9-3a.mp4)
+
+# Player Position
+
+In order for us to be able to play the game, we need to manage the position of the player.  We'll add a `Position` attribute to the `GameBoard` class.
+
+~~~~ Java
+	private Position playerPos;
+~~~~
+
+
+We'll add the following lines to the `loadGame()` method so that the player's position is set when a game board is read from a file (within the `'@'` case:
+
+~~~~ Java
+					case '@':
+						playerPos = new Position(col, row);
+~~~~
+
+
+# MoveHandler Implementation
+
+The implementation of the `MoveHandler` class will advance the player one closer to the tile that was click as long as the tile was either on the same row or same column as the player.
+
+~~~~ Java
+	private class MoveHandler implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			Tile tile = (Tile)event.getSource();
+			Position clickedPos = tile.getPosition();
+			if(!clickedPos.equals(playerPos)
+					&& (playerPos.row==clickedPos.row || playerPos.col==clickedPos.col)) {
+				Move nextMove = null;
+				Tile nextTile = null;
+				if(clickedPos.col < playerPos.col) {
+					nextMove = new Move(Move.DIRECTION_WEST, playerPos);
+					nextTile = gameboard[playerPos.col-1][playerPos.row];
+				} else if(clickedPos.col>playerPos.col) {
+					nextMove = new Move(Move.DIRECTION_EAST, playerPos);
+					nextTile = gameboard[playerPos.col+1][playerPos.row];
+				} else if(clickedPos.row>playerPos.row) {
+					nextMove = new Move(Move.DIRECTION_SOUTH, playerPos);
+					nextTile = gameboard[playerPos.col][playerPos.row+1];
+				} else if(clickedPos.row < playerPos.row) {
+					nextMove = new Move(Move.DIRECTION_NORTH, playerPos);
+					nextTile = gameboard[playerPos.col][playerPos.row-1];
+				}
+				gameboard[playerPos.col][playerPos.row].playerLeaves();
+				nextMove = nextTile.processMove(nextMove);
+				playerPos = nextMove.getPosition();
+				gameboard[playerPos.col][playerPos.row].playerEnters();
+				System.out.println(nextMove.getPosition().col + ", " + nextMove.getPosition().row);
+				if(gameboard[playerPos.col][playerPos.row] instanceof WinTile) {
+					JOptionPane.showMessageDialog(GameBoard.this, "Winner");
+				}
+				if(gameboard[playerPos.col][playerPos.row] instanceof LoseTile) {
+					JOptionPane.showMessageDialog(GameBoard.this, "Loser");
+				}
+			}
+		}
+	}
+~~~~
+
+
+## __QUESTIONS/EXERCISES__
+
+1. In order to make the game play more realistic, change the move handler so that it kicks off a timer that will move the player every 100 milliseconds until the player reaches something that causes it to stop.
+
+# Sizing the GameBoard
+
+Here we'll add methods to get the number of rows and columns and update the `createGUI()` method to make use of them.
+
+~~~~ Java
+	public int numRows() {
+		return gameboard[0].length;
+	}
+	public int numColumns() {
+		return gameboard.length;
+	}
+	
+	private void createGUI() {
+		setLayout(new GridLayout(numRows(), numColumns()));
+		for(int row=0; row < getTileRows(); ++row) {
+			for(int col=0; col < getTileColumns(); ++col) {
+				add(gameboard[col][row]);
+			}
+		}
+	}
+~~~~
+
+
+We can then update the `Game` class to make use of the methods to set the approriate size for the GUI.
+
+~~~~ Java
+	public Game() {
+		super("Maniacal Blocks");
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		this.setSize(300, 200);
+		try {
+			GameBoard level = new GameBoard("levels/level2.txt");
+			add(level);
+			this.setSize(level.getTileColumns()*Tile.PLAYER_ICON.getIconWidth(), level.getTileRows()*Tile.PLAYER_ICON.getIconHeight());
+		} catch (IOException e) {
+			System.out.println("Level doesn't exist, no game for you");
+		}
+	}
+~~~~
+
+
+## __QUESTIONS/EXERCISES__
+
+1. Modify the `Tile` so that it keeps track of a preference for text on each tile or an icon on each tile.
+1. Modify the child classes of the `Tile` class so that they too handle the text/icon preference.
+1. Place the tile classes in a separate package.
+1. Modify the `Game` and `GameBoard` class so that once each level is finished, the next level is loaded and the game continues.
+1. Create additional tile classes that do other things (be creative).
+
+<!-- Markdeep: --><script src="../markdeep.js?taylorial"></script>

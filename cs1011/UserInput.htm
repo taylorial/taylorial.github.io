@@ -1,0 +1,114 @@
+<meta charset="utf-8" lang="en" /><style class="fallback">body{visibility:hidden;}</style>
+
+**User Input**
+             Looping Until Valid Input
+         It's hard to make things foolproof because fools are so ingenious.
+
+# JOptionPane
+
+Often we want our programs to interact with the user.  We can use
+`JOptionPane.showInputDialog()` to pop-up a dialog box asking
+the user for input.  For example:
+
+~~~~ Java
+String input = JOptionPane.showInputDialog("Please enter something");
+~~~~
+
+![Figure [showInput]: `showInputDialog()` Dialog Box](dialogBox.png)
+
+The user can then type anything into the input field and when they
+click **OK**, the text entered is stored in a `String` object to
+which `input` refers.  Often times we may want to ensure that what
+the user enters is consistent with what we expect.  For example, we may
+want to make sure they don't just click **OK** without typing anything.
+
+If the user doesn't enter the correct information, we could ask them again
+to enter the appropriate information.  One technique would be to have a loop
+that continually asks the user to enter the input until we are sure that they
+have entered something that we can use.  This might looks something like this:
+
+~~~~ Java
+String input;
+do {
+  input = JOptionPane.showInputDialog("Please enter something");
+} while(!input.isEmpty());
+~~~~
+
+This works fine for situations where we have very simple criteria for
+valid input (in this case, the user just needs to type at least one character
+before clicking **OK**).  If our conditions on what makes up valid input
+is more complicated, we can create a boolean flag that will keep track of
+whether or not we received valid input.
+
+~~~~ Java
+boolean isValid = false;
+String input;
+do {
+  input = JOptionPane.showInputDialog("Please enter something");
+  if(!input.isEmpty()) {
+    isValid = true;
+  }
+} while(!isValid);
+~~~~
+
+Whenever the user clicks **OK** (or hits the <kbd>enter</kbd> key while
+in the textbox), the text typed in the text field is converted to a string
+and returned.  If the user clicks **Cancel** or the **X** in the upper
+right corner of the window (or hits the <kbd>esc</kbd> key), the method
+returns **`null`**.  A **`null`** is the value
+for a reference that isn't actually pointing to an object.  In this case,
+it's a way of telling your program that "nothing" was returned from the
+`showInputDialog()` method.
+
+Below I've introduced another flag (`canceled`) which will be
+**`true`** if the user cancels the dialog box.
+
+~~~~ Java
+boolean isValid = false;
+boolean canceled = false;
+String input;
+do {
+  input = JOptionPane.showInputDialog("Please enter something");
+  if(input==null) {
+    canceled = true;
+  } else {
+    isValid = !input.isEmpty();
+  }
+} while(!canceled && !isValid);
+~~~~
+
+Here we only want to loop again if the user has not canceled and has not
+entered valid input.
+
+We can use this same structure to check for much more complicated input
+conditions.  For example, ensuring the user entered a single digit integer,
+might look something like this:
+
+~~~~ Java
+boolean isValid = false;
+boolean canceled = false;
+int singleDigit = -30;       // Set it to some invalid value
+do {
+  String input = JOptionPane.showInputDialog("Please enter something");
+  if(input==null) {
+    canceled = true;
+  } else {
+    Scanner converter = new Scanner(input);
+    if(converter.hasNextInt()) {
+      singleDigit = convereter.nextInt();
+      isValid = singleDigit<10 && singleDigit>-10);
+    }
+  }
+} while(!canceled && !isValid);
+if(canceled) {
+  JOptionPane.showMessageDialog(null, "You canceled the dialog box!");
+} else {
+  JOptionPane.showMessageDialog(null, "Great job!  You entered " + singleDigit);
+}
+~~~~
+
+In this case we could have simplified things by just checking to make sure
+that the string had a length of one and that the first character was between
+`'0'` and `'9'`.
+
+<!-- Markdeep: --><script src="../markdeep.js?taylorial"></script>

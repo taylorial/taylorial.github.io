@@ -1,0 +1,75 @@
+<meta charset="utf-8" lang="en" /><style class="fallback">body{visibility:hidden;}</style>
+
+**ArrayLists**
+
+!!!
+    An ArrayList is a class that encapsulates an array and provides a number of convenient methods to simplify storing collections of like data.
+
+# Introduction
+
+* Like an array, an `ArrayList` stores a collection of similar.
+* Unlike an array, an `ArrayList` can only store reference types (no primitives).
+* `ArrayList`s use a **generic** between angle brackets to specify the type stored within the object.  For example, creating an `ArrayList` of `String`s would look like this:
+
+~~~~ Java
+ArrayList<String> words = new ArrayList<>();
+~~~~
+
+* .
+    + The left side of the assignment operator declares a reference (`words`) that refers to an `ArrayList` of `String`s.
+    + The right side of the assignment operator instantiates a new `ArrayList` of `String`s that is empty (size of zero).
+* We can display all of the items in an `ArrayList<String>` much like [we did with arrays](Arrays):
+~~~~ Java
+public static void display(ArrayList<String> names, PrintStream out) {
+  for(int i=0; i < names.size(); ++i) {
+    out.println(names.get(i));
+  }
+}
+~~~~
+* .
+    + We can call `display` as follows:
+~~~~ Java
+ArrayList<String> names = new ArrayList<>();
+names.add("Peter");
+names.add("Paul");
+names.add("Mary-Anne");
+display(names, System.out);  // Note: System.out is a PrintStream object
+~~~~
+
+* .
+    + The method will display all three names.  If `names` had twenty names in it, all twenty would be displayed.
+
+* It turns out that displaying the elements in an `ArrayList` is actually much easier than this since the `toString()` method for the class has been implemented to do this work for us.  Instead of calling the `display()` we wrote above, we can just say:
+
+~~~~ Java
+out.println(names);
+~~~~
+
+# Examples
+Consider the following two methods.  Both of these methods reverse the order of the elements of an `ArrayList<String>`, and yet they are quite different.
+
+~~~~ Java
+public static ArrayList<Double> reverse1(ArrayList<Double> data) {
+  ArrayList<Double> temp = new ArrayList();
+  for(int i=0; i < data.size(); i++){
+    temp.add(data.get(i));
+  }
+  return temp;
+}
+
+public static ArrayList<Double> reverse2(ArrayList<Double> data) {
+  for(int i=0; i < data.size()/2; i++){
+    int j = data.size()-1-i;
+    Double temp = data.get(i);
+    data.set(i, data.get(j));
+    data.set(j, temp);
+  }
+  return data;
+}
+~~~~
+
+* Here we made use of the `Double` wrapper class instead of **`double`** because `ArrayList`s cannot store primitive types.
+* Although these methods are doing the same thing as the methods with the same names in the [array tutorial](Arrays), the syntax is different because we now are sending messages to the `ArrayList` object instead of communicating directly with the array.
+* Do you see how these two methods differ in functionality?
+
+<!-- Markdeep: --><script src="../markdeep.js?taylorial"></script>

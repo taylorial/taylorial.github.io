@@ -1,0 +1,124 @@
+<meta charset="utf-8" lang="en" /><style class="fallback">body{visibility:hidden;}</style>
+
+**Arrays**
+      An array stores a collection of like data.
+
+# Introduction
+
+* An array can be used to group a collection of similar pieces of data.  In particular, arrays are one of two things:
+  1. A collection of primitives, all of the same type
+
+~~~~ Java
+int[] integers;
+integers = new int[20];
+~~~~
+
+* .
+  + .
+    - The first line declares a reference to an array of `int`s, called **integers**.
+    - The second line allocates space for an array of twenty `int`s and makes **integers** point to this newly allocated array.
+  + A collection of references, all of the same type
+
+~~~~ Java
+Integer[] integers;
+integers = new Integer[20];
+~~~~
+
+* .
+  + .
+    - The first line declares a reference to an array of Integer references, called **integers**.
+    - The second line allocates space for an array of twenty references to Integer objects and makes **integers** point to this newly allocated array.
+    - Each element in the array is currently referencing `null` since we haven't created any `Integer` objects.
+    - The following loop will create twenty `Integer` objects and assign the references in the array to point to the newly created Integer objects:
+
+~~~~ Java
+for(int i=0; i < integers.length; ++i) {
+  integers[i] = new Integer(i);
+}
+~~~~
+* Arrays are nice because they allow you to store a collection of items in a group **and** act on all of the items in the group in the same way.  For example, consider the following method:
+
+~~~~ Java
+public static void display(String[] names, PrintStream out) {
+  for(int i=0; i < names.length; ++i) {
+    out.println(names[i]);
+  }
+}
+~~~~
+* .
+  + We can call <code>display</code> as follows:
+
+~~~~ Java
+String[] names = {"Peter", "Paul", "Mary-Anne"};
+display(names, System.out);  // Note: System.out is a PrintStream object
+~~~~
+
+* .
+  + The method will display all three names.  If `names` had twenty names in it, all twenty would be displayed.
+  + If we wanted to do the same thing without an array, we'd need to hard-code the number of names, like this...
+
+~~~~ Java
+public static void display(String name1, String name2, String name3, PrintStream out) {
+  out.println(names1);
+  out.println(names2);
+  out.println(names3);
+}
+~~~~
+
+* .
+  + I'm not going to show you what it would look like if we had twenty names because I don't want you to lose your lunch, but just thinking about it is probably enough to make you nauseous.
+* Arrays can be cumbersome because they cannot be resized easily.  If we need to add an element to an array that is already full, we would need to create a larger array like this:
+  1. Create a new, larger, array
+  2. Copy over all the primitive values/references in the old array to the new array
+  3. Reassign the reference to the original array so that it now points to the new array
+
+~~~~ Java
+/**
+  * Resizes an array of Strings
+  * @param array Array to be resized
+  * @param size Desired size for the array
+  * @return A reference to the newly sized array
+  */
+public static String[] resize(String[] array, int size) {
+  String[] newArray = new String[size];
+  // Since the size could be less than array.length, we need to make sure
+  //  we only go up to the smaller of the two values.
+  for(int i=0; i < array.length && i < size; ++i) {
+    newArray[i] = array[i];
+  }
+  return newArray;
+}
+~~~~
+
+* Wait, wouldn't it be nice if we could just start out with an empty array and then just add elements to it as needed?  [Check this out](ArrayLists) because the girls and boys at Sun Microsystems have already fulfilled your wildest dreams![^dreams]
+
+# Examples
+
+Consider the following two methods. Both of these methods reverse the
+order of the elements of an array, and yet they are quite different.
+
+~~~~ Java
+public static double[] reverse1(double[] data) {
+  double[] temp = new double[data.length];
+  for(int i=0; i < data.length; i++){
+    temp[i] = data[data.length-1-i];
+  }
+  return temp;
+}
+
+public static double[] reverse2(double[] data) {
+  for(int i=0; i < data.length/2; i++){
+    int j = data.length-1-i;
+    double temp = data[i];
+    data[i] = data[j];
+    data[j] = temp;
+  }
+  return data;
+}
+~~~~
+
+How do `reverse1()` and `reverse2()` differ?
+
+[^dreams]: Assuming your wildest dreams are about easily adding elements to a collection of items.
+
+<!-- Markdeep: --><script src="../markdeep.js?taylorial"></script>

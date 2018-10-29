@@ -1,0 +1,77 @@
+<meta charset="utf-8" lang="en" /><style class="fallback">body{visibility:hidden;}</style>
+
+**Value versus reference comparisons**
+         It is important to understand the difference between `==` and `.equals()` and when to use each.
+
+!!!
+    Make sure you understand the concepts discussed in [Primitives versus References](References) before reading this page.
+
+# Comparing Primitives
+
+~~~~ Java
+int i = 3;
+int j = 3;
+if(i==j) {
+  System.out.println("Both variables contain the same value.");
+}
+~~~~
+
+When testing the equality of two primitives we always use the equality operator (`==`).
+
+# Reference Types
+
+Recall that a reference variable stores a memory address.  The address
+is the memory location where the object to which the reference refers is
+located in memory.
+
+# Checking for null
+
+~~~~ Java
+String word;
+if(word==null) {
+  System.out.println("Reference is null.");
+}
+~~~~
+
+When we wish to determine if we have a `null` reference, we must use the equality operator because we need to see of the memory address
+stored in the reference is null.  Calling a method on a `null`
+reference will cause a `NullPointerException` to be thrown at
+runtime, so it doesn't make sense to call `.equals(null)` since
+it will never return `true`.  We will either get a
+`NullPointerException` or the method will return
+`false`.
+
+# Checking for Identity
+
+~~~~ Java
+Complex c1 = new Complex("2.0 + 3.2i");
+Complex c2 = c1;
+if(c1==c2) {
+  System.out.println("The references refer to exactly the same object.");
+}
+~~~~
+
+When we wish to determine if two references both refer to the same object
+(said more causually: "The objects are *identical*"), we are interested
+in comparing the memory addresses stored in the references.  As a result,
+we use the equality operator.
+
+# Checking for Equality
+
+~~~~ Java
+Complex c1 = new Complex("2.0 + 3.2i");
+Complex c2 = new Complex("2.0 + 3.2i");
+if(c1==c2) {
+  System.out.println("The references refer to two equivalent objects.");
+}
+~~~~
+
+We call the `.equals()` when we wish to determine if two
+references refer to objects that are equivalent.  Because we are calling
+a method, the class is responsible for defining what must be true in order
+for two objects to be considered equivalent.  In the class of the
+`Complex`, we would expect the `.equals()` method
+to return true if and only if both objects had the same values for both the
+real and imaginary components.
+
+<!-- Markdeep: --><script src="../markdeep.js?taylorial"></script>
