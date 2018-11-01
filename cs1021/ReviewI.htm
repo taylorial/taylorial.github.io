@@ -9,7 +9,7 @@
 In this sequence of tutorial pages we will be creating a game similar
 to the [Blocks Mania iOS game](www.youtube.com/watch?v=k4qAAs3wvqU).
 
-# Game Introduction ([VIDEO](1021reviewI1.mp4))
+# Game Introduction ([VIDEO](1021review1.mp4))
 
 The game consists of a tiled game board like the one shown below:
 
@@ -27,7 +27,7 @@ We will begin with a very simple game board that consists of: ![<kbd> </kbd> bla
 ~~~~
 [Text Representation of Simple Level of the Gameboard]
 
-# Tile and Position Classes ([VIDEO](1021reviewI2.mp4))
+# Tile and Position Classes ([VIDEO](1021review2.mp4))
 
 We will represent each spot on the gameboard with a tile.  Each tile is a button that can be pressed by clicking with the mouse.  Each tile keeps track of a position (column and row) and a type.  What follows is a first attempt at these classes.
 
@@ -74,7 +74,7 @@ The `type` attribute is used to distinguish between different types of game tile
 1. What are the disadvantages of declaring the `Position` attributes as `public`?
 1. Since the type will be the same for every object from the `Tile` class, can you think of a better way to store this information?
 
-# Game Movement ([VIDEO](1021reviewI3.mp4))
+# Game Movement ([VIDEO](1021review3.mp4))
 
 The video describes the intended behavior when the player makes a move.  If the tile at row: 1, col: 3 is clicked, the tile at row: 1, col: 8 should determine what should happen next.  If this tile is a blank tile, then the Player should be moved to position row: 1, col: 8, and the next move should be moved based on the tile at position row: 1, col: 7.
 
@@ -138,7 +138,7 @@ public class Move {
 1. Implement the `processMove()` method for the `Tile` class that represents a blank tile.
 1. The `position` and `direction` attributes are declared `final`.  What implications does this have on how objects from the `Move` class can be used?
 
-# Gameboard Class ([VIDEO](1021reviewI4.mp4))
+# Gameboard Class ([VIDEO](1021review4.mp4))
 
 A `GameBoard` class is used to manage the GUI of each level of the game.  The `GameBoard` is a `JPanel` that contains a grid of buttons.
 
@@ -173,7 +173,7 @@ public class GameBoard extends JPanel {
 1. Implement the `loadLevel()` method for the `GameBoard` class.
 1. Implement the `createGUI()` method for the `GameBoard` class.
 
-# Game and WinTile Classes ([VIDEO](1021reviewI5.mp4))
+# Game and WinTile Classes ([VIDEO](1021review5.mp4))
 
 For now, the `Game` class will just create a game using the first level of the game.  Eventually it will need to manage multiple levels and the transition between levels.
 
