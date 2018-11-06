@@ -1,0 +1,49 @@
+<meta charset="utf-8" lang="en" /><style class="fallback">body{visibility:hidden;}</style>
+
+**Installing Java 11**
+
+# Install Java 11 Open JDK
+* Download Windows/x64 `.zip` build from [here](http://jdk.java.net/11/)
+* Create a folder at `C:\bin\Java`
+* Copy the `jdk-11.0.1` folder from the `.zip` file to `C:\bin\Java\`
+
+## Set `JAVA_HOME` environment variable
+* Press the Windows key and type **advanced system settings**
+* Select **View advanced systems settings**
+* Click the **Environment Variables** button under the **Advanced** tab
+* Click the lower **New...** button under the list of **System variables**
+* Set `JAVA_HOME` as the **Variable name** and `C:\bin\Java\jdk-11.0.1` as the **Variable value** and click **OK**
+* Click **OK** and then **OK** again
+
+# Install JavaFX 11
+* Download **JavaFX Windows SDK** from [here](https://gluonhq.com/products/javafx/)
+* Copy the `javafx-sdk-11` folder from the `.zip` file to `C:\bin\Java\`
+
+## Set `PATH_TO_FX` environment variable
+* Select **View advanced systems settings**
+* Click the **Environment Variables** button under the **Advanced** tab
+* Click the lower **New...** button under the list of **System variables**
+* Set `PATH_TO_FX` as the **Variable name** and `C:\bin\Java\javafx-sdk-11\lib` as the **Variable value** and click **OK**
+* Click **OK** and then **OK** again
+
+# Configure IntelliJ
+* Create a JavaFX project
+* Set the **Project SDK** to `C:\bin\Java\jdk-11.0.1`
+    + Go to **File** -> **Project Structure...** (or type `CTRL+SHIFT+ALT+S`)
+    + Click **New...** under **Project SDK**
+    + Select JDK and browse to `C:\bin\Java\jdk-11.0.1`
+    + Under **Project language level** select **11 - Local variable syntax for lambda parameters**
+    + Click **OK**
+* Add the JavaFX 11 SDK library
+    + Go to **File** -> **Project Structure...** (or type `CTRL+SHIFT+ALT+S`)
+    + Select **Modules**
+    + Open the **Dependencies** tab and click **+**
+    + Select **Jars or directories** and then select `C:\bin\Java\javafx-sdk-11\lib`
+    + Click **OK**
+* Configure VM options
+    + Go to **Run** -> **Edit Configurations...**
+    + Expand **Templates** and select **Application**
+    + Paste the following in **VM options**: `--module-path C:\bin\Java\javafx-sdk-11\lib --add-modules=javafx.controls,javafx.fxml`
+    + Click **OK**
+
+<!-- Markdeep: --><script src="../markdeep.js?taylorial"></script>
