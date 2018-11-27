@@ -1,6 +1,6 @@
 /**
   markdeep.js
-  Version 1.02 [2018-09-10]
+  Version 1.03 [2018-11-06]
 
   Copyright 2015-2018, Morgan McGuire, http://casual-effects.com
   All rights reserved.
@@ -33,8 +33,8 @@ highlight.min.js 9.12.0 (C) 2017 Ivan Sagalaev https://highlightjs.org/*/
 (function() {
 'use strict';
 
-var TAYLORIAL_HEADER = '<header><a href="index.htm">More</a></header>';
-var TAYLORIAL_FOOTER = '<footer><p>Please send feedback, suggestions, and requests to &#623;o&#596;&#729;l&#592;&#7433;&#633;ol&#654;&#592;&#647;@&#7433;&#613;</p>&#169; 2018 <a href="http://msoe.us/taylor">Dr. Chris Taylor</a>, professor and program director for the Software Engineering program at the <a href="https://msoe.edu">Milwaukee School of Engineering</a>.</footer>';
+let TAYLORIAL_HEADER = '<header><a href="index.htm">More</a></header>';
+let TAYLORIAL_FOOTER = '<footer><p>Please send feedback, suggestions, and requests to &#623;o&#596;&#729;l&#592;&#7433;&#633;ol&#654;&#592;&#647;@&#7433;&#613;</p>&#169; 2018 <a href="http://msoe.us/taylor">Dr. Chris Taylor</a>, professor and program director for the Software Engineering program at the <a href="https://msoe.edu">Milwaukee School of Engineering</a>.</footer>';
 
 // For minification. This is admittedly scary.
 var _ = String.prototype;
@@ -169,16 +169,6 @@ var STYLESHEET = entag('style',
     '}' +
 
     '.md .image{display:inline-block}' +
-    '.md div.imagecaption,.md div.tablecaption,.md div.listingcaption{' +
-    'margin:5px 5px 5px 5px;' +
-    'text-align: justify;' +
-    'font-style:italic' +
-    '}' +
-
-    '.md div.imagecaption{' +
-    'margin-bottom:0' +
-    '}' +
-
     '.md img{' +
     'max-width:100%;' +
     'page-break-inside:avoid' +
@@ -221,6 +211,16 @@ var STYLESHEET = entag('style',
     'border-radius:.2rem;' +
     'border-left:0.5rem solid rgba(68,138,255,.4);' +
     'background-color:rgba(68,138,255,.4);' +
+    '}' +
+
+    '.md div.imagecaption,.md div.tablecaption,.md div.listingcaption{' +
+    'margin:5px 5px 5px 5px;' +
+    'text-align: justify;' +
+    'font-style:italic' +
+    '}' +
+
+    '.md div.imagecaption{' +
+    'margin-bottom:0' +
     '}' +
 
     '.md blockquote.fancyquote{' + 
@@ -297,6 +297,9 @@ var STYLESHEET = entag('style',
     '.md svg.diagram text{' +
     'stroke:none' +
     '}' +
+
+    // printing scale and margins
+    '@media print{@page{margin:1in 5mm;transform: scale(150%)}}' +
 
     // pagebreak hr
     '@media print{body{font-size:90%}.md .pagebreak{page-break-after:always;visibility:hidden}footer p{display:none}header{display:none}}' +
@@ -2159,25 +2162,25 @@ function insertGrading(s, protect, score, possible) {
         return '<title>' + score + '| ' + text + '</title>';
     });
 
-    var grade = 100 * score / possible;
-    var ratio = '';
+    let grade = 100 * score / possible;
+    let ratio = '';
     if(possible != 100) {
         ratio = ' (' + score + '/' + possible + ')';
     };
-    var gradedTOC = '';
-    var feedbackLevel = 0;
+    let gradedTOC = '';
+    let feedbackLevel = 0;
     s = s.rp(/<div class=\"admonition (.*?)\"><div class=\"admonition-title\">(.*?)<\/div>/gi, function (admonition, type, text) {
         if(type === 'metrics') return admonition;
         text = text.trim();
         ++feedbackLevel;
-        var name = 'feedback' + feedbackLevel;
+        let name = 'feedback' + feedbackLevel;
         gradedTOC += '<a href="#' + name + '">' + text + '</a><br/>\n';
         return entag('a', '&nbsp;', 'class="target" name="' + name + '"') + admonition;
     });
-    var TOC = '<p>Additional point adjustments related to specific comments:<br />' + gradedTOC + '</p><div class="gradedTOC"><div class="tocHeader">' + keyword('Grade:') + ' ' + grade.toFixed(1) + '%' + ratio + '</div></div>';
+    let TOC = '<p>Additional point adjustments related to specific comments:<br />' + gradedTOC + '</p><div class="gradedTOC"><div class="tocHeader">' + keyword('Grade:') + ' ' + grade.toFixed(1) + '%' + ratio + '</div></div>';
 
-    var AFTER_GRADE_TABLE = '<a href=\"http:\/\/msoe.us\/taylor\/Nice\">Nicely Done<\/a>';
-    var insertLocation = s.indexOf(AFTER_GRADE_TABLE);
+    let AFTER_GRADE_TABLE = '<a href=\"http:\/\/msoe.us\/taylor\/Nice\">Nicely Done<\/a>';
+    let insertLocation = s.indexOf(AFTER_GRADE_TABLE);
     if (insertLocation === -1) {
         s = TOC + s;
     } else {
@@ -2196,6 +2199,9 @@ function insertTableOfContents(s, protect) {
     // to insert at the end.
     var fullTOC = '';
     var shortTOC = '';
+
+    // names of parent sections
+    var nameStack = [];
     
     // headerCounter[i] is the current counter for header level (i - 1)
     var headerCounter = [0];
@@ -2207,22 +2213,33 @@ function insertTableOfContents(s, protect) {
         level = parseInt(level)
         text = text.trim();
         // If becoming more nested:
-        for (var i = currentLevel; i < level; ++i) { headerCounter[i] = 0; }
+        for (var i = currentLevel; i < level; ++i) {
+            nameStack[i] = '';
+            headerCounter[i] = 0;
+        }
         
         // If becoming less nested:
         headerCounter.splice(level, currentLevel - level);
+        nameStack.splice(level, currentLevel - level);
         currentLevel = level;
-        
+ 
         ++headerCounter[currentLevel - 1];
         
         // Generate a unique name for this element
         var number = headerCounter.join('.');
-        var name = 'toc' + number;
+
+        // legacy, for when toc links were based on
+        // numbers instead of mangled names
+        var oldname = 'toc' + number;
 
         table[removeHTMLTags(text).trim().toLowerCase()] = number;
 
         // Remove links from the title itself
         text = text.rp(/<a\s.*>(.*?)<\/a>/g, '$1');
+
+        nameStack[currentLevel - 1] = mangle(removeHTMLTags(text));
+
+        var name = nameStack.join('/');
 
         // Only insert for the first three levels
         if (level <= 3) {
@@ -2236,7 +2253,7 @@ function insertTableOfContents(s, protect) {
             }
         }
 
-        return entag('a', '&nbsp;', protect('class="target" name="' + name + '"')) + header;
+        return entag('a', '&nbsp;', protect('class="target" name="' + name + '"')) + entag('a', '&nbsp;', protect('class="target" name="' + oldname + '"')) + header;
     });
     if (shortTOC.length > 0) {
         // Strip the leading " &middot; "
@@ -2340,8 +2357,8 @@ function isolated(preSpaces, postSpaces) {
 
 /** Grading related functions */
 function getEarned(str) {
-    var earned = 100;
-    var matches = str.match(/!!!.* metrics:.*\n.*Earned.*\n.*\n((.|\n)*)\[Nicely Done\]/ig);
+    let earned = 100;
+    let matches = str.match(/!!!.* metrics:.*\n.*Earned.*\n.*\n((.|\n)*)\[Nicely Done\]/ig);
     if(!!matches) {
         earned = matches[0].split('\n')
             .filter(r => r.match(/.* .*[0-9].* \|.* .*[0-9].* \|/ig))
@@ -2356,8 +2373,8 @@ function getEarned(str) {
 }
 
 function getPossible(str) {
-    var possible = 100;
-    var matches = str.match(/!!!.* metrics:.*\n.*Earned.*\n.*\n((.|\n)*)\[Nicely Done\]/ig);
+    let possible = 100;
+    let matches = str.match(/!!!.* metrics:.*\n.*Earned.*\n.*\n((.|\n)*)\[Nicely Done\]/ig);
     if(!!matches) {
         possible = matches[0].split('\n')
             .filter(r => r.match(/.* .*[0-9].* \|.* .*[0-9].* \|/ig))
@@ -2371,20 +2388,21 @@ function getPossible(str) {
     return possible;
 }
 
-function getScore(str, possible) {
-    var matches = str.match(/!!!.* minus:.* -(.*[0-9])/ig);
+function getScore(str) {
+    let earned = getEarned(str);
+    let matches = str.match(/!!!.* minus:.* -(.*[0-9])/ig);
     if(!!matches) {
-        possible -= matches.reduce(function(prev, curr) {
+        earned -= matches.reduce(function(prev, curr) {
                 return prev + parseInt(curr.replace( /^\D+/g, ''));
             }, 0);
     }
     matches = str.match(/!!!.* bonus:.* +(.*[0-9])/ig)
     if(!!matches) {
-        possible += matches.reduce(function(prev, curr) {
+        earned += matches.reduce(function(prev, curr) {
                 return prev + parseInt(curr.replace( /^\D+/g, ''));
             }, 0);
     }
-    return possible;
+    return earned;
 }
 
 
@@ -2403,8 +2421,7 @@ function getScore(str, possible) {
 function markdeepToHTML(str, elementMode) {
     // Get grade for assignment
     if(gradingOn) {
-        var earned = getEarned(str);
-        var score = getScore(str, earned);
+        var score = getScore(str);
         var possible = getPossible(str);
     }
 
@@ -2818,6 +2835,12 @@ function markdeepToHTML(str, elementMode) {
 
         return img;
     };
+
+    // Reformat equation links that have brackets: eqn [foo] --> eqn \ref{foo} so that
+    // mathjax can process them.
+    str = str.rp(/\b(equation|eqn\.|eq\.)\s*\[([^\s\]]+)\]/gi, function (match, eq, label) {
+        return eq + ' \\ref{' + label + '}';
+    });
 
     // Reformat figure links that have subfigure labels in parentheses, to avoid them being
     // processed as links
@@ -4511,9 +4534,9 @@ if (! window.alreadyProcessedMarkdeep) {
     var MATHJAX_CONFIG ='<script type="text/x-mathjax-config">MathJax.Hub.Config({ TeX: { equationNumbers: {autoNumber: "AMS"} } });</script>' +
         '<span style="display:none">' +
         // Custom definitions (NC == \newcommand)
-        '$$NC{\\n}{\\hat{n}}NC{\\w}{\\hat{\\omega}}NC{\\wi}{\\w_\\mathrm{i}}NC{\\wo}{\\w_\\mathrm{o}}NC{\\wh}{\\w_\\mathrm{h}}NC{\\Li}{L_\\mathrm{i}}NC{\\Lo}{L_\\mathrm{o}}NC{\\Le}{L_\\mathrm{e}}NC{\\Lr}{L_\\mathrm{r}}NC{\\Lt}{L_\\mathrm{t}}NC{\\O}{\\mathrm{O}}NC{\\degrees}{{^{\\large\\circ}}}NC{\\T}{\\mathsf{T}}NC{\\mathset}[1]{\\mathbb{#1}}NC{\\Real}{\\mathset{R}}NC{\\Integer}{\\mathset{Z}}NC{\\Boolean}{\\mathset{B}}NC{\\Complex}{\\mathset{C}}NC{\\un}[1]{\\,\\mathrm{#1}}$$\n'.rp(/NC/g, '\\newcommand') +
+                '$$NC{\\n}{\\hat{n}}NC{\\thetai}{\\theta_\\mathrm{i}}NC{\\thetao}{\\theta_\\mathrm{o}}NC{\\d}[1]{\\mathrm{d}#1}NC{\\w}{\\hat{\\omega}}NC{\\wi}{\\w_\\mathrm{i}}NC{\\wo}{\\w_\\mathrm{o}}NC{\\wh}{\\w_\\mathrm{h}}NC{\\Li}{L_\\mathrm{i}}NC{\\Lo}{L_\\mathrm{o}}NC{\\Le}{L_\\mathrm{e}}NC{\\Lr}{L_\\mathrm{r}}NC{\\Lt}{L_\\mathrm{t}}NC{\\O}{\\mathrm{O}}NC{\\degrees}{{^{\\large\\circ}}}NC{\\T}{\\mathsf{T}}NC{\\mathset}[1]{\\mathbb{#1}}NC{\\Real}{\\mathset{R}}NC{\\Integer}{\\mathset{Z}}NC{\\Boolean}{\\mathset{B}}NC{\\Complex}{\\mathset{C}}NC{\\un}[1]{\\,\\mathrm{#1}}$$\n'.rp(/NC/g, '\\newcommand') +
         '</span>\n'
-    var MATHJAX_URL = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
+    var MATHJAX_URL = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
 
     function loadMathJax() {
         // Dynamically load mathjax
@@ -4648,7 +4671,7 @@ if (! window.alreadyProcessedMarkdeep) {
                 // Dynamically load mathjax
                 text += '<script src="' + MATHJAX_URL +'"></script>';
             }
-            document.body.innerHTML = entag('code', escapeHTMLEntities(text));
+            document.body.innerHTML = entag('pre', escapeHTMLEntities(text));
         } else {
             document.head.innerHTML = '<meta charset="UTF-8"><meta http-equiv="content-type" content="text/html;charset=UTF-8">' + head + document.head.innerHTML;
             document.body.innerHTML = markdeepHTML;
