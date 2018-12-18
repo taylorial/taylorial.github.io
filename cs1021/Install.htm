@@ -43,7 +43,10 @@
 * Configure VM options
     + Go to **Run** -> **Edit Configurations...**
     + Expand **Templates** and select **Application**
-    + Paste the following in **VM options**: `--module-path C:\bin\Java\javafx-sdk-11.0.1\lib --add-modules=javafx.controls,javafx.fxml`
+    + Paste the following in **VM options**: 
+    ```
+    --module-path C:\bin\Java\javafx-sdk-11.0.1\lib --add-modules=javafx.controls,javafx.fxml
+    ```
     + Click **OK**
 
 [^jdkpath]: If the version of the JDK is different, you will need to use the new version number in the rest of the instructions. E.g., if the version of JDK is 11.0.2, you should replace `jdk-11.0.1` with `jdk-11.0.2`.
