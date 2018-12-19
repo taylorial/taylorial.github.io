@@ -1,6 +1,6 @@
 /**
   markdeep.js
-  Version 1.03 [2018-11-06]
+  Version 1.03 [2018-12-17]
 
   Copyright 2015-2018, Morgan McGuire, http://casual-effects.com
   All rights reserved.
@@ -264,6 +264,7 @@ var STYLESHEET = entag('style',
     '}' +
 
     '.md small{font-size:60%}' +
+    '.md big{font-size:150%}' +
 
     '.md div.title,contents,.md .tocHeader,h1,h2,h3,h4,h5,h6,.md .shortTOC,.md .mediumTOC,.nonumberh1,.nonumberh2,.nonumberh3,.nonumberh4,.nonumberh5,.nonumberh6{' +
     'font-family:Copse,Verdana,Helvetica,Arial,sans-serif;' +
@@ -1316,7 +1317,7 @@ function maybeShowLabel(url, tag) {
 
 // Returns the localized version of word, defaulting to the word itself
 function keyword(word) {
-    return option('lang').keyword[word.toLowerCase()] || word;
+    return option('lang').keyword[word] || option('lang').keyword[word.toLowerCase()] || word;
 }
 
 
@@ -1883,7 +1884,7 @@ function replaceScheduleLists(str, protect) {
                                        }
                                        
                                        // Reconstruct standardized date format
-                                       date = day + ' ' + month + ' ' + year;
+                                       date = day + ' ' + keyword(month) + ' ' + year;
                                        
                                        // Detect the month
                                        var monthNumber = parseInt(month) - 1;
@@ -3180,8 +3181,13 @@ function markdeepToHTML(str, elementMode) {
                 var subtitles = match.ss(match.indexOf('\n', match.indexOf('</strong>')));
                 subtitles = subtitles ? subtitles.rp(/[ \t]*(\S.*?)\n/g, '<div class="subtitle"> $1 </div>\n') : '';
                 
-                // Remove all tags from the title when inside the <TITLE> tag
-                return entag('title', removeHTMLTags(title)) + maybeShowLabel(window.location.href, 'center') +
+                // Remove all tags from the title when inside the <TITLE> tag, as well
+                // as unicode characters that don't render well in tabs and window bars.
+                // These regexps look like they are full of spaces but are actually various
+                // unicode space characters. http://jkorpela.fi/chars/spaces.html
+                title = removeHTMLTags(title).replace(/[? ???]/g, '').replace(/[       ?? ]/g, ' ');
+
+                return entag('title', title) + maybeShowLabel(window.location.href, 'center') +
                     '<div class="title"> ' + title + 
                     ' </div>\n' + subtitles + '<div class="afterTitles"></div>\n';
             });
@@ -4536,7 +4542,7 @@ if (! window.alreadyProcessedMarkdeep) {
         // Custom definitions (NC == \newcommand)
                 '$$NC{\\n}{\\hat{n}}NC{\\thetai}{\\theta_\\mathrm{i}}NC{\\thetao}{\\theta_\\mathrm{o}}NC{\\d}[1]{\\mathrm{d}#1}NC{\\w}{\\hat{\\omega}}NC{\\wi}{\\w_\\mathrm{i}}NC{\\wo}{\\w_\\mathrm{o}}NC{\\wh}{\\w_\\mathrm{h}}NC{\\Li}{L_\\mathrm{i}}NC{\\Lo}{L_\\mathrm{o}}NC{\\Le}{L_\\mathrm{e}}NC{\\Lr}{L_\\mathrm{r}}NC{\\Lt}{L_\\mathrm{t}}NC{\\O}{\\mathrm{O}}NC{\\degrees}{{^{\\large\\circ}}}NC{\\T}{\\mathsf{T}}NC{\\mathset}[1]{\\mathbb{#1}}NC{\\Real}{\\mathset{R}}NC{\\Integer}{\\mathset{Z}}NC{\\Boolean}{\\mathset{B}}NC{\\Complex}{\\mathset{C}}NC{\\un}[1]{\\,\\mathrm{#1}}$$\n'.rp(/NC/g, '\\newcommand') +
         '</span>\n'
-    var MATHJAX_URL = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
+    var MATHJAX_URL = 'https://taylorial.com/MathJax2.7.5.js?config=TeX-AMS-MML_HTMLorMML'
 
     function loadMathJax() {
         // Dynamically load mathjax
@@ -4679,6 +4685,19 @@ if (! window.alreadyProcessedMarkdeep) {
         }
 
         document.body.style.visibility = 'visible';
+
+        var hashIndex = window.location.href.indexOf('#');
+        if (hashIndex > -1) {
+            // Scroll to the target; needed when loading is too fast (ironically)
+            setTimeout(function () {
+                var anchor = document.getElementsByName(window.location.href.substring(hashIndex + 1));
+                if (anchor.length > 0) { anchor[0].scrollIntoView(); }
+                if (window.markdeepOptions) (window.markdeepOptions.onLoad || Math.cos)();
+            }, 100);
+        } else if (window.markdeepOptions && window.markdeepOptions.onLoad) {
+            // Wait for the DOM to update
+            setTimeout(window.markdeepOptions.onLoad, 100);
+        }
     };
 
     ///////////// INSERT command processing
