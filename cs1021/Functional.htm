@@ -114,7 +114,7 @@ interface).
 
 There are several higher-order functions that are commonly used with
 streams of data.  The
-[`Stream`](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html)
+[`Stream`](http://javadoc.taylorial.com/java.base/util/stream/Stream.html)
 interface in Java is often used when applying a functional programming
 approach to collections of data.  The interface includes the following
 methods:
@@ -133,7 +133,7 @@ i.e., methods that accept one or more functions as argument(s).
 One common type of function that is passed to higher-order functions is a
 predicate function -- a function that evaluates to a `boolean` value.
 Java provides a functional interface to help:
-[`Predicate&lt&#xFEFF;T>`](https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html). 
+[`Predicate&lt&#xFEFF;T>`](http://javadoc.taylorial.com/java.base/util/function/Predicate.html). 
 
 We can create a predicate function by implementing this interface with a
 lambda expression.  The following defines a predicate function that returns
@@ -155,7 +155,7 @@ a predicate function:
 ### Function Interface
 
 Another functional interface is the
-[`Function&lt&#xFEFF;T, R>`](https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html)
+[`Function&lt&#xFEFF;T, R>`](http://javadoc.taylorial.com/java.base/util/function/Function.html)
 interface.  This interface represents a function that accepts one argument, of
 type `T`, and produces a result, of type `R`.
 The `Stream` interface declares these higher-order functions that require
@@ -168,12 +168,12 @@ a `Function`:
 ### Consumer Interface
 
 Another functional interface is the
-[`Consumer&lt&#xFEFF;T>`](https://docs.oracle.com/javase/8/docs/api/java/util/function/Consumer.html)
+[`Consumer&lt&#xFEFF;T>`](http://javadoc.taylorial.com/java.base/util/function/Consumer.html)
 interface which represents an operation that accepts a single input, of type
 `T` and returns no result.  Unlike most other functional interfaces, this
 interface is expected to operate via side-effects.
 
-This can be used with the [`Stream.forEach(Consumer&lt&#xFEFF;? super T> action)`](https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#forEach-java.util.function.Consumer-) method.
+This can be used with the [`Stream.forEach(Consumer&lt&#xFEFF;? super T> action)`](http://javadoc.taylorial.com/java.base/util/stream/Stream.html#forEach-java.util.function.Consumer-) method.
 For example, the following code
 
 ```
@@ -215,7 +215,7 @@ law: 3
     Gravity: 7
     ~~~~
 
-    By using a [`parallelStream()`](https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html#parallelStream--)
+    By using a [`parallelStream()`](http://javadoc.taylorial.com/java.base/util/Collection.html#parallelStream())
     the evaluation of the `forEach()` method may be evaluated in parallel.
     In this case, the original stream could be partitioned into `n` streams of `k` elements each (where `´n*k` is the total number of elements in the stream).
     Each partitioned stream could be processed on a separate thread.  The resulting order in which the elements are processed is non-deterministic.
@@ -297,12 +297,12 @@ OptionalDouble averageArea = Stream.of(new Circle(), new Rectangle(), new Circle
         .average();
 ```
 
-Note: `.average()` returns an [`OptionalDouble`](https://docs.oracle.com/javase/8/docs/api/java/util/OptionalDouble.html)
+Note: `.average()` returns an [`OptionalDouble`](http://javadoc.taylorial.com/java.base/util/OptionalDouble.html)
 since it is possible that this calculation doesn't make sense (if the list is empty).  We can check if the
 average was calculated by calling `averageArea.isPresent()`.  If it is, then we can get the value by
 calling `averageArea.getAsDouble()`.
 
-Since calculating statistics is pretty common, there is a [`DoubleSummaryStatistics`](https://docs.oracle.com/javase/8/docs/api/java/util/DoubleSummaryStatistics.html)
+Since calculating statistics is pretty common, there is a [`DoubleSummaryStatistics`](http://javadoc.taylorial.com/java.base/util/DoubleSummaryStatistics.html)
 class that can be used with `summaryStatistics()` to calculate several statistics:
 
 ```

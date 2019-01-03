@@ -36,13 +36,13 @@ private class ButtonEventHandler implements EventHandler&lt&#xFEFF;ActionEvent> 
 ~~~~
   + The first line creates a reference to a String and makes it point to a newly created String object.
   + The second line creates a reference to a `CharSequence` and makes it point to the same String object as word.
-  + Since the [`String`](http://docs.oracle.com/javase/8/docs/api/java/lang/String.html) class implements the [`CharSequence`](http://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html) interface, the second line is a valid statement.
+  + Since the [`String`](http://javadoc.taylorial.com/java.base/lang/String.html) class implements the [`CharSequence`](http://javadoc.taylorial.com/java.base/lang/CharSequence.html) interface, the second line is a valid statement.
   + Both **word** and **charSeq** refer to the same object, but we can only access methods known to the CharSequence interface when using the **charSeq** reference.
   + The `CharSequence` consists of four methods:
-    - [charAt(int)](http://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html#charAt%28int%29)
-    - [length()](http://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html#length%28%29)
-    - [subSequence(int, int)](http://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html#subSequence%28int,%20int%29)
-    - [toString()](http://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html#toString%28%29)
+    - [charAt(int)](http://javadoc.taylorial.com/java.base/lang/CharSequence.html#charAt%28int%29)
+    - [length()](http://javadoc.taylorial.com/java.base/lang/CharSequence.html#length%28%29)
+    - [subSequence(int, int)](http://javadoc.taylorial.com/java.base/lang/CharSequence.html#subSequence%28int,int%29)
+    - [toString()](http://javadoc.taylorial.com/java.base/lang/CharSequence.html#toString%28%29)
   + The following indicates which lines are illegal.  All of the legal lines of code function identically regardless of whether the method is called through **word** or **charSeq**.
 ~~~~ Java
   word.toString();
@@ -64,18 +64,18 @@ private class ButtonEventHandler implements EventHandler&lt&#xFEFF;ActionEvent> 
 
 ## Collection Interface
 
-* The [`Collection&lt&#xFEFF;E>`](http://docs.oracle.com/javase/8/docs/api/java/util/Collection.html) interface is the root interface for the JCF.
+* The [`Collection&lt&#xFEFF;E>`](http://javadoc.taylorial.com/java.base/util/Collection.html) interface is the root interface for the JCF.
 * The `Collection&lt&#xFEFF;E>` represents a group of objects called elements.
 * Collections may be ordered or unordered and may allow duplicate elements or may forbid duplicates.
 * The JCF does not actually provide any direct implementations for the `Collection&lt&#xFEFF;E>` interface.  Instead, the `Collection&lt&#xFEFF;E>` interface acts as a base interface for more specific types of interfaces.
 * Two subinterfaces of the `Collection&lt&#xFEFF;E>` interface are:
-  + [`List&lt&#xFEFF;E>`](http://docs.oracle.com/javase/8/docs/api/java/util/List.html) -- an ordered collection that allows duplicates.  The JCF provides the following implementations of this interface:
-    - [`ArrayList&lt&#xFEFF;E>`](http://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html)
-    - [`LinkedList&lt&#xFEFF;E>`](http://docs.oracle.com/javase/8/docs/api/java/util/LinkedList.html)
-  + [`Set&lt&#xFEFF;E>`](http://docs.oracle.com/javase/8/docs/api/java/util/Set.html) -- an unordered collection that forbids duplicates. The JCF provides the following implementations of this interface:
-    - [`TreeSet&lt&#xFEFF;E>`](http://docs.oracle.com/javase/8/docs/api/java/util/TreeSet.html)
-    - [`HashSet&lt&#xFEFF;E>`](http://docs.oracle.com/javase/8/docs/api/java/util/HashSet.html)
-    - [`PriorityQueue&lt&#xFEFF;E>`](http://docs.oracle.com/javase/8/docs/api/java/util/PriorityQueue.html)
+  + [`List&lt&#xFEFF;E>`](http://javadoc.taylorial.com/java.base/util/List.html) -- an ordered collection that allows duplicates.  The JCF provides the following implementations of this interface:
+    - [`ArrayList&lt&#xFEFF;E>`](http://javadoc.taylorial.com/java.base/util/ArrayList.html)
+    - [`LinkedList&lt&#xFEFF;E>`](http://javadoc.taylorial.com/java.base/util/LinkedList.html)
+  + [`Set&lt&#xFEFF;E>`](http://javadoc.taylorial.com/java.base/util/Set.html) -- an unordered collection that forbids duplicates. The JCF provides the following implementations of this interface:
+    - [`TreeSet&lt&#xFEFF;E>`](http://javadoc.taylorial.com/java.base/util/TreeSet.html)
+    - [`HashSet&lt&#xFEFF;E>`](http://javadoc.taylorial.com/java.base/util/HashSet.html)
+    - [`PriorityQueue&lt&#xFEFF;E>`](http://javadoc.taylorial.com/java.base/util/PriorityQueue.html)
 * We will cover most of these implementations this quarter.
 
 ## Extending Interfaces

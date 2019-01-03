@@ -8,15 +8,15 @@ requires that program control be driven by the user's interaction with the
 moves the mouse, clicks on a button, or selects an item from a menu an "event"
 occurs.
 
-The [javafx.event](https://openjfx.io/javadoc/11/javafx.base/javafx/event/package-summary.html)
+The [javafx.event](http://javadoc.taylorial.com/javafx.base/event/package-summary.html)
 package provides the basic framework for FX events.  The
-[Event](https://openjfx.io/javadoc/11/javafx.base/javafx/event/Event.html)
+[Event](http://javadoc.taylorial.com/javafx.base/event/Event.html)
 class serves as the base class for JavaFX events.  Associated with each
 event is an event source, an event target, and an event type.
 
- * Source -- <acronym title="Graphical User Interface)">GUI</acronym> objects (e.g., a [Button]() object) which generates an [ActionEvent](https://openjfx.io/javadoc/11/javafx.base/javafx/event/ActionEvent.html) (e.g., when the button is clicked).  The source implements the [EventTarget](https://openjfx.io/javadoc/11/javafx.base/javafx/event/EventTarget.html) interface.
- * Listener -- An object that **subscribes** (listens) for a particular type of event to occur.  The listener must implement an interface like [EventHandler](https://openjfx.io/javadoc/11/javafx.base/javafx/event/EventHandler.html) or <a href="https://openjfx.io/javadoc/11/javafx.base/javafx/beans/InvalidationListener.html#invalidated(javafx.beans.Observable)">InvalidationListener</a>[^invalidation].
- * Type -- An additional classification that are used to specify the specific type of event.  For example, a [MouseEvent](https://openjfx.io/javadoc/11/javafx.graphics/javafx/scene/input/MouseEvent.html) has the following types: `ANY`, `MOUSE_CLICKED`, `MOUSE_PRESSED`, `MOUSE_RELEASED`, `MOUSE_MOVED`, `MOUSE_DRAGGED`, `MOUSE_ENTERED`, `MOUSE_EXITED`, `MOUSE_ENTERED_TARGET`, `MOUSE_EXITED_TARGET`, `DRAG_DETECTED`.
+ * Source -- <acronym title="Graphical User Interface)">GUI</acronym> objects (e.g., a [Button]() object) which generates an [ActionEvent](http://javadoc.taylorial.com/javafx.base/event/ActionEvent.html) (e.g., when the button is clicked).  The source implements the [EventTarget](http://javadoc.taylorial.com/javafx.base/event/EventTarget.html) interface.
+ * Listener -- An object that **subscribes** (listens) for a particular type of event to occur.  The listener must implement an interface like [EventHandler](http://javadoc.taylorial.com/javafx.base/event/EventHandler.html) or [InvalidationListener](http://javadoc.taylorial.com/javafx.base/beans/InvalidationListener.html#invalidated%28javafx.beans.Observable%29)[^invalidation].
+ * Type -- An additional classification that are used to specify the specific type of event.  For example, a [MouseEvent](http://javadoc.taylorial.com/javafx.graphics/scene/input/MouseEvent.html) has the following types: `ANY`, `MOUSE_CLICKED`, `MOUSE_PRESSED`, `MOUSE_RELEASED`, `MOUSE_MOVED`, `MOUSE_DRAGGED`, `MOUSE_ENTERED`, `MOUSE_EXITED`, `MOUSE_ENTERED_TARGET`, `MOUSE_EXITED_TARGET`, `DRAG_DETECTED`.
 
 The operating system or windowing system captures generated events and
 notifies the listener objects when a type of event they are listening for
@@ -29,12 +29,12 @@ is ignored.
 
 There are many subclasses of the `Event` class:
 
- * [ActionEvent](https://openjfx.io/javadoc/11/javafx.base/javafx/event/ActionEvent.html) -- widely used to indicate things like when a button is pressed.
- * [MouseEvent](https://openjfx.io/javadoc/11/javafx.graphics/javafx/scene/input/MouseEvent.html) -- indicates mouse activity.
- * [DragEvent](https://openjfx.io/javadoc/11/javafx.graphics/javafx/scene/input/DragEvent.html) -- indicates a drag-and-drop gesture.
- * [KeyEvent](https://openjfx.io/javadoc/11/javafx.graphics/javafx/scene/input/KeyEvent.html) -- indicates that a keystroke has occurred.
- * [ScrollEvent](https://openjfx.io/javadoc/11/javafx.graphics/javafx/scene/input/ScrollEvent.html) -- indicates scrolling by mouse wheel, track pad, touch screen, etc...
- * [TouchEvent](https://openjfx.io/javadoc/11/javafx.graphics/javafx/scene/input/TouchEvent.html) -- indicates a touch screen action
+ * [ActionEvent](http://javadoc.taylorial.com/javafx.base/event/ActionEvent.html) -- widely used to indicate things like when a button is pressed.
+ * [MouseEvent](http://javadoc.taylorial.com/javafx.graphics/scene/input/MouseEvent.html) -- indicates mouse activity.
+ * [DragEvent](http://javadoc.taylorial.com/javafx.graphics/scene/input/DragEvent.html) -- indicates a drag-and-drop gesture.
+ * [KeyEvent](http://javadoc.taylorial.com/javafx.graphics/scene/input/KeyEvent.html) -- indicates that a keystroke has occurred.
+ * [ScrollEvent](http://javadoc.taylorial.com/javafx.graphics/scene/input/ScrollEvent.html) -- indicates scrolling by mouse wheel, track pad, touch screen, etc...
+ * [TouchEvent](http://javadoc.taylorial.com/javafx.graphics/scene/input/TouchEvent.html) -- indicates a touch screen action
 
 # EventHandler I -- Separate Class
 
@@ -287,7 +287,7 @@ which makes the `handleClickMe(ActionEvent event)` method get called whenever
 the button generates an `ActionEvent`.
 
 [^invalidation]: The `InvalidationListener` is used for observable controls like
-sliders, menus, etc..  The [ChangeListener](https://docs.oracle.com/javase/8/javafx/api/javafx/beans/value/ChangeListener.html) interface may be used
+sliders, menus, etc..  The [ChangeListener](http://javadoc.taylorial.com/javafx.base/beans/value/ChangeListener.html) interface may be used
 instead of the `InvalidationListener` if, in the listener, you
 need to know the new value of the item being observered.
 

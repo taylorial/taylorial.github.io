@@ -253,11 +253,11 @@ public class Shape implements Cloneable {
 }
 ~~~~
 
-The first thing we need to do within the `try` block is to call the super constructor.  All implementations of `clone()` should do this.  We want to do this so that we eventually make it all the way back to to `Object.clone()`.  From the [`Object` class Javadoc](http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#clone%28%29):
+The first thing we need to do within the `try` block is to call the super constructor.  All implementations of `clone()` should do this.  We want to do this so that we eventually make it all the way back to to `Object.clone()`.  From the [`Object` class Javadoc](http://javadoc.taylorial.com/java.base/lang/Object.html#clone%28%29):
 
 > The method clone for class Object performs a specific cloning operation. First, if the class of this object does not implement the interface Cloneable, then a CloneNotSupportedException is thrown. Note that all arrays are considered to implement the interface Cloneable. Otherwise, this method creates a new instance of the class of this object and initializes all its fields with exactly the contents of the corresponding fields of this object, as if by assignment; the contents of the fields are not themselves cloned. Thus, this method performs a "shallow copy" of this object, not a "deep copy" operation. 
 > 
->     -- [`Object` class Javadoc](http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#clone%28%29)
+>     -- [`Object` class Javadoc](http://javadoc.taylorial.com/java.base/lang/Object.html#clone%28%29)
 
 In this case, `super.clone()` actually returns a `Shape` object that is a shallow copy of the original object.  In order to make it a deep copy, we need to make deep copies of all the attributes of the `Shape` object.  On the next line, we make a clone of the `Point` object; however, we don't make a clone of the `Color`.  Since the `Color` class doesn't implement the `Cloneable` interface, we aren't able to call `clone`.  Instead, we use a constructor to create a copy of the color attribute.
 

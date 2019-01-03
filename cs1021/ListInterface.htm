@@ -19,9 +19,9 @@
   + Briefly review arrays, discussing some disadvantages
   + Introduce the concept of an **interface** in Java
   + Introduce one interface and two classes that are part of the [Java Collections Framework](http://docs.oracle.com/javase/8/docs/technotes/guides/collections/):
-    - The [List&lt&#xFEFF;E>](http://docs.oracle.com/javase/8/docs/api/java/util/List.html) interface.
-    - The [ArrayList&lt&#xFEFF;E>](http://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html) class.
-    - The [LinkedList&lt&#xFEFF;E>](http://docs.oracle.com/javase/8/docs/api/java/util/LinkedList.html) class.
+    - The [List&lt&#xFEFF;E>](http://javadoc.taylorial.com/java.base/util/List.html) interface.
+    - The [ArrayList&lt&#xFEFF;E>](http://javadoc.taylorial.com/java.base/util/ArrayList.html) class.
+    - The [LinkedList&lt&#xFEFF;E>](http://javadoc.taylorial.com/java.base/util/LinkedList.html) class.
 
 # Arrays
 
@@ -126,13 +126,13 @@ public static String[] resize(String[] array, int size) {
 
 * The first line creates a reference to a String and makes it point to a newly created String object.
 * The second line creates a reference to a CharSequence and makes it point to the same String object as word.
-* Since the [String](http://docs.oracle.com/javase/8/docs/api/java/lang/String.html) class implements the [CharSequence](http://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html), the second line is valid code.
+* Since the [String](http://javadoc.taylorial.com/java.base/lang/String.html) class implements the [CharSequence](http://javadoc.taylorial.com/java.base/lang/CharSequence.html), the second line is valid code.
 * Both **word** and **charSeq** refer to the same object, but we can only access methods known to the CharSequence interface when using the **charSeq** reference.
-* The [CharSequence](http://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html) consists of four methods:
-  + [charAt(int)](http://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html#charAt%28int%29)
-  + [length()](http://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html#length%28%29)
-  + [subSequence(int, int)](http://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html#subSequence%28int,%20int%29)
-  + [toString()](http://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html#toString%28%29)
+* The [CharSequence](http://javadoc.taylorial.com/java.base/lang/CharSequence.html) consists of four methods:
+  + [charAt(int)](http://javadoc.taylorial.com/java.base/lang/CharSequence.html#charAt%28int%29)
+  + [length()](http://javadoc.taylorial.com/java.base/lang/CharSequence.html#length%28%29)
+  + [subSequence(int, int)](http://javadoc.taylorial.com/java.base/lang/CharSequence.html#subSequence%28int,int%29)
+  + [toString()](http://javadoc.taylorial.com/java.base/lang/CharSequence.html#toString%28%29)
 * The following indicates which lines are illegal.  All of the legal lines of code function identically regardless of whether the method is called through **word** or **charSeq**.
 ~~~~ Java
   word.toString();
@@ -150,23 +150,23 @@ public static String[] resize(String[] array, int size) {
 
 # Java Collections Framework
 
-* Because manipulating collections of objects is such a common task, Sun provides the [Java Collections Framework](http://docs.oracle.com/javase/8/docs/guide/collections/index.html).
+* Because manipulating collections of objects is such a common task, Sun provides the [Java Collections Framework](http://javadoc.taylorial.com/java.base/index.html).
 * The framework contains a number of interfaces and classes that various ways of storing and interacting with collections of data.
 * In CS-2852 you will explore the Java Collections Framework in much more detail.
 * In this course we will just touch on a few items.
 
 ## List Interface
 
-* The [List&lt&#xFEFF;E>](http://docs.oracle.com/javase/8/docs/api/java/util/List.html) interface describes a contract for classes that provide an implementation for storing lists of information.
-* The **E** between the angle brackets indicates the type of references contained in the list.  For example [List&lt&#xFEFF;String>](http://docs.oracle.com/javase/8/docs/api/java/util/List.html) indicates that the list contains references to Strings.
+* The [List&lt&#xFEFF;E>](http://javadoc.taylorial.com/java.base/util/List.html) interface describes a contract for classes that provide an implementation for storing lists of information.
+* The **E** between the angle brackets indicates the type of references contained in the list.  For example [List&lt&#xFEFF;String>](http://javadoc.taylorial.com/java.base/util/List.html) indicates that the list contains references to Strings.
 * Some relevant methods include:
-  + [add(E)](http://docs.oracle.com/javase/8/docs/api/java/util/List.html#add%28E%29) -- adds an object to the end of the list.
-  + [clear()](http://docs.oracle.com/javase/8/docs/api/java/util/List.html#clear%28%29) -- removes all elements from the list.
-  + [contains(E)](http://docs.oracle.com/javase/8/docs/api/java/util/List.html#contains%28E%29) -- returns true if the specified element is found in the list.
-  + [get(int)](http://docs.oracle.com/javase/8/docs/api/java/util/List.html#get%28int%29) -- returns the element at the specified location in the list.
-  + [isEmpty()](http://docs.oracle.com/javase/8/docs/api/java/util/List.html#isEmpty%28%29) -- returns true if no elements are in the list.
-  + [set(int, E)](http://docs.oracle.com/javase/8/docs/api/java/util/List.html#set%28int,%20E%29) -- replaces the element at the specified location with the specified element.
-  + [size()](http://docs.oracle.com/javase/8/docs/api/java/util/List.html#size%28%29) -- returns the number of elements in the list.
+  + [add(E)](http://javadoc.taylorial.com/java.base/util/List.html#add%28E%29) -- adds an object to the end of the list.
+  + [clear()](http://javadoc.taylorial.com/java.base/util/List.html#clear%28%29) -- removes all elements from the list.
+  + [contains(E)](http://javadoc.taylorial.com/java.base/util/List.html#contains%28E%29) -- returns true if the specified element is found in the list.
+  + [get(int)](http://javadoc.taylorial.com/java.base/util/List.html#get%28int%29) -- returns the element at the specified location in the list.
+  + [isEmpty()](http://javadoc.taylorial.com/java.base/util/List.html#isEmpty%28%29) -- returns true if no elements are in the list.
+  + [set(int, E)](http://javadoc.taylorial.com/java.base/util/List.html#set%28int,E%29) -- replaces the element at the specified location with the specified element.
+  + [size()](http://javadoc.taylorial.com/java.base/util/List.html#size%28%29) -- returns the number of elements in the list.
 * The following method does some silly stuff with a list of strings:
 ~~~~ Java
 public static void silly(List&lt&#xFEFF;String> words) {
@@ -188,7 +188,7 @@ public static void silly(List&lt&#xFEFF;String> words) {
 * The second time in the loop, word is a reference to the second element in the list.
 * ...
 * The last time in the loop, word is a reference to the last element in the list.
-* Of course, all of this is pretty useless if we don't know about any classes that implement the [List&lt&#xFEFF;E>](http://docs.oracle.com/javase/8/docs/api/java/util/List.html) interface, since we can't do:
+* Of course, all of this is pretty useless if we don't know about any classes that implement the [List&lt&#xFEFF;E>](http://javadoc.taylorial.com/java.base/util/List.html) interface, since we can't do:
 ~~~~ Java
 List&lt&#xFEFF;String> words = new List<>();
 ~~~~
@@ -196,12 +196,12 @@ List&lt&#xFEFF;String> words = new List<>();
 
 ## List Implementations
 
-* The [JCF](http://docs.oracle.com/javase/8/docs/guide/collections/index.html) provides a few classes that implement the [List&lt&#xFEFF;E>](http://docs.oracle.com/javase/8/docs/api/java/util/List.html) interface.
-* The [ArrayList&lt&#xFEFF;E>](http://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html) class.
+* The [JCF](http://docs.oracle.com/javase/8/docs/guide/collections/index.html) provides a few classes that implement the [List&lt&#xFEFF;E>](http://javadoc.taylorial.com/java.base/util/List.html) interface.
+* The [ArrayList&lt&#xFEFF;E>](http://javadoc.taylorial.com/java.base/util/ArrayList.html) class.
   + This is basically a souped up array.
-  + You can think of this class as containing one field that is a reference to an array and a number of methods that implement the [List&lt&#xFEFF;E>](http://docs.oracle.com/javase/8/docs/api/java/util/List.html) interface.
+  + You can think of this class as containing one field that is a reference to an array and a number of methods that implement the [List&lt&#xFEFF;E>](http://javadoc.taylorial.com/java.base/util/List.html) interface.
   + There is really a bit more than this going on here, and you'll learn more about that in CS-2852.
-  + A simplified version of the [ArrayList&lt&#xFEFF;E>](http://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html) class might look something like this:
+  + A simplified version of the [ArrayList&lt&#xFEFF;E>](http://javadoc.taylorial.com/java.base/util/ArrayList.html) class might look something like this:
 ~~~~ Java
 public class ArrayList&lt&#xFEFF;E> implements List&lt&#xFEFF;E> {
   private E[] array;
@@ -248,13 +248,13 @@ public class ArrayList&lt&#xFEFF;E> implements List&lt&#xFEFF;E> {
 
 
 * Again, this is a very simplified version of what really goes on.
-* The [LinkedList&lt&#xFEFF;E>](http://docs.oracle.com/javase/8/docs/api/java/util/LinkedList.html) class.
+* The [LinkedList&lt&#xFEFF;E>](http://javadoc.taylorial.com/java.base/util/LinkedList.html) class.
 * This class also implements the List interface.
-* Although you can interact with the class in the same way you would interact with an [ArrayList&lt&#xFEFF;E>](http://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html), the way that each class implements the functionality described by the List interface is quite different.
-* The [LinkedList&lt&#xFEFF;E>](http://docs.oracle.com/javase/8/docs/api/java/util/LinkedList.html) doesn't use an array to store the data internally.
-* You will study the internal structure of the [LinkedList&lt&#xFEFF;E>](http://docs.oracle.com/javase/8/docs/api/java/util/LinkedList.html) in CS-2852.
-* For now, it is sufficient to know that the [LinkedList&lt&#xFEFF;E>](http://docs.oracle.com/javase/8/docs/api/java/util/LinkedList.html) class implements the List interface.
-* Depending on your application, you may find that it is better to use a [ArrayList&lt&#xFEFF;E>](http://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html) while other times it is better to use an [LinkedList&lt&#xFEFF;E>](http://docs.oracle.com/javase/8/docs/api/java/util/LinkedList.html).
+* Although you can interact with the class in the same way you would interact with an [ArrayList&lt&#xFEFF;E>](http://javadoc.taylorial.com/java.base/util/ArrayList.html), the way that each class implements the functionality described by the List interface is quite different.
+* The [LinkedList&lt&#xFEFF;E>](http://javadoc.taylorial.com/java.base/util/LinkedList.html) doesn't use an array to store the data internally.
+* You will study the internal structure of the [LinkedList&lt&#xFEFF;E>](http://javadoc.taylorial.com/java.base/util/LinkedList.html) in CS-2852.
+* For now, it is sufficient to know that the [LinkedList&lt&#xFEFF;E>](http://javadoc.taylorial.com/java.base/util/LinkedList.html) class implements the List interface.
+* Depending on your application, you may find that it is better to use a [ArrayList&lt&#xFEFF;E>](http://javadoc.taylorial.com/java.base/util/ArrayList.html) while other times it is better to use an [LinkedList&lt&#xFEFF;E>](http://javadoc.taylorial.com/java.base/util/LinkedList.html).
 * Since both class implement the List interface, you can easily modify which implementation you use by just changing the **new** operation.
 * The following code shows how you can use the **silly** method implemented above with either of these classes:
 ~~~~ Java
