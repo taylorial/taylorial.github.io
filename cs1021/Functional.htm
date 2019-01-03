@@ -173,7 +173,7 @@ interface which represents an operation that accepts a single input, of type
 `T` and returns no result.  Unlike most other functional interfaces, this
 interface is expected to operate via side-effects.
 
-This can be used with the [`Stream.forEach(Consumer&lt&#xFEFF;? super T> action)`](http://javadoc.taylorial.com/java.base/util/stream/Stream.html#forEach-java.util.function.Consumer-) method.
+This can be used with the [`Stream.forEach(Consumer&lt&#xFEFF;? super T> action)`](http://javadoc.taylorial.com/java.base/util/stream/Stream.html#forEach%28java.util.function.Consumer%29) method.
 For example, the following code
 
 ```
@@ -215,7 +215,7 @@ law: 3
     Gravity: 7
     ~~~~
 
-    By using a [`parallelStream()`](http://javadoc.taylorial.com/java.base/util/Collection.html#parallelStream())
+    By using a [`parallelStream()`](http://javadoc.taylorial.com/java.base/util/Collection.html#parallelStream%28%29)
     the evaluation of the `forEach()` method may be evaluated in parallel.
     In this case, the original stream could be partitioned into `n` streams of `k` elements each (where `´n*k` is the total number of elements in the stream).
     Each partitioned stream could be processed on a separate thread.  The resulting order in which the elements are processed is non-deterministic.

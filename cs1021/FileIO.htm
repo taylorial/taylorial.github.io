@@ -222,7 +222,7 @@ As noted in the comment, this code does not free up the resources associated wit
 * Doing so makes it possible for someone to read and interpret the data file created by our Java program.
 * In much the same way as we display text to the console (using System.out.print() or System.out.println()), we can send text to a file.
 * A [PrintWriter](http://javadoc.taylorial.com/java.base/io/PrintWriter.html) object has all of the same functionality as System.out.
-* In fact, [System.out](http://javadoc.taylorial.com/java.base/util/System.html#out) is an object from the PrintStream class which is very similar to the PrintWriter class... Yes, that's right, System.out is an object (and so is [System.in](http://javadoc.taylorial.com/java.base/util/System.html#in)).
+* In fact, [System.out](http://javadoc.taylorial.com/java.base/lang/System.html#out) is an object from the PrintStream class which is very similar to the PrintWriter class... Yes, that's right, System.out is an object (and so is [System.in](http://javadoc.taylorial.com/java.base/lang/System.html#in)).
 * The following code creates an input file (if a directory with the same name doesn't already exist) and writes one line of text to it:
 ~~~~ Java
     public static void writeText(String filename) {

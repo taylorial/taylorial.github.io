@@ -14,7 +14,7 @@ package provides the basic framework for FX events.  The
 class serves as the base class for JavaFX events.  Associated with each
 event is an event source, an event target, and an event type.
 
- * Source -- <acronym title="Graphical User Interface)">GUI</acronym> objects (e.g., a [Button]() object) which generates an [ActionEvent](http://javadoc.taylorial.com/javafx.base/event/ActionEvent.html) (e.g., when the button is clicked).  The source implements the [EventTarget](http://javadoc.taylorial.com/javafx.base/event/EventTarget.html) interface.
+ * Source -- <acronym title="Graphical User Interface)">GUI</acronym> objects (e.g., a [Button](http://javadoc.taylorial.com/javafx.controls/scene/control/Button.html) object) which generates an [ActionEvent](http://javadoc.taylorial.com/javafx.base/event/ActionEvent.html) (e.g., when the button is clicked).  The source implements the [EventTarget](http://javadoc.taylorial.com/javafx.base/event/EventTarget.html) interface.
  * Listener -- An object that **subscribes** (listens) for a particular type of event to occur.  The listener must implement an interface like [EventHandler](http://javadoc.taylorial.com/javafx.base/event/EventHandler.html) or [InvalidationListener](http://javadoc.taylorial.com/javafx.base/beans/InvalidationListener.html#invalidated%28javafx.beans.Observable%29)[^invalidation].
  * Type -- An additional classification that are used to specify the specific type of event.  For example, a [MouseEvent](http://javadoc.taylorial.com/javafx.graphics/scene/input/MouseEvent.html) has the following types: `ANY`, `MOUSE_CLICKED`, `MOUSE_PRESSED`, `MOUSE_RELEASED`, `MOUSE_MOVED`, `MOUSE_DRAGGED`, `MOUSE_ENTERED`, `MOUSE_EXITED`, `MOUSE_ENTERED_TARGET`, `MOUSE_EXITED_TARGET`, `DRAG_DETECTED`.
 
