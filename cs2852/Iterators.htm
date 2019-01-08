@@ -5,7 +5,7 @@
 
 * Data structures typically contain a collection of elements.
 * It is often useful to be able to traverse that collection of elements.
-* It is possible to get an iterator from any collection that implements the [Iterable&lt&#xFEFF;T>](http://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html) interface.
+* It is possible to get an iterator from any collection that implements the [Iterable&lt&#xFEFF;T>](http://javadoc.taylorial.com/java.base/lang/Iterable.html) interface.
 * The `Iterable&lt&#xFEFF;T>` interface is quite simple:
 ~~~~ Java
 Iterator&lt&#xFEFF;T> iterator();
@@ -17,7 +17,7 @@ Iterator&lt&#xFEFF;T> iterator();
   + The `T` in `Iterable&lt&#xFEFF;T>` refers to the <b>t</b>ype of element over which we can iterate.
   + Okay... at least I gave you the option of skipping these sub-bullets.
 * So you're probably wondering what you can do with an iterator.  If not, you should be.
-* [`Iterator&lt&#xFEFF;E>`](http://docs.oracle.com/javase/8/docs/api/java/util/Iterator.html) is an interface consisting of three methods:
+* [`Iterator&lt&#xFEFF;E>`](http://javadoc.taylorial.com/java.base/util/Iterator.html) is an interface consisting of three methods:
   + `boolean hasNext()` -- returns `true` if another element exists in the collection
   + `E next()` -- returns the next element in the collection
   + `void remove()` -- removes, from the underlying collection, the last element returned by the iterator (the result of the most recent `next()` call)

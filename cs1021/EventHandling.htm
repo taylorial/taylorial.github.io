@@ -2,6 +2,10 @@
 
 **Event Handling**
 
+!!! WARNING: This page is outdated
+    This page covers Java AWT and Swing which we are no longer learning in
+    CS1021. Instead, we are using [JavaFX](EventHandlingFX.htm).
+
 !!!
     Writing event driven code is require for building useful graphical user
     interfaces.  When a user interacts with the GUI, an event is triggered.
@@ -12,7 +16,7 @@ Writing <acronym title="Graphical User Interface">GUI</acronym> applications req
 
 Event driven programs contain two specific types of objects:
 
-* Source objects -- <acronym title="Graphical User Interface">GUI</acronym> objects (e.g., a [JButton](http://docs.oracle.com/javase/8/docs/api/javax/swing/JButton.html) object) which generates an event (e.g., when the button is clicked).
+* Source objects -- <acronym title="Graphical User Interface">GUI</acronym> objects (e.g., a [JButton](http://javadoc.taylorial.com/javax/swing/JButton.html) object) which generates an event (e.g., when the button is clicked).
 * Listener objects -- An object that <em class="u">subscribes</em> (listens) for a particular type of event to occur.
 
 The operating system or windowing system captures generated events and notifies the listener objects when a type of event they are listening for has occurred.  The operating system <em class="u">notifies</em> the event listener object by sending a message to (calling) the <em class="u">event handling method</em>.  If no event listener object is subscribed to listen for the event that occurred, the event is ignored.
@@ -26,25 +30,25 @@ There are many different kinds of events
   <tr>
     <th>Event Trigger                                     </th><th> Event Listener Type    </th>
   </tr><tr>
-    <td>Click a button                                    </td><td>[ActionListener](http://docs.oracle.com/javase/8/docs/api/java/awt/event/ActionListener.html)</td>
+    <td>Click a button                                    </td><td>[ActionListener](http://javadoc.taylorial.com/java.desktop/awt/event/ActionListener.html)</td>
   </tr><tr>
-    <td>Press <em>Enter</em> while typing in a text field </td><td>[ActionListener](http://docs.oracle.com/javase/8/docs/api/java/awt/event/ActionListener.html)</td>
+    <td>Press <em>Enter</em> while typing in a text field </td><td>[ActionListener](http://javadoc.taylorial.com/java.desktop/awt/event/ActionListener.html)</td>
   </tr><tr>
-    <td>Choose a menu item                                </td><td>[ActionListener](http://docs.oracle.com/javase/8/docs/api/java/awt/event/ActionListener.html)</td>
+    <td>Choose a menu item                                </td><td>[ActionListener](http://javadoc.taylorial.com/java.desktop/awt/event/ActionListener.html)</td>
   </tr><tr>
-    <td>Close a frame (main window)                       </td><td>[WindowListener](http://docs.oracle.com/javase/8/docs/api/java/awt/event/WindowListener.html)</td>
+    <td>Close a frame (main window)                       </td><td>[WindowListener](http://javadoc.taylorial.com/java.desktop/awt/event/WindowListener.html)</td>
   </tr><tr>
-    <td>Press mouse button while hovering over a component</td><td>[MouseListener](http://docs.oracle.com/javase/8/docs/api/java/awt/event/MouseListener.html)</td>
+    <td>Press mouse button while hovering over a component</td><td>[MouseListener](http://javadoc.taylorial.com/java.desktop/awt/event/MouseListener.html)</td>
   </tr><tr>
-    <td>Move mouse over a component                       </td><td>[MouseMotionListener](http://docs.oracle.com/javase/8/docs/api/java/awt/event/MouseMotionListener.html)</td>
+    <td>Move mouse over a component                       </td><td>[MouseMotionListener](http://javadoc.taylorial.com/java.desktop/awt/event/MouseMotionListener.html)</td>
   </tr><tr>
-    <td>Component becomes visible                         </td><td>[ComponentListener](http://docs.oracle.com/javase/8/docs/api/java/awt/event/ComponentListener.html)</td>
+    <td>Component becomes visible                         </td><td>[ComponentListener](http://javadoc.taylorial.com/java.desktop/awt/event/ComponentListener.html)</td>
   </tr><tr>
-    <td>Component gets keyboard focus                     </td><td>[FocusListener](http://docs.oracle.com/javase/8/docs/api/java/awt/event/FocusListener.html)</td>
+    <td>Component gets keyboard focus                     </td><td>[FocusListener](http://javadoc.taylorial.com/java.desktop/awt/event/FocusListener.html)</td>
   </tr><tr>
-    <td>Table/List selection changes                      </td><td>[ListSelectionListener](http://docs.oracle.com/javase/8/docs/api/java/awt/event/ListSelectionListener.html)</td>
+    <td>Table/List selection changes                      </td><td>[ListSelectionListener](http://javadoc.taylorial.com/java.desktop/awt/event/ListSelectionListener.html)</td>
   </tr><tr>
-    <td>Any property in a component changes*              </td><td>[PropertyChangeListener](http://docs.oracle.com/javase/8/docs/api/java/awt/event/PropertyChangeListener.html)</td>
+    <td>Any property in a component changes*              </td><td>[PropertyChangeListener](http://javadoc.taylorial.com/java.desktop/awt/event/PropertyChangeListener.html)</td>
   </tr>
 </table>
 
@@ -108,7 +112,7 @@ The <acronym title="Graphical User Interface">GUI</acronym> looks like this:
 
 ![Figure [gui]: Dog and Pony Show GUI](dognponyshow.png)
 
-The class contains two Action Sources (btnShow and btnHide).  In order for the <acronym title="Graphical User Interface">GUI</acronym> class to be an action listener, it must implement the [ActionListener](http://docs.oracle.com/javase/8/docs/api/java/awt/event/ActionListener.html) interface.  This is accomplished by:
+The class contains two Action Sources (btnShow and btnHide).  In order for the <acronym title="Graphical User Interface">GUI</acronym> class to be an action listener, it must implement the [ActionListener](http://javadoc.taylorial.com/java.desktop/awt/event/ActionListener.html) interface.  This is accomplished by:
 
 * Adding `implements ActionListener` just prior to the opening curly brace for the class, and
 * Implementing the `actionPerformed` method.
@@ -312,7 +316,7 @@ Inner: 1 Outer: -1
 
 ## Sample Code
 
-Making use of the [getActionCommand()](http://docs.oracle.com/javase/8/docs/api/java/awt/event/ActionEvent.html#getActionCommand%28%29) method of the [ActionEvent](http://docs.oracle.com/javase/8/docs/api/java/awt/event/ActionEvent.html) object passed to [actionPerformed()](http://docs.oracle.com/javase/8/docs/api/java/awt/event/ActionListener.html#actionPerformed%28java.awt.event.ActionEvent%29), we no longer need the references to the buttons to be attributes of the class.  We can declare them locally in the `SimpleWindow` class's constructor.
+Making use of the [getActionCommand()](http://javadoc.taylorial.com/java.desktop/awt/event/ActionEvent.html#getActionCommand%28%29) method of the [ActionEvent](http://javadoc.taylorial.com/java.desktop/awt/event/ActionEvent.html) object passed to [actionPerformed()](http://javadoc.taylorial.com/java.desktop/awt/event/ActionListener.html#actionPerformed%28java.awt.event.ActionEvent%29), we no longer need the references to the buttons to be attributes of the class.  We can declare them locally in the `SimpleWindow` class's constructor.
 
 ~~~~ Java
 public class SimpleWindow extends JFrame {
@@ -368,7 +372,7 @@ public class SimpleWindow extends JFrame {
 
 !!!
     * The `ponyLabel` must be declared as an attribute of the `SimpleWindow` class because it needs to be referenced by the object of the `ButtonEventHandler` inner class.
-    * We have modified the text associated with the action command for the **Show** button by using the [setActionCommand](http://docs.oracle.com/javase/8/docs/api/javax/swing/AbstractButton.html#setActionCommand%28java.lang.String%29) (just to show that it could be done, not because it is a great idea in this case).
+    * We have modified the text associated with the action command for the **Show** button by using the [setActionCommand](http://javadoc.taylorial.com/javax/swing/AbstractButton.html#setActionCommand%28java.lang.String%29) (just to show that it could be done, not because it is a great idea in this case).
 
 # Action Events IV
 

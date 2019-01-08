@@ -5,7 +5,7 @@
 An abstract class typically serves as a parent for multiple subclasses.  The abstract class can implement some behaviors to be inherited by the subclasses and declare other behaviors that the subclass must implement.[^subclass]
 
 !!!
-    This page assumes that you have an understanding of [inheritance](Inheritance) and [interfaces](ListInterface).  Please review those pages first.
+    This page assumes that you have an understanding of [inheritance](Inheritance.htm) and [interfaces](ListInterface.htm).  Please review those pages first.
 
 * Inheritance is useful because it allows us to:
   + take an existing class and specialize it
@@ -42,10 +42,10 @@ public abstract void draw();
 
 # Abstract Class Example
 
-Since there really isn't such a thing as a generic shape, we could rewrite our `Shape` class example from the [inheritance](Inheritance) page.  Each particular type of shape (like a rectangle or a circle) will need to provide its own implementation of the `draw()`, `erase()`, and `zoom()`, so we declare them as `abstract` in the `Shape` class, and don't bother to create a dummy implementation.
+Since there really isn't such a thing as a generic shape, we could rewrite our `Shape` class example from the [inheritance](Inheritance.htm) page.  Each particular type of shape (like a rectangle or a circle) will need to provide its own implementation of the `draw()`, `erase()`, and `zoom()`, so we declare them as `abstract` in the `Shape` class, and don't bother to create a dummy implementation.
 
 ~~~~ Java
-import java.awt.Color;
+import javafx.scene.paint.Color;
 
 public abstract class Shape {
 

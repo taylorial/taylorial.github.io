@@ -3,7 +3,7 @@
 **File I/O**
      File Input and Output
 
-The [File](http://docs.oracle.com/javase/8/docs/api/java/io/File.html) class from java.io package is used to represent a file in Java.
+The [File](http://javadoc.taylorial.com/java.base/io/File.html) class from java.io package is used to represent a file in Java.
 
 # File Class
 
@@ -81,17 +81,17 @@ As noted in the comment, this code does not free up the resources associated wit
 * These file streams function in much the same way as the console input and output streams do.
 * There are a variety of standard streams provided in Java
 * Low-level file I/O for raw byte I/O, similar to System.in.read() and System.out.write()
-  + [FileInputStream](http://docs.oracle.com/javase/8/docs/api/java/io/FileInputStream.html) -- reads raw **bytes**
-  + [FileOutputStream](http://docs.oracle.com/javase/8/docs/api/java/io/FileOutputStream.html) -- writes raw **bytes**
+  + [FileInputStream](http://javadoc.taylorial.com/java.base/io/FileInputStream.html) -- reads raw **bytes**
+  + [FileOutputStream](http://javadoc.taylorial.com/java.base/io/FileOutputStream.html) -- writes raw **bytes**
 * High-level file I/O for I/O of primitive data types
-  + [DataInputStream](http://docs.oracle.com/javase/8/docs/api/java/io/DataInputStream.html) -- reads primitive data types
-  + [DataOutputStream](http://docs.oracle.com/javase/8/docs/api/java/io/DataOutputStream.html) -- writes primitive data types
+  + [DataInputStream](http://javadoc.taylorial.com/java.base/io/DataInputStream.html) -- reads primitive data types
+  + [DataOutputStream](http://javadoc.taylorial.com/java.base/io/DataOutputStream.html) -- writes primitive data types
 * Text file I/O for I/O of text
-  + [Scanner](http://docs.oracle.com/javase/8/docs/api/java/util/Scanner.html) -- reads and parses text
-  + [PrintWriter](http://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html) -- writes text
+  + [Scanner](http://javadoc.taylorial.com/java.base/util/Scanner.html) -- reads and parses text
+  + [PrintWriter](http://javadoc.taylorial.com/java.base/io/PrintWriter.html) -- writes text
 * Object file I/O for I/O of arbitrary object data
-  + [ObjectInputStream](http://docs.oracle.com/javase/8/docs/api/java/io/ObjectInputStream.html) -- reads arbitrary object data
-  + [ObjectOutputStream](http://docs.oracle.com/javase/8/docs/api/java/io/ObjectOutputStream.html) -- writes arbitrary object data
+  + [ObjectInputStream](http://javadoc.taylorial.com/java.base/io/ObjectInputStream.html) -- reads arbitrary object data
+  + [ObjectOutputStream](http://javadoc.taylorial.com/java.base/io/ObjectOutputStream.html) -- writes arbitrary object data
 
 # Low-Level File I/O
 
@@ -156,7 +156,7 @@ As noted in the comment, this code does not free up the resources associated wit
 
 * High-level file I/O involves making use of an additional layer of classes to add "improved" functionality.
 
-* The [DataInputStream](http://docs.oracle.com/javase/8/docs/api/java/io/DataInputStream.html) makes use of a [FileInputStream](http://docs.oracle.com/javase/8/docs/api/java/io/FileInputStream.html) object to do the actual work.
+* The [DataInputStream](http://javadoc.taylorial.com/java.base/io/DataInputStream.html) makes use of a [FileInputStream](http://javadoc.taylorial.com/java.base/io/FileInputStream.html) object to do the actual work.
 
 
 * The DataInputStream class provides methods to read primitive data types:
@@ -167,7 +167,7 @@ As noted in the comment, this code does not free up the resources associated wit
   + readDouble()
   + readFloat()
   + read(byte[] b) -- same as FileInputStream's method
-* The [DataOutputStream](http://docs.oracle.com/javase/8/docs/api/java/io/DataOutputStream.html) makes use of a [FileOutputStream](http://docs.oracle.com/javase/8/docs/api/java/io/FileOutputStream.html) object to do the actual work.
+* The [DataOutputStream](http://javadoc.taylorial.com/java.base/io/DataOutputStream.html) makes use of a [FileOutputStream](http://javadoc.taylorial.com/java.base/io/FileOutputStream.html) object to do the actual work.
 * The DataOutputStream class provides methods to write primitive data types:
   + writeBoolean()
   + writeByte()
@@ -221,8 +221,8 @@ As noted in the comment, this code does not free up the resources associated wit
 * Often times we may prefer to store data in a file as text instead of raw binary data.
 * Doing so makes it possible for someone to read and interpret the data file created by our Java program.
 * In much the same way as we display text to the console (using System.out.print() or System.out.println()), we can send text to a file.
-* A [PrintWriter](http://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html) object has all of the same functionality as System.out.
-* In fact, [System.out](http://docs.oracle.com/javase/8/docs/api/java/util/System.html#out) is an object from the PrintStream class which is very similar to the PrintWriter class... Yes, that's right, System.out is an object (and so is [System.in](http://docs.oracle.com/javase/8/docs/api/java/util/System.html#in)).
+* A [PrintWriter](http://javadoc.taylorial.com/java.base/io/PrintWriter.html) object has all of the same functionality as System.out.
+* In fact, [System.out](http://javadoc.taylorial.com/java.base/lang/System.html#out) is an object from the PrintStream class which is very similar to the PrintWriter class... Yes, that's right, System.out is an object (and so is [System.in](http://javadoc.taylorial.com/java.base/lang/System.html#in)).
 * The following code creates an input file (if a directory with the same name doesn't already exist) and writes one line of text to it:
 ~~~~ Java
     public static void writeText(String filename) {
@@ -238,7 +238,7 @@ As noted in the comment, this code does not free up the resources associated wit
 ~~~~
 
 * System.in is an InputStream object.
-* The easiest way to read information from the keyboard is to attach a [Scanner](http://docs.oracle.com/javase/8/docs/api/java/util/Scanner.html) object to the System.in input stream.
+* The easiest way to read information from the keyboard is to attach a [Scanner](http://javadoc.taylorial.com/java.base/util/Scanner.html) object to the System.in input stream.
 * In much the same way, we can read text data from a file by attaching a Scanner object to a FileInputStream.
 * The following code creates a file, writes some text to it, and then reads and displays each word on a separate line.
 ~~~~ Java
@@ -267,7 +267,7 @@ As noted in the comment, this code does not free up the resources associated wit
 * However, each object in our Java program is stored in memory as a bunch of ones and zeros.
 * What if we could just write this "memory footprint" to a file automatically.
 * That's the idea behind Object File I/O.
-* [ObjectOutputStream](http://docs.oracle.com/javase/8/docs/api/java/io/ObjectOutputStream.html) provides a writeObject() method
+* [ObjectOutputStream](http://javadoc.taylorial.com/java.base/io/ObjectOutputStream.html) provides a writeObject() method
 * The data is stored in binary form.
 * The code following creates a file and saves three objects (an Integer, String and Date) in it:
 ~~~~ Java
@@ -280,7 +280,7 @@ try (FileOutputStream fos = new FileOutputStream("test3.dat");
 }
 ~~~~
 
-* [ObjectInputStream](http://docs.oracle.com/javase/8/docs/api/java/io/ObjectInputStream.html) provides a readObject() method
+* [ObjectInputStream](http://javadoc.taylorial.com/java.base/io/ObjectInputStream.html) provides a readObject() method
 * The following code reads the three values back into objects:
 
 ~~~~ Java

@@ -89,7 +89,7 @@ If we enter something other than an integer, the program will display the error 
 * A catch block is executed if
   1. an exception has been encountered in the try block immediately preceding it and
   1. the type of exception encountered matches the type of exception being caught.
-* The type of exception a catch block catches is specified in parentheses after the catch statement.  In the above example, the catch block catches [NumberFormatException](http://docs.oracle.com/javase/8/docs/api/java/lang/NumberFormatException.html) type exceptions.
+* The type of exception a catch block catches is specified in parentheses after the catch statement.  In the above example, the catch block catches [NumberFormatException](http://javadoc.taylorial.com/java.base/lang/NumberFormatException.html) type exceptions.
 * Only the first matching catch block after a try block will be executed.
 * If no exceptions were encountered during the execution of a try block, the catch block(s) after the try block are ignored.  Program flow continues with the statement following the try-catch statement.
 * If an exception is encountered, but no matching catch block is present, program control reverts to the calling method.
@@ -97,21 +97,21 @@ If we enter something other than an integer, the program will display the error 
 
 # Types of Exceptions
 
-* In order for an exception to be thrown, it must be an object from the [Throwable](http://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html) class, or one of its subclasses.
-* The [Throwable](http://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html) class has two subclasses:
-  1. [Error](http://docs.oracle.com/javase/8/docs/api/java/lang/Error.html)
-  1. [Exception](http://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html)
+* In order for an exception to be thrown, it must be an object from the [Throwable](http://javadoc.taylorial.com/java.base/lang/Throwable.html) class, or one of its subclasses.
+* The [Throwable](http://javadoc.taylorial.com/java.base/lang/Throwable.html) class has two subclasses:
+  1. [Error](http://javadoc.taylorial.com/java.base/lang/Error.html)
+  1. [Exception](http://javadoc.taylorial.com/java.base/lang/Exception.html)
 * Recall that the type of exception being caught must be specified in the catch block's parameter list.
 * There are many different types of exceptions.
 
 
 
-After studying the [Throwable](http://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html), [Error](http://docs.oracle.com/javase/8/docs/api/java/lang/Error.html), and [Exception](http://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html) classes we can conclude that:
+After studying the [Throwable](http://javadoc.taylorial.com/java.base/lang/Throwable.html), [Error](http://javadoc.taylorial.com/java.base/lang/Error.html), and [Exception](http://javadoc.taylorial.com/java.base/lang/Exception.html) classes we can conclude that:
 
 
-* [Error](http://docs.oracle.com/javase/8/docs/api/java/lang/Error.html) and [Exception](http://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html) types are specializations of the [Throwable](http://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html) type.
-* [Exception](http://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html) has all of the characteristics (attributes/behaviors) of a [Throwable](http://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html) object, but [Exception](http://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html) may specialize (re-implement) some of these characteristics or add other characteristics that are shared by all [Exception](http://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html) instances but don't apply to [Throwable](http://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html) instances.
-* The [java.lang](http://docs.oracle.com/javase/8/docs/api/java/lang/package-summary.html) package provides a number of subclasses (and subsubclasses, etc) of the [Exception](http://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html) class.
+* [Error](http://javadoc.taylorial.com/java.base/lang/Error.html) and [Exception](http://javadoc.taylorial.com/java.base/lang/Exception.html) types are specializations of the [Throwable](http://javadoc.taylorial.com/java.base/lang/Throwable.html) type.
+* [Exception](http://javadoc.taylorial.com/java.base/lang/Exception.html) has all of the characteristics (attributes/behaviors) of a [Throwable](http://javadoc.taylorial.com/java.base/lang/Throwable.html) object, but [Exception](http://javadoc.taylorial.com/java.base/lang/Exception.html) may specialize (re-implement) some of these characteristics or add other characteristics that are shared by all [Exception](http://javadoc.taylorial.com/java.base/lang/Exception.html) instances but don't apply to [Throwable](http://javadoc.taylorial.com/java.base/lang/Throwable.html) instances.
+* The [java.lang](http://javadoc.taylorial.com/java.base/lang/package-summary.html) package provides a number of subclasses (and subsubclasses, etc) of the [Exception](http://javadoc.taylorial.com/java.base/lang/Exception.html) class.
 * Objects from any of these subclasses can be thrown.
 * The diagram below shows some of the types that can be thrown.
 
@@ -119,11 +119,11 @@ After studying the [Throwable](http://docs.oracle.com/javase/8/docs/api/java/lan
 
 # Handling Exceptions
 
-* When an object from the [Error](http://docs.oracle.com/javase/8/docs/api/java/lang/Error.html) class is thrown, it represents a serious problem and normally should not be caught.
-* When an object from the [Exception](http://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html) class, or one of its subclasses, is thrown, it typically should be caught and handled.
+* When an object from the [Error](http://javadoc.taylorial.com/java.base/lang/Error.html) class is thrown, it represents a serious problem and normally should not be caught.
+* When an object from the [Exception](http://javadoc.taylorial.com/java.base/lang/Exception.html) class, or one of its subclasses, is thrown, it typically should be caught and handled.
 * The type of exception a catch block catches is specified in parentheses after the catch statement.
   + A thrown exception will be caught if it is the same type or a subtype of the type specified in parentheses.
-  + For example, if a [NumberFormatException](http://docs.oracle.com/javase/8/docs/api/java/lang/NumberFormatException.html), it would be caught by the following catch block:
+  + For example, if a [NumberFormatException](http://javadoc.taylorial.com/java.base/lang/NumberFormatException.html), it would be caught by the following catch block:
 ~~~~ Java
 catch (Exception e) {
   // ...
@@ -131,13 +131,13 @@ catch (Exception e) {
 ~~~~
 
 
-since [Exception](http://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html) is a superclass of [NumberFormatException](http://docs.oracle.com/javase/8/docs/api/java/lang/NumberFormatException.html).
+since [Exception](http://javadoc.taylorial.com/java.base/lang/Exception.html) is a superclass of [NumberFormatException](http://javadoc.taylorial.com/java.base/lang/NumberFormatException.html).
 
-* Once caught, methods from the [Throwable](http://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html) class provide information about the exception that was thrown:
-  + The [getMessage()](http://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html#getMessage%28%29) method returns a descriptive string.
-  + The [printStackTrace()](http://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html#printStackTrace%28%29) method prints all of the methods on the stack, i.e., all of the still active methods called prior to encountering the exception.
+* Once caught, methods from the [Throwable](http://javadoc.taylorial.com/java.base/lang/Throwable.html) class provide information about the exception that was thrown:
+  + The [getMessage()](http://javadoc.taylorial.com/java.base/lang/Throwable.html#getMessage%28%29) method returns a descriptive string.
+  + The [printStackTrace()](http://javadoc.taylorial.com/java.base/lang/Throwable.html#printStackTrace%28%29) method prints all of the methods on the stack, i.e., all of the still active methods called prior to encountering the exception.
 * Be sure to catch more specialized exception types (subclasses) first since once a matching catch block is found, all other catch blocks are ignored.
-* If a thrown exception is not caught, anywhere in the program, the Java Virtual Machine (JVM) catches it.  The JVM handles exceptions by calling [printStackTrace()](http://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html#printStackTrace%28%29) and then terminating the program.
+* If a thrown exception is not caught, anywhere in the program, the Java Virtual Machine (JVM) catches it.  The JVM handles exceptions by calling [printStackTrace()](http://javadoc.taylorial.com/java.base/lang/Throwable.html#printStackTrace%28%29) and then terminating the program.
 
 
 ## Recapping
@@ -164,18 +164,18 @@ JOptionPane.showMessageDialog(null, "No worries.  Either way we'll continue on w
 
 * Recall that, if no exception occurs, all of the code except for the catch blocks will be executed.
 * If an exception is thrown while in the try block,
-  + The first catch block will be executed if the exception thrown is of type [NumberFormatException](http://docs.oracle.com/javase/8/docs/api/java/lang/NumberFormatException.html).  Once the catch block finishes executing, program execution continues after the last catch block.
-  + The second catch block will be executed if the exception thrown is of type [RuntimeException](http://docs.oracle.com/javase/8/docs/api/java/lang/RuntimeException.html) or any subclass of [RuntimeException](http://docs.oracle.com/javase/8/docs/api/java/lang/RuntimeException.html) other than [NumberFormatException](http://docs.oracle.com/javase/8/docs/api/java/lang/NumberFormatException.html) (because that exception would have already been caught by the first catch block).  If the second catch block is executed, program control is returned to the calling method at the end of the catch block, so the "No worries" dialog will not be displayed.
+  + The first catch block will be executed if the exception thrown is of type [NumberFormatException](http://javadoc.taylorial.com/java.base/lang/NumberFormatException.html).  Once the catch block finishes executing, program execution continues after the last catch block.
+  + The second catch block will be executed if the exception thrown is of type [RuntimeException](http://javadoc.taylorial.com/java.base/lang/RuntimeException.html) or any subclass of [RuntimeException](http://javadoc.taylorial.com/java.base/lang/RuntimeException.html) other than [NumberFormatException](http://javadoc.taylorial.com/java.base/lang/NumberFormatException.html) (because that exception would have already been caught by the first catch block).  If the second catch block is executed, program control is returned to the calling method at the end of the catch block, so the "No worries" dialog will not be displayed.
   + If no catch block matches the exception thrown, execution of the current method is terminated and the exception is thrown to the calling method (which can either catch it or propagate the exception to the method that called it).
 
 
 ## throw statement
 
 * We can explicitly throw exceptions using the following to steps:
-  1. Instantiate the appropriate [Throwable](http://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html) object.
+  1. Instantiate the appropriate [Throwable](http://javadoc.taylorial.com/java.base/lang/Throwable.html) object.
   1. **throw** a reference to that object.
-* An object is said to be a [Throwable](http://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html) object if it is an instance of the [Throwable](http://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html) class or one of [Throwable](http://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html)'s subclasses.
-* [Exception](http://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html) is a subclass of [Throwable](http://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html).
+* An object is said to be a [Throwable](http://javadoc.taylorial.com/java.base/lang/Throwable.html) object if it is an instance of the [Throwable](http://javadoc.taylorial.com/java.base/lang/Throwable.html) class or one of [Throwable](http://javadoc.taylorial.com/java.base/lang/Throwable.html)'s subclasses.
+* [Exception](http://javadoc.taylorial.com/java.base/lang/Exception.html) is a subclass of [Throwable](http://javadoc.taylorial.com/java.base/lang/Throwable.html).
 * Here is what it looks like in Java:
 ~~~~ Java
 throw new Exception("Info about the exception");
@@ -219,10 +219,10 @@ JOptionPane.showMessageDialog(null, "No worries.  Either way we'll continue on w
 
 * Some exceptions are not allowed to propagate back to the JVM, i.e., they must be caught by your code.
 * A *checked exception* is an exception that is checked at compile time.
-* Objects from the [RuntimeException](http://docs.oracle.com/javase/8/docs/api/java/lang/RuntimeException.html) or one of its subclasses are *unchecked* exceptions.
+* Objects from the [RuntimeException](http://javadoc.taylorial.com/java.base/lang/RuntimeException.html) or one of its subclasses are *unchecked* exceptions.
   + Do not need to be caught by your code.
   + Are detected only at runtime.
-* Only [RuntimeException](http://docs.oracle.com/javase/8/docs/api/java/lang/RuntimeException.html)s can be left unchecked.
+* Only [RuntimeException](http://javadoc.taylorial.com/java.base/lang/RuntimeException.html)s can be left unchecked.
 * In order to propagate a checked exception, the method propagating the exception must explicitly indicate that it may throw a checked exception.
   + To indicate that a method may throw a checked exception, the method's header must include a list of checked exceptions that it may throw.
   + The syntax makes use of the **throws** keyword as follows:
@@ -233,12 +233,12 @@ void someMethod() throws IOException {
 ~~~~
 
 * The exception classes shown in yellow in the figure above are all checked exceptions.  That is, the compiler checks to make sure if there is a potential that any of those types of exceptions are thrown, they must be handled.
-* Use of the **throws** keyword is optional for [RuntimeException](http://docs.oracle.com/javase/8/docs/api/java/lang/RuntimeException.html)s.
+* Use of the **throws** keyword is optional for [RuntimeException](http://javadoc.taylorial.com/java.base/lang/RuntimeException.html)s.
 
 ## The finally Block
 
 * A **finally** block may be used in conjunction with a **try** block.
 * Code within a **finally** block is executed regardless of whether an exception was thrown within the **try** block that it is associated with.
-* The **finally** block is discussed on the [File IO](FileIO) page.
+* The **finally** block is discussed on the [File IO](FileIO.html) page.
 
 <!-- Markdeep: --><script src="../markdeep.js?taylorial"></script>

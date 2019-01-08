@@ -9,19 +9,19 @@ The `List` is implemented by both the `ArrayList` and the `LinkedList`.
 
 # List Interface
 
-* The [`List&lt&#xFEFF;E>`](http://docs.oracle.com/javase/8/docs/api/java/util/List.html) interface describes a contract for classes that provide an implementation for storing lists of information.
+* The [`List&lt&#xFEFF;E>`](http://javadoc.taylorial.com/java.base/util/List.html) interface describes a contract for classes that provide an implementation for storing lists of information.
 * The `E` between the angle brackets indicates the type of references contained in the list.  For example, `List&lt&#xFEFF;String>` indicates that the list contains references to `String`s.
 * The `List&lt&#xFEFF;E>` interface is similar to the `Collection&lt&#xFEFF;E>` interface but adds the concept of ordering.
 * Some relevant methods from the `Collection&lt&#xFEFF;E>` interface include:
-  + [`add(E)`](http://docs.oracle.com/javase/8/docs/api/java/util/List.html#add%28E%29) -- adds an object to the end of the list.
-  + [`clear()`](http://docs.oracle.com/javase/8/docs/api/java/util/List.html#clear%28%29) -- removes all elements from the list.
-  + [`contains(E)`](http://docs.oracle.com/javase/8/docs/api/java/util/List.html#contains%28E%29) -- returns true if the specified element is found in the list.
-  + [`isEmpty()`](http://docs.oracle.com/javase/8/docs/api/java/util/List.html#isEmpty%28%29) -- returns true if no elements are in the list.
-  + [`size()`](http://docs.oracle.com/javase/8/docs/api/java/util/List.html#size%28%29) -- returns the number of elements in the list.
+  + [`add(E)`](http://javadoc.taylorial.com/java.base/util/List.html#add%28E%29) -- adds an object to the end of the list.
+  + [`clear()`](http://javadoc.taylorial.com/java.base/util/List.html#clear%28%29) -- removes all elements from the list.
+  + [`contains(E)`](http://javadoc.taylorial.com/java.base/util/List.html#contains%28E%29) -- returns true if the specified element is found in the list.
+  + [`isEmpty()`](http://javadoc.taylorial.com/java.base/util/List.html#isEmpty%28%29) -- returns true if no elements are in the list.
+  + [`size()`](http://javadoc.taylorial.com/java.base/util/List.html#size%28%29) -- returns the number of elements in the list.
 * Some relevant methods added by the `List&lt&#xFEFF;E>` interface include:
-  + [`add(int, E)`](http://docs.oracle.com/javase/8/docs/api/java/util/List.html#add-int-E-) -- inserts the specified element at the specified position in the list.
-  + [`get(int)`](http://docs.oracle.com/javase/8/docs/api/java/util/List.html#get%28int%29) -- returns the element at the specified location in the list.
-  + [`set(int, E)`](http://docs.oracle.com/javase/8/docs/api/java/util/List.html#set%28int,%20E%29) -- replaces the element at the specified location with the specified element.
+  + [`add(int, E)`](http://javadoc.taylorial.com/java.base/util/List.html#add-int-E-) -- inserts the specified element at the specified position in the list.
+  + [`get(int)`](http://javadoc.taylorial.com/java.base/util/List.html#get%28int%29) -- returns the element at the specified location in the list.
+  + [`set(int, E)`](http://javadoc.taylorial.com/java.base/util/List.html#set%28int,E%29) -- replaces the element at the specified location with the specified element.
 * The following method does some silly stuff with a list of strings:
 ~~~~ Java
    public static void silly(List&lt&#xFEFF;String> words) {
@@ -49,7 +49,7 @@ List&lt&#xFEFF;String> words = new List&lt&#xFEFF;>();
 
 # ArrayList Implementation
 
-* The Java Collections Framework provides an array-based implementation of the `List&lt&#xFEFF;E>` interface as the [`ArrayList&lt&#xFEFF;E>`](http://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html) class.
+* The Java Collections Framework provides an array-based implementation of the `List&lt&#xFEFF;E>` interface as the [`ArrayList&lt&#xFEFF;E>`](http://javadoc.taylorial.com/java.base/util/ArrayList.html) class.
 * The `ArrayList&lt&#xFEFF;E>` has two instance variables:
   + `elementData` -- an array of `Object` references that holds references to the elements in the list.
   + `size` -- an `int` representing the size of the list, i.e., the number of elements in the list.
@@ -60,20 +60,20 @@ List&lt&#xFEFF;String> words = new List&lt&#xFEFF;>();
 * Accessing an arbitrary element within the list can be done quickly because the references to each element are stored in an array and determining where the reference is located is a simple math operation.
 * Suppose that each reference requires 8 bytes to store.  If we wish to access the reference of the fifth element in the array, we can add 32 bytes ($4 \times 8$ bytes) to the address of the first reference in the array.
 * Since the time required to access an element in an `ArrayList` is independent of the size of the list, we consider this to be easy.  For formally, we'll refer to this as a contant-time or $O(1)$ algorithm, but discuss that more later.
-* You may have noticed that the `ArrayList&lt&#xFEFF;E>` implements the [`RandomAccess`](http://docs.oracle.com/javase/8/docs/api/java/util/RandomAccess.html) interface.
+* You may have noticed that the `ArrayList&lt&#xFEFF;E>` implements the [`RandomAccess`](http://javadoc.taylorial.com/java.base/util/RandomAccess.html) interface.
   + The `RandomAccess` interace is a **marker** interface -- an interface that does not declare any methods.
   + By implementing the `RandomAccess` interface the `ArrayList&lt&#xFEFF;E>` is declaring that accessing elements in the list is fast.
 * For more information on `ArrayList`s, see [this `ArrayList` tutorial](ArrayList).
 
 # LinkedList Implementation
 
-* The [`LinkedList&lt&#xFEFF;E>`](http://docs.oracle.com/javase/8/docs/api/java/util/LinkedList.html) doesn't use an array to store the data internally.
-* We will study the internal structure of the `LinkedList&lt&#xFEFF;E>` [later in this course](LinkedList).
+* The [`LinkedList&lt&#xFEFF;E>`](http://javadoc.taylorial.com/java.base/util/LinkedList.html) doesn't use an array to store the data internally.
+* We will study the internal structure of the `LinkedList&lt&#xFEFF;E>` [later in this course](LinkedList.htm).
 * For now, it is sufficient to know that the `LinkedList&lt&#xFEFF;E>` class implements the `List&lt&#xFEFF;E>` interface and does not implement the `RandomAccess` interface.
 * Since it does not implement the `RandomAccess` interface, we are not guaranteed fast access to elements in the list; however, there are other operations that are faster with a `LinkedList&lt&#xFEFF;E>` than with an `ArrayList&lt&#xFEFF;E>`.
 * Depending on your application, you may find that it is better to use an `ArrayList&lt&#xFEFF;E>` while other times it is better to use a `LinkedList&lt&#xFEFF;E>`.
 * Since both class implement the `List&lt&#xFEFF;E>` interface, you can easily modify which implementation you use by just changing the `new` operation.
 * The following code shows how you can use the `silly()` method implemented above with either of these classes:
-* For more information on `LinkedList`s, see [this `LinkedList` tutorial](LinkedList).
+* For more information on `LinkedList`s, see [this `LinkedList` tutorial](LinkedList.htm).
 
 <!-- Markdeep: --><script src="../markdeep.js?taylorial"></script>
