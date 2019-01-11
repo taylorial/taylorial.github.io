@@ -2,10 +2,19 @@
 
 **Installing Java 11**
 
-# Install Java 11 Open JDK
+# Installing Java 11 Open JDK and JavaFX
+
+## Install Java 11 Open JDK
 * Download Windows/x64 `.zip` build from [here](http://jdk.java.net/11/)
 * Create a folder at `C:\bin\Java`
 * Copy the `jdk-11.0.1`[^jdkpath] folder from the `.zip` file to `C:\bin\Java\`
+
+## Install JavaFX 11
+* Download **JavaFX Windows SDK** from [here](https://gluonhq.com/products/javafx/)
+* Copy the `javafx-sdk-11.0.1`[^javafxpath] folder from the `.zip` file to `C:\bin\Java\`
+
+# Configure Environment Variables (Windows)
+In order to use Java from the command line, it is useful to set the following environment variables.
 
 ## Set `JAVA_HOME` environment variable
 * Press the Windows key and type **advanced system settings**
@@ -15,10 +24,6 @@
 * Set `JAVA_HOME` as the **Variable name** and `C:\bin\Java\jdk-11.0.1` as the **Variable value** and click **OK**
 * Click **OK** and then **OK** again
 
-# Install JavaFX 11
-* Download **JavaFX Windows SDK** from [here](https://gluonhq.com/products/javafx/)
-* Copy the `javafx-sdk-11.0.1`[^javafxpath] folder from the `.zip` file to `C:\bin\Java\`
-
 ## Set `PATH_TO_FX` environment variable
 * Select **View advanced systems settings**
 * Click the **Environment Variables** button under the **Advanced** tab
@@ -27,27 +32,43 @@
 * Click **OK** and then **OK** again
 
 # Configure IntelliJ
-* Create a JavaFX project
-* Set the **Project SDK** to `C:\bin\Java\jdk-11.0.1`
-    + Go to **File** -> **Project Structure...** (or type `CTRL+SHIFT+ALT+S`)
-    + Click **New...** under **Project SDK**
-    + Select JDK and browse to `C:\bin\Java\jdk-11.0.1`
-    + Under **Project language level** select **11 - Local variable syntax for lambda parameters**
-    + Click **OK**
-* Add the JavaFX 11 SDK library
-    + Go to **File** -> **Project Structure...** (or type `CTRL+SHIFT+ALT+S`)
-    + Select **Modules**
-    + Open the **Dependencies** tab and click **+**
-    + Select **Jars or directories** and then select `C:\bin\Java\javafx-sdk-11.0.1\lib`
-    + Click **OK**
-* Configure VM options
-    + Go to **Run** -> **Edit Configurations...**
-    + Expand **Templates** and select **Application**
-    + Paste the following in **VM options**: 
-    ```
-    --module-path C:\bin\Java\javafx-sdk-11.0.1\lib --add-modules=javafx.controls,javafx.fxml
-    ```
-    + Click **OK**
+Begin by closing all IntelliJ projects so that you see the "Welcome to IntelliJ IDEA window. The following steps all begin by selecting **Configure** in the lower right corner of the window.
+
+## Set a path variable to JavaFX
+* Go to **Configure** -> **Settings** -> **Appearance & Behavior** -> **Path Variables**
+* Click <kbd>+</kbd> to add a path variable using:
+    + `PATH_TO_FX` for the **Name**
+    + `C:\bin\Java\javafx-sdk-11.0.1\lib` for the **Value** 
+* Click **OK**
+
+## Set the **Project SDK** to `C:\bin\Java\jdk-11.0.1`
+* Go to **Configure** -> **Project Defaults** -> **Project Structure**
+* Under **Project SDK**: Select **11** (if available); otherwise:
+   + Click **New...**
+   + Select JDK and browse to `C:\bin\Java\jdk-11.0.1`
+* Under **Project language level** select **11 - Local variable syntax for lambda parameters**
+* Click **OK** twice
+
+## Set Run Configuration
+* Go to **Configure** -> **Project Defaults** -> **Run Configurations**
+* Expand **Templates** and select **Application**
+* Paste the following in **VM options**: 
+```
+--module-path ${PATH_TO_FX} --add-modules=javafx.controls,javafx.fxml
+```
+* Click **OK**
+
+# New IntelliJ Project
+All of the steps above must be implemented once, but you'll need to do the following for each new IntelliJ project.
+
+* Create a **Java** (__not__ JavaFX) project, if you create a JavaFX project, you will need to set the run configuration (as described above).
+
+## Add the JavaFX 11 SDK library
+* Go to **File** -> **Project Structure...** (<kbd>CTRL</kbd>+<kbd>ALT</kbd>+<kbd>SHIFT</kbd>+<kbd>S</kbd>)
+* Select **Modules**
+* Open the **Dependencies** tab and click <kbd>+</kbd>
+* Select `C:\bin\Java\javafx-sdk-11.0.1\lib`
+* Click **OK** twice
 
 [^jdkpath]: If the version of the JDK is different, you will need to use the new version number in the rest of the instructions. E.g., if the version of JDK is 11.0.2, you should replace `jdk-11.0.1` with `jdk-11.0.2`.
 
