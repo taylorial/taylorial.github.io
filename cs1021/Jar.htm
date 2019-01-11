@@ -1,0 +1,35 @@
+<meta charset="utf-8" lang="en" /><style class="fallback">body{visibility:hidden;}</style>
+
+**Creating Executable Jars**
+
+A `.jar` file can be used to distribute a Java program. A `.jar` file is essentially a `.zip` file that follows a specific structure. This page describes how to use IntelliJ to create a `.jar` file that can be executed from the command line.
+
+# Jar without JavaFX packages (prefered)
+This approach requires that the computer on which the `.jar` is to be executed already has JavaFX installed and configured.
+
+## Configuring Jar to be Created
+* Go to **File** -> **Project Structure...** (<kbd>CTRL</kbd>+<kbd>ALT</kbd>+<kbd>SHIFT</kbd>+<kbd>S</kbd>)
+* Select **Artifacts**
+* Click <kbd>+</kbd>
+* Select **JAR** -> **From modules with dependencies...**
+* Select the class that contains the `main` method (class that extends `Application`)
+* Click **OK**
+* In the **Output Layout** tab, remove all but the last item:
+    + Select **Extracted 'javafx-swf.jar/'** and click <kbd>-</kbd>
+    + Remove the remaining entries that begin with **Extracted** leaving just one entry containing **compiled output**
+
+## Creating the Jar
+* Go to **Build** -> **Build Artifacts**
+* Select the **Build** action in the pop-up menu
+* The `.jar` file should be located in a folder in the `out\artifacts` folder of your project
+
+## Running the Jar file
+You should be able to run the `.jar` file with the following command (from the command line)
+
+```bash
+java --module-path %PATH_TO_FX% --add-modules javafx.controls,javafx.fxml -jar out\artifacts\WHATEVER_jar\WHATEVER.jar
+```
+
+Of course, you'll need to make sure the JavaFX has been installed on the computer and that the `PATH_TO_FX` environment variable has been set appropriately.
+
+<!-- Markdeep: --><script src="../markdeep.js?taylorial"></script>
