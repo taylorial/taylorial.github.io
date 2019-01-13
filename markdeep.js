@@ -79,7 +79,7 @@ function entag(tag, content, attribs) {
 
 
 var BODY_STYLESHEET = entag('style', 
-    '@import url(http://rsms.me/inter/inter-ui.css);' +
+    '@import url(https://rsms.me/inter/inter-ui.css);' +
     'body{max-width:980px;' +
     'margin:auto;' +
     'padding:20px;' +
