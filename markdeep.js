@@ -79,8 +79,7 @@ function entag(tag, content, attribs) {
 
 
 var BODY_STYLESHEET = entag('style', 
-    '@import url(http://fonts.googleapis.com/css?family=Copse);' +
-    '@import url(http://fonts.googleapis.com/css?family=Alegreya+Sans);' +
+    '@import url(http://rsms.me/inter/inter-ui.css);' +
     'body{max-width:980px;' +
     'margin:auto;' +
     'padding:20px;' +
@@ -88,7 +87,7 @@ var BODY_STYLESHEET = entag('style',
     'line-height:140%; ' +
     '-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;font-smoothing:antialiased;' +
     'color:#222;' +
-    'font-family:"Alegreya Sans",Palatino,Georgia,"Times New Roman",serif}');
+    'font-family:"Inter UI",Palatino,Georgia,"Times New Roman",serif}');
 
 /** You can embed your own stylesheet AFTER the <script> tags in your
     file to override these defaults. */
@@ -109,7 +108,7 @@ var STYLESHEET = entag('style',
     'display:block;' +
     'clear:both;' +
     'color:#999;' +
-    'font-family:"Alegreya Sans","arial narrow",arial;' +
+    'font-family:"Inter UI","arial narrow",arial;' +
     '}' +
     'header{' +
     'margin:-1em;' +
@@ -232,7 +231,7 @@ var STYLESHEET = entag('style',
     '.md blockquote.fancyquote::before{' +
     'content:"\u201C";' +
     'color:#DDD;' +
-    'font-family:Times New Roman;' +
+    'font-family:"Inter UI","Times New Roman";' +
     'font-size:300%;' +
     'line-height:0;' +
     'margin-right:0.05em;' +
@@ -249,7 +248,7 @@ var STYLESHEET = entag('style',
     'content:"\u201D";' +
     'font-style:normal;' +
     'color:#DDD;' +
-    'font-family:Times New Roman;' +
+    'font-family:"Inter UI","Times New Roman";' +
     'font-size:250%;' +
     'line-height:0;' +
     'margin-left:0.1em;' +
@@ -267,7 +266,7 @@ var STYLESHEET = entag('style',
     '.md big{font-size:150%}' +
 
     '.md div.title,contents,.md .tocHeader,h1,h2,h3,h4,h5,h6,.md .shortTOC,.md .mediumTOC,.nonumberh1,.nonumberh2,.nonumberh3,.nonumberh4,.nonumberh5,.nonumberh6{' +
-    'font-family:Copse,Verdana,Helvetica,Arial,sans-serif;' +
+    'font-family:"Inter UI",Verdana,Helvetica,Arial,sans-serif;' +
     'margin:13.4px 0 13.4px;' +
     'padding:15px 0 3px;' +
     'border-top:none;' +
@@ -310,7 +309,7 @@ var STYLESHEET = entag('style',
 
     // Not restricted to a:link because we want things like svn URLs to have this font, which
     // makes "//" look better.
-    '.md a{font-family:Georgia,Palatino,\'Times New Roman\'}' +
+    '.md a{font-family:\'Inter UI\',Georgia,Palatino,\'Times New Roman\'}' +
 
     '.md h1,.md .tocHeader,.md .nonumberh1{' +
     'border-bottom:3px solid;' +
@@ -331,7 +330,7 @@ var STYLESHEET = entag('style',
     '}' +
 
     '.md h3,.md h4,.md h5,.md h6,.md .nonumberh3,.md .nonumberh4,.md .nonumberh5,.md .nonumberh6{' +
-    'font-family:Copse,Verdana,Helvetica,Arial,sans-serif;' +
+    'font-family:"Inter UI",Verdana,Helvetica,Arial,sans-serif;' +
     'color:#555;' +
     'font-size:105%;' +
     '}' +
@@ -358,7 +357,7 @@ var STYLESHEET = entag('style',
     'width:100%;' +
     'margin:auto;' +
     'font-size:70%;' +
-    'font-family:Copse,Helvetica,Arial,sans-serif' +
+    'font-family:"Inter UI",Helvetica,Arial,sans-serif' +
     '}' +
 
     '.md table.calendar th{' +
@@ -560,7 +559,7 @@ var STYLESHEET = entag('style',
 
     '.md .admonition.error::before{' + 
     'content: "\\2612";' +
-    'font-family:"Arial";' +
+    'font-family:"Inter UI","Arial";' +
     'font-size:200%;' +
     'position:relative;' +
     'color:rgba(128,12,34,.8);' +
@@ -592,7 +591,7 @@ var STYLESHEET = entag('style',
    '}'
 );
 
-var MARKDEEP_LINE = '<!-- Markdeep: --><style class="fallback">body{visibility:hidden;white-space:pre;font-family:monospace}</style><script src="markdeep.min.js"></script><script src="https://casual-effects.com/markdeep/latest/markdeep.min.js?"></script><script>window.alreadyProcessedMarkdeep||(document.body.style.visibility="visible")</script>';
+var MARKDEEP_LINE = '<!-- Markdeep: --><style class="fallback">body{visibility:hidden;white-space:pre;font-family:Menlo,Monaco,Consolas,monospace}</style><script src="markdeep.min.js"></script><script src="https://casual-effects.com/markdeep/latest/markdeep.min.js?"></script><script>window.alreadyProcessedMarkdeep||(document.body.style.visibility="visible")</script>';
 
 // Language options:
 var FRENCH = {
