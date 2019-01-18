@@ -3,84 +3,49 @@
 **File I/O**
      File Input and Output
 
-The [File](http://javadoc.taylorial.com/java.base/io/File.html) class from java.io package is used to represent a file in Java.
+The [File](http://javadoc.taylorial.com/java.base/io/File.html) class from `java.io` package is used to represent a file in Java. In Java 7, the `java.nio` package was introduced. This package contains a number of useful file-related classes.
 
-# File Class
+# File Management with `java.nio.file` Package
+## The `Path` Interface
+Objects implementing the [`Path`](http://javadoc.taylorial.com/java.base/nio/file/Path.html) interface are used to locate a file/directory in a file system. `Path` objects are created by calling a class method:
 
-* A file can represent a file or a directory/folder.
-* Representing a file:
-  + In the current directory
-~~~~ Java
-File inFile = new File("stuff.txt");
-~~~~
+```
+Path textFile = Path.of("stuff.txt");
+```
 
-    
-* In a specified directory directory:
-~~~~ Java
-File inFile = new File("D:/data/stuff.txt");
-~~~~
+This associates the `textFile` object with a file or directory called `stuff.txt` located in the IntelliJ project directory. The following methods are likely self-explanatory:
 
-* Representing a directory:
-~~~~ Java
-File directory = new File("D:/data");
-~~~~
+```
+// Command                               Result
+textFile.toString();                  // "stuff.txt"
+textFile.toAbsolutePath().toString(); // "C:\w\stuff.txt"
+textFile.toFile();                    // a File object representing the Path
+```
 
-* Here are a few methods that will likely prove useful to you:
-  + inFile.exists() -- true if inFile is correctly associated with a file or directory
-  + inFile.isFile() -- true if inFile is correctly associated with a file
-  + inFile.isDirectory() -- true if inFile is correctly associated with a directory
-  + inFile.list() -- returns an array of strings naming the files and directories in the directory associated with inFile (or null, if not a directory)
+# Files Class
+The [`Files`](http://javadoc.taylorial.com/java.base/nio/file/Files.html) class provides a number of class methods to facilitate working with files.
 
-The following example code will display a does not exist message if the stuff.txt file is not in the current directory.
-
-~~~~ Java
-File inFile = new File("stuff.txt");
-if(!inFile.exists()) {
-  System.out.println("stuff.txt does not exist");
-}
-~~~~
-
-
-The following example code will display a list of all of the filenames (but not subdirectory names) of the files in the specified directory.
-
-~~~~ Java
-    public static void listDirectory(String name) {
-        Path path = Paths.get(name);
-        DirectoryStream<Path> directory = null;
-        try {
-            directory = Files.newDirectoryStream(path);
-            for (Path p : directory) {
-                System.out.println(p);
-            }
-        } catch (IOException e) {
-            System.err.println("An IO Exception occurred");
-        }
-        // NOTE: Not closing DirectoryStream
-    }
-~~~~
-
-
-As noted in the comment, this code does not free up the resources associated with the directory stream.  The following example makes use of the try/using directive introduced in Java 7:
-
-~~~~ Java
-    public static void listDirectory(String name) {
-        try (DirectoryStream<Path> directory = Files.newDirectoryStream(path)) {
-            for (Path p : directory) {
-                System.out.println(p);
-            }
-        } catch (IOException e) {
-            System.err.println("An IO Exception occurred");
-        }
-    }
-~~~~
-
+Here are a few methods that will likely prove useful to you:
+* [`Files.exists(Path)`](http://javadoc.taylorial.com/java.base/nio/file/Files.html#exists%28java.nio.file.Path,java.nio.file.LinkOption...%29) &mdash; Returns true if the path exists on the file system
+* [`Files.isDirectory(Path)`](http://javadoc.taylorial.com/java.base/nio/file/Files.html#isDirectory%28java.nio.file.Path,java.nio.file.LinkOption...%29) &mdash; Returns true if the directory exists
+* [`Files.isRegularFile(Path)`](http://javadoc.taylorial.com/java.base/nio/file/Files.html#isRegularFile%28java.nio.file.Path,java.nio.file.LinkOption...%29) &mdash; Returns true if the directory exists
+* [`Files.isReadable(Path)`](http://javadoc.taylorial.com/java.base/nio/file/Files.html#isReadable%28java.nio.file.Path%29) &mdash; Returns true if it is possible to read from the file
+* [`Files.isWritable(Path)`](http://javadoc.taylorial.com/java.base/nio/file/Files.html#isWritable%28java.nio.file.Path%29) &mdash; Returns true if it is possible to write to the file
+* [`Files.size(Path)`](http://javadoc.taylorial.com/java.base/nio/file/Files.html#size%28java.nio.file.Path%29) &mdash; Returns the size of the file in bytes
+* [`Files.readString(Path)`](http://javadoc.taylorial.com/java.base/nio/file/Files.html#readString%28java.nio.file.Path%29) &mdash; Reads all content from the file and returns it as one `String`
+* [`Files.readAllLines(Path)`](http://javadoc.taylorial.com/java.base/nio/file/Files.html#readAllLines%28java.nio.file.Path%29) &mdash; Reads all content from the file returns a `List<String>` of lines
+* [`Files.writeString(Path)`](http://javadoc.taylorial.com/java.base/nio/file/Files.html#writeString%28java.nio.file.Path,java.lang.CharSequence,java.nio.file.OpenOption...%29) &mdash; Writes a `CharSequence` (think `String`) to a file
+* [`Files.newInputStream(Path)`](http://javadoc.taylorial.com/java.base/nio/file/Files.html#newInputStream%28java.nio.file.Path,java.nio.file.OpenOption...%29) &mdash; Returns an `InputStream` attached to the file
+* [`Files.newOutputStream(Path)`](http://javadoc.taylorial.com/java.base/nio/file/Files.html#newOutputStream%28java.nio.file.Path,java.nio.file.OpenOption...%29) &mdash; Returns an `OutputStream` attached to the file
 
 # Streams of Data
 
-* File input and output is managed through data streams.
+* File input and output can be managed through data streams.
 * These file streams function in much the same way as the console input and output streams do.
 * There are a variety of standard streams provided in Java
 * Low-level file I/O for raw byte I/O, similar to System.in.read() and System.out.write()
+  + [InputStream](http://javadoc.taylorial.com/java.base/io/InputStream.html) -- Abstract class whose subclasses read raw **bytes**
+  + [OutputStream](http://javadoc.taylorial.com/java.base/io/OutputStream.html) -- Abstract class whose subclasses write raw **bytes**
   + [FileInputStream](http://javadoc.taylorial.com/java.base/io/FileInputStream.html) -- reads raw **bytes**
   + [FileOutputStream](http://javadoc.taylorial.com/java.base/io/FileOutputStream.html) -- writes raw **bytes**
 * High-level file I/O for I/O of primitive data types
@@ -101,7 +66,7 @@ As noted in the comment, this code does not free up the resources associated wit
 * Writing involves use of the FileOutputStream.write() method which can accept either a byte value (specified as an int) or an array of bytes.
 * The following code appends some data to a file.  The file is created if it did not exist prior to running this code:
 ~~~~ Java
-    public static void writeBytes3(Path path, boolean append) {
+    public static void writeBytes(Path path, boolean append) {
         try (FileOutputStream out = new FileOutputStream(path.toFile(), append)) {
             out.write('a');
             out.write('d');
@@ -151,6 +116,26 @@ As noted in the comment, this code does not free up the resources associated wit
     }
 ~~~~
 
+Alternatively, we can use the `Files` class to request an `InputStream` to read from a file and an `OutputStream` to write from a file:
+
+~~~~ Java
+    public static void readBytes(Path path) {
+~~~~ Java highlight
+        try (InputStream in = Files.newInputStream(path)) {
+~~~~ Java
+            int i = in.read();
+            // ...
+~~~~
+
+~~~~ Java
+    public static void writeBytes(Path path, boolean append) {
+~~~~ Java highlight
+        OpenOption openOption = append ? StandardOpenOption.APPEND : StandardOpenOption.CREATE;
+        try (OutputStream out = Files.newOutputStream(path), openOption)) {
+~~~~ Java
+            out.write('a');
+            // ...
+~~~~
 
 # High-Level File I/O
 
@@ -180,7 +165,8 @@ As noted in the comment, this code does not free up the resources associated wit
 * What follows is an example.
 ~~~~ Java
     public static void writePrimitives(Path path, boolean append) {
-        try (FileOutputStream out = new FileOutputStream(path.toFile(), append);
+        OpenOption openOption = append ? StandardOpenOption.APPEND : StandardOpenOption.CREATE;
+        try (OutputStream out = Files.newOutputStream(path, openOption);
              DataOutputStream dOut = new DataOutputStream(out)) {
             dOut.writeInt(43);
             dOut.writeBoolean(false);
@@ -197,7 +183,7 @@ As noted in the comment, this code does not free up the resources associated wit
     }
 
     public static void readPrimitives(Path path) {
-        try (FileInputStream in = new FileInputStream(path.toFile());
+        try (InputStream in = Files.newInputStream(path)) {
              DataInputStream dIn = new DataInputStream(in)) {
             int i = dIn.readInt();
             boolean j = dIn.readBoolean();
@@ -271,7 +257,7 @@ As noted in the comment, this code does not free up the resources associated wit
 * The data is stored in binary form.
 * The code following creates a file and saves three objects (an Integer, String and Date) in it:
 ~~~~ Java
-try (FileOutputStream fos = new FileOutputStream("test3.dat");
+try (InputStream in = Files.newOutputStream(Path.of("test3.dat")) {
      ObjectOutputStream out = new ObjectOutputStream(fos)) {
 
     out.writeInt(178);
@@ -284,7 +270,7 @@ try (FileOutputStream fos = new FileOutputStream("test3.dat");
 * The following code reads the three values back into objects:
 
 ~~~~ Java
-try (FileInputStream fis = new FileInputStream("test3.dat");
+try (InputStream in = Files.newInputStream(Path.of("test3.dat")) {
      ObjectInputStream in = new ObjectInputStream(fis)) {
 
     int i = in.readInt();
