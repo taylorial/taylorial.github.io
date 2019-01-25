@@ -255,10 +255,10 @@ Alternatively, we can use the `Files` class to request an `InputStream` to read 
 * That's the idea behind Object File I/O.
 * [ObjectOutputStream](http://javadoc.taylorial.com/java.base/io/ObjectOutputStream.html) provides a writeObject() method
 * The data is stored in binary form.
-* The code following creates a file and saves three objects (an Integer, String and Date) in it:
+* The code following creates a file and saves three objects (an `Integer`, `String` and `Date`) in it:
 ~~~~ Java
-try (InputStream in = Files.newOutputStream(Path.of("test3.dat")) {
-     ObjectOutputStream out = new ObjectOutputStream(fos)) {
+try (OutputStream os = Files.newOutputStream(Path.of("test3.dat")) {
+     ObjectOutputStream out = new ObjectOutputStream(os)) {
 
     out.writeInt(178);
     out.writeObject("I am a string");
@@ -270,8 +270,8 @@ try (InputStream in = Files.newOutputStream(Path.of("test3.dat")) {
 * The following code reads the three values back into objects:
 
 ~~~~ Java
-try (InputStream in = Files.newInputStream(Path.of("test3.dat")) {
-     ObjectInputStream in = new ObjectInputStream(fis)) {
+try (InputStream is = Files.newInputStream(Path.of("test3.dat")) {
+     ObjectInputStream in = new ObjectInputStream(is)) {
 
     int i = in.readInt();
     String phrase = (String)in.readObject();
