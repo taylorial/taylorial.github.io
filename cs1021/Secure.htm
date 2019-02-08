@@ -83,7 +83,7 @@ exploits stemming from implementation defects in trusted code.
    - Left non-final, a class or method can be maliciously overridden by an attacker.
  * **Validate inputs**
    - Inputs from untrusted sources must be validate before use.
- * **Prevent constructrs from calling methods that can be overridden**
+ * **Prevent constructors from calling methods that can be overridden**
    - Constructors that call overridable methods give attackers a reference to `this` before the object has been fully initialized.
  * **Prefer immutability**
    - Declaring things as `final` ensures that they can't be changed maliciously.
