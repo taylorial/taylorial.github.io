@@ -21,7 +21,7 @@ for(Object word : words) {
 }
 ~~~~
 
-Here we're not making use of generics, so the compiler has no idea what we are storing in the collection.  As a result, we had to cast the `word` object reference to a `String` reference before we are able to call the `length()` method on the string in the collection.  That's not the big deal though.  The big deal is that I can add anything to this collection.  For example, the last `words.add("third")` could be replaced with: `words.add(3)` and the compiler is still happy.[^happy]
+Here we're not making use of generics, so the compiler has no idea what we intend to store in the collection.  As a result, we had to cast the `word` `Object` reference to a `String` reference before we are able to call the `length()` method on the string in the collection.  That's not the big deal though.  The big deal is that I can add anything to this collection without the compiler objecting.  For example, the last `words.add("third")` could be replaced with: `words.add(3)` and the compiler is still happy.[^happy]
 
 With generics, we can be much more explicit in declaring our intented use for the collection:
 
@@ -35,10 +35,10 @@ for(String word : words) {
 }
 ~~~~
 
-Here we have declared our intent to only store references to `String`s within our collection.  We no longer need to get `Object` references and then cast them to `String` references, but, more importantly, the compiler will be sad, perhaps even angry, if we try to do something stupid like: `words.add(3);`.  When do you want an angry compiler?  Anytime you are doing something stupid.  The compiler has now become your friend.  Instead of letting you do something stupid that would won't discover until later (perhaps much later), the compiler now cares so much about you that it won't let you proceed with your idiocy.
+Here we have declared our intent to only store references to `String`s within our collection.  We no longer need to get `Object` references and then cast them to `String` references, but, more importantly, the compiler will be sad, perhaps even angry, if we try to do something stupid like: `words.add(3);`.  When do you want an angry compiler?  Anytime you are doing something stupid.  The compiler has now become your friend.  Instead of letting you do something stupid that you won't discover until later (perhaps much later), the compiler now cares so much about you that it won't let you proceed with your idiocy.
 
 !!!
-    Generics allow the compiler to become your good friend.  With generics you can tell the compiler about your dreams for the software you are developing and the compiler can tell you when you are doing things that will turn your dream into a nightmare.[^nightmare]
+    Generics allow the compiler to become your good friend.  With generics you can tell the compiler about your dreams for the software you are developing, and the compiler can tell you when you are doing things that will turn your dream into a nightmare.[^nightmare]
 
 # Define Your Own Class with Generic Support
 
@@ -87,7 +87,7 @@ public static double totalArea(Collection&lt&#xFEFF;Shape> shapes) {
 * The following code will work just fine with our `totalArea` method:
 ~~~~ Java
    List&lt&#xFEFF;Shape> shapes = new LinkedList&lt&#xFEFF;>();
-   for(int i=0; i < 10; ++i) {
+   for(int i=0; i &lt&#xFEFF; 10; ++i) {
        shapes.add(new Circle(Math.random()));
    }
    System.out.println(totalArea(shapes));
@@ -96,7 +96,7 @@ public static double totalArea(Collection&lt&#xFEFF;Shape> shapes) {
 * We could have added `Square`s instead of `Circle`s or some combination of any concrete shapes in the hierarchy and things will continue function properly; however, the following will make a good day bad, or a bad day worse:
 ~~~~ Java
    List&lt&#xFEFF;Circle> shapes = new LinkedList&lt&#xFEFF;>();
-   for(int i=0; i < 10; ++i) {
+   for(int i=0; i &lt&#xFEFF; 10; ++i) {
        shapes.add(new Circle(Math.random()));
    }
    System.out.println(totalArea(shapes));
