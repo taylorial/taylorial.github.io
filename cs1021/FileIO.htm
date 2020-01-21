@@ -7,7 +7,15 @@ The [File](http://javadoc.taylorial.com/java.base/io/File.html) class from `java
 
 # File Management with `java.nio.file` Package
 ## The `Path` Interface
-Objects implementing the [`Path`](http://javadoc.taylorial.com/java.base/nio/file/Path.html) interface are used to locate a file/directory in a file system. `Path` objects are created by calling a class method:
+Objects implementing the [`Path`](http://javadoc.taylorial.com/java.base/nio/file/Path.html) interface are used to locate a file/directory in a file system. 
+
+`Path` objects can be created by:
+
+```
+Path textFile = Paths.get("stuff.txt");
+```
+
+Starting in Java 11, `Path` objects are created by calling a class method:
 
 ```
 Path textFile = Path.of("stuff.txt");
@@ -32,9 +40,9 @@ Here are a few methods that will likely prove useful to you:
 * [`Files.isReadable(Path)`](http://javadoc.taylorial.com/java.base/nio/file/Files.html#isReadable%28java.nio.file.Path%29) &mdash; Returns true if it is possible to read from the file
 * [`Files.isWritable(Path)`](http://javadoc.taylorial.com/java.base/nio/file/Files.html#isWritable%28java.nio.file.Path%29) &mdash; Returns true if it is possible to write to the file
 * [`Files.size(Path)`](http://javadoc.taylorial.com/java.base/nio/file/Files.html#size%28java.nio.file.Path%29) &mdash; Returns the size of the file in bytes
-* [`Files.readString(Path)`](http://javadoc.taylorial.com/java.base/nio/file/Files.html#readString%28java.nio.file.Path%29) &mdash; Reads all content from the file and returns it as one `String`
+* [`Files.readString(Path)`](http://javadoc.taylorial.com/java.base/nio/file/Files.html#readString%28java.nio.file.Path%29) &mdash; Reads all content from the file and returns it as one `String` (only available starting in Java 11)
 * [`Files.readAllLines(Path)`](http://javadoc.taylorial.com/java.base/nio/file/Files.html#readAllLines%28java.nio.file.Path%29) &mdash; Reads all content from the file returns a `List<String>` of lines
-* [`Files.writeString(Path,CharSequence)`](http://javadoc.taylorial.com/java.base/nio/file/Files.html#writeString%28java.nio.file.Path,java.lang.CharSequence,java.nio.file.OpenOption...%29) &mdash; Writes a `CharSequence` (think `String`) to a file
+* [`Files.writeString(Path,CharSequence)`](http://javadoc.taylorial.com/java.base/nio/file/Files.html#writeString%28java.nio.file.Path,java.lang.CharSequence,java.nio.file.OpenOption...%29) &mdash; Writes a `CharSequence` (think `String`) to a file (only available starting in Java 11)
 * [`Files.newInputStream(Path)`](http://javadoc.taylorial.com/java.base/nio/file/Files.html#newInputStream%28java.nio.file.Path,java.nio.file.OpenOption...%29) &mdash; Returns an `InputStream` attached to the file
 * [`Files.newOutputStream(Path)`](http://javadoc.taylorial.com/java.base/nio/file/Files.html#newOutputStream%28java.nio.file.Path,java.nio.file.OpenOption...%29) &mdash; Returns an `OutputStream` attached to the file
 
