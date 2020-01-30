@@ -32,7 +32,7 @@ Java has two primitive types that can store floating-point values, i.e., values 
 
 More precisely, the representation of `float` follows the IEEE 754 standard which specifies that the first bit represents the sign (0 for possitive and 1 for negative).  The next eight bits represent the exponent.  The last 23 bits hold the mantissa, a.k.a, the significand.  This results in a float representation of: $ sign \times mantissa \times 2^{exponent} $.  Even this is a bit of a simiplication.  More details are available [here](https://blog.demofox.org/2017/11/21/floating-point-precision/) or [here](https://www.ibm.com/developerworks/library/j-math2/index.html).  A `double` uses 52 bits for the mantissa and 12 bits for the exponent.
 
-If you are interested, the [Game Engine Black Book: Wolfenstein 3D](https://books.google.com/books?id=Lq4yDwAAQBAJ&pg=PA28&lpg=PA28&dq=3.14%3D%28%E2%88%921%290%E2%88%971.57%E2%88%972%28128%E2%88%92127%29&source=bl&ots=Eue3xPFE97&sig=wlIbpZlirJhzx4Sfr-HBrIbQWzM&hl=en&sa=X&ved=0ahUKEwjS3diu0MnWAhXK5yYKHR6yAv8Q6AEIKDAA#v=onepage&q=IEEE%20754%20standard&f=false) has a nice visualization of how these values are stored.
+[Float Toy](https://evanw.github.io/float-toy/) is a nice tool lets you develop an understanding by twiddling bits and seeing how it changes the value being represented. If you have more interest, the [Game Engine Black Book: Wolfenstein 3D](https://books.google.com/books?id=Lq4yDwAAQBAJ&pg=PA28&lpg=PA28&dq=3.14%3D%28%E2%88%921%290%E2%88%971.57%E2%88%972%28128%E2%88%92127%29&source=bl&ots=Eue3xPFE97&sig=wlIbpZlirJhzx4Sfr-HBrIbQWzM&hl=en&sa=X&ved=0ahUKEwjS3diu0MnWAhXK5yYKHR6yAv8Q6AEIKDAA#v=onepage&q=IEEE%20754%20standard&f=false) has a nice visualization of how these values are stored.
 
 # Automatic Type Conversions
 
