@@ -181,7 +181,7 @@ Shape ref2;
 
 * an interface
 ~~~~ Java
-List<Shape> ref3;
+List&lt&#xFEFF;Shape> ref3;
 ~~~~
 
 * The type of the reference determines which attributes (methods and fields) are available to be called via the reference.
@@ -197,7 +197,7 @@ List<Shape> ref3;
 * Instead, it depends on the actual object to which the reference is pointing.
 * Consider the following code (`readShapes()` is some method that reads shape data from a file and returns a list of shapes):
 ~~~~ Java
-List<Shape> shapes = readShapes("shapeData.txt");
+List&lt&#xFEFF;Shape> shapes = readShapes("shapeData.txt");
 for(Shape shape : shapes) {
   shape.zoom(Math.random()*10.0);
 }
