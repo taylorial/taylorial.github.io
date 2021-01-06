@@ -167,11 +167,11 @@ The `MoveHandler` class has been updated to use a timer to move the player acros
 		}
 
 		private void determineMove(Position clickPos) {
-			if(clickPos.col<playerPos.col) {
+			if(clickPos.col&lt&#xFEFF;playerPos.col) {
 				currentMove = new Move(Move.DIRECTION_WEST, playerPos);
 			} else if(clickPos.col>playerPos.col) {
 				currentMove = new Move(Move.DIRECTION_EAST, playerPos);
-			} else if(clickPos.row<playerPos.row) {
+			} else if(clickPos.row&lt&#xFEFF;playerPos.row) {
 				currentMove = new Move(Move.DIRECTION_NORTH, playerPos);
 			} else if(clickPos.row>playerPos.row) {
 				currentMove = new Move(Move.DIRECTION_SOUTH, playerPos);

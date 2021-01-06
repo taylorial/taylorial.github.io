@@ -47,7 +47,7 @@ integers = new Integer[20];
 * Each element in the array is currently referencing **null** since we haven't created any Integer objects.
 * The following loop will create twenty Integer objects and assign the references in the array to point to the newly created Integer objects:
 ~~~~ Java
-for(int i=0; i < integers.length; ++i) {
+for(int i=0; i &lt&#xFEFF; integers.length; ++i) {
   integers[i] = new Integer(i);
 }
 ~~~~
@@ -56,7 +56,7 @@ for(int i=0; i < integers.length; ++i) {
 * Arrays are nice because they allow you to store a collection of items in a group **and** act on all of the items in the group in the same way.  For example, consider the following method:
 ~~~~ Java
 public static void display(String[] names, PrintStream out) {
-  for(int i=0; i < names.length; ++i) {
+  for(int i=0; i &lt&#xFEFF; names.length; ++i) {
     out.println(names[i]);
   }
 }
@@ -98,7 +98,7 @@ public static String[] resize(String[] array, int size) {
   String[] newArray = new String[size];
   // Since the size could be less than array.length, we need to make sure
   //  we only go up to the smaller of the two values.
-  for(int i=0; i < array.length && i < size; ++i) {
+  for(int i=0; i &lt&#xFEFF; array.length && i &lt&#xFEFF; size; ++i) {
     newArray[i] = array[i];
   }
   return newArray;
@@ -190,7 +190,7 @@ public static void silly(List&lt&#xFEFF;String> words) {
 * The last time in the loop, word is a reference to the last element in the list.
 * Of course, all of this is pretty useless if we don't know about any classes that implement the [List&lt&#xFEFF;E>](http://javadoc.taylorial.com/java.base/util/List.html) interface, since we can't do:
 ~~~~ Java
-List&lt&#xFEFF;String> words = new List<>();
+List&lt&#xFEFF;String> words = new List&lt&#xFEFF;>();
 ~~~~
 
 
@@ -228,7 +228,7 @@ public class ArrayList&lt&#xFEFF;E> implements List&lt&#xFEFF;E> {
 
   public boolean contains(E target) {
     boolean found = false;
-    for(int i=0; !found &amp;&amp; i < array.length; ++i) {
+    for(int i=0; !found &amp;&amp; i &lt&#xFEFF; array.length; ++i) {
       found = target.equals(array[i]);
     }
     return found;
@@ -236,7 +236,7 @@ public class ArrayList&lt&#xFEFF;E> implements List&lt&#xFEFF;E> {
 
   public boolean add(E obj) {
     E[] newArray = (E[])new Object[array.length+1];
-    for(int i=0; i < array.length; ++i) {
+    for(int i=0; i &lt&#xFEFF; array.length; ++i) {
       newArray[i] = array[i];
     }
     newArray[newArray.length-1] = obj;
@@ -258,7 +258,7 @@ public class ArrayList&lt&#xFEFF;E> implements List&lt&#xFEFF;E> {
 * Since both class implement the List interface, you can easily modify which implementation you use by just changing the **new** operation.
 * The following code shows how you can use the **silly** method implemented above with either of these classes:
 ~~~~ Java
-List&lt&#xFEFF;String> words = new ArrayList<>();
+List&lt&#xFEFF;String> words = new ArrayList&lt&#xFEFF;>();
 // do a bunch of .add calls to populate the list
 silly(words);
 

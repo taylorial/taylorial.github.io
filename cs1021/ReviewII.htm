@@ -58,8 +58,8 @@ Here is a potential implementation:
 				++height;
 			}
 			gameboard = new Tile[width][height];
-			for(int row=0; row < height; ++row) {
-				for(int col=0; col < width; ++col) {
+			for(int row=0; row &lt&#xFEFF; height; ++row) {
+				for(int col=0; col &lt&#xFEFF; width; ++col) {
 					char tileType = level.charAt(row*width + col);
 					Position pos = new Position(col, row);
 					Tile tile = null;
@@ -100,8 +100,8 @@ Creating the GUI just involves adding all the tiles to a `GridLayout` within the
 		int width = gameboard.length;
 		int height = gameboard[0].length;
 		setLayout(new GridLayout(height, width));
-		for(int row=0; row < height; ++row) {
-			for(int col=0; col < width; ++col) {
+		for(int row=0; row &lt&#xFEFF; height; ++row) {
+			for(int col=0; col &lt&#xFEFF; width; ++col) {
 				add(gameboard[col][row]);
 			}
 		}

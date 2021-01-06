@@ -42,7 +42,7 @@ The `EventHandler` interface is a functional interface with one method:
 `void handle(T event)`.  Here we will focus on enabling functionality when
 a button is pressed.  In order to do this, we need to:
 
- * Create an object that implements the `EventHandler<ActionEvent>` interface
+ * Create an object that implements the `EventHandler&lt&#xFEFF;ActionEvent>` interface
  * Tell it to listen for events initiated by the button.  To do this we pass the object above to the `Button.setOnAction()` method
  * The system notifies an event hanlder by calling the handler's `handle()` method.
  * The `handle()` method is passed a reference to the `ActionEvent` object.
@@ -84,7 +84,7 @@ Here we:
 The `ClickMeHandler` class implements the `EventHandler` class:
 
 ~~~~ Java
-public class ClickMeHandler implements EventHandler<ActionEvent> {
+public class ClickMeHandler implements EventHandler&lt&#xFEFF;ActionEvent> {
     @Override
     public void handle(ActionEvent event) {
         Button button = (Button)event.getSource();
@@ -132,7 +132,7 @@ public class SimpleGUI extends Application {
         primaryStage.show();
     }
 
-    private class ClickMeHandler implements EventHandler<ActionEvent> {
+    private class ClickMeHandler implements EventHandler&lt&#xFEFF;ActionEvent> {
         @Override
         public void handle(ActionEvent event) {
             if(label.getEffect()==null) {
@@ -172,7 +172,7 @@ public class SimpleGUI extends Application {
         Pane root = new StackPane();
         label = new Label("Here is some text that can be manipulated with the button above.");
         Button clickMe = new Button("Click Me");
-        clickMe.setOnAction(new EventHandler<ActionEvent>() {
+        clickMe.setOnAction(new EventHandler&lt&#xFEFF;ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 if(label.getEffect()==null) {
@@ -192,7 +192,7 @@ public class SimpleGUI extends Application {
 ~~~~
 
  * Notice that here we actually define the class right where we want to use it.
- * One strange thing about the syntax is that it looks like we are instantiating an interface, i.e., `new EventHandler<ActionEvent>()`.
+ * One strange thing about the syntax is that it looks like we are instantiating an interface, i.e., `new EventHandler&lt&#xFEFF;ActionEvent>()`.
  * Notice that the `{ ... }` block immediately following is the implementation of the inner class.
 
 # EventHandler IV -- Lambda Expression
