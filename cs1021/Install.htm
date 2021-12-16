@@ -1,20 +1,17 @@
 <meta charset="utf-8" lang="en" /><style class="fallback">body{visibility:hidden;}</style>
 
-!!!
-    Note: Students taking CS1021 in the winter 2019-20 term should install Java. please see install instructions [here](https://msoe.us/taylor/cs1011/Lab1)
+**Installing Java 17**
 
-**Installing Java 11**
+# Installing Java 17 Open JDK and JavaFX
 
-# Installing Java 11 Open JDK and JavaFX
+## Install Java 17 Open JDK
+* Download Windows/x64 `.zip` build from [here](https://download.oracle.com/java/17/latest/jdk-17_windows-x64_bin.zip)
+* Create a folder at `C:\Java`
+* Copy the `jdk-17.0.1`[^jdkpath] folder from the `.zip` file to `C:\Java\`
 
-## Install Java 11 Open JDK
-* Download Windows/x64 `.zip` build from [here](https://corretto.aws/downloads/latest/amazon-corretto-11-x64-windows-jdk.zip)
-* Create a folder at `C:\bin\Java`
-* Copy the `jdk-11.0.1`[^jdkpath] folder from the `.zip` file to `C:\bin\Java\`
-
-## Install JavaFX 11
-* Download **JavaFX Windows SDK** from [here](https://gluonhq.com/products/javafx/)
-* Copy the `javafx-sdk-11.0.1`[^javafxpath] folder from the `.zip` file to `C:\bin\Java\`
+## Install JavaFX 17
+* Download x64 **JavaFX Windows SDK** from [here](https://gluonhq.com/products/javafx/)
+* Copy the `javafx-sdk-17.0.1`[^javafxpath] folder from the `.zip` file to `C:\Java\`
 
 # Configure Environment Variables (Windows)
 In order to use Java from the command line, it is useful to set the following environment variables.
@@ -24,42 +21,42 @@ In order to use Java from the command line, it is useful to set the following en
 * Select **View advanced systems settings**
 * Click the **Environment Variables** button under the **Advanced** tab
 * Click the lower **New...** button under the list of **System variables**
-* Set `JAVA_HOME` as the **Variable name** and `C:\bin\Java\jdk-11.0.1` as the **Variable value** and click **OK**
+* Set `JAVA_HOME` as the **Variable name** and `C:\Java\jdk-17.0.1` as the **Variable value** and click **OK**
 * Click **OK** and then **OK** again
 
 ## Set `PATH_TO_FX` environment variable
 * Select **View advanced systems settings**
 * Click the **Environment Variables** button under the **Advanced** tab
 * Click the lower **New...** button under the list of **System variables**
-* Set `PATH_TO_FX` as the **Variable name** and `C:\bin\Java\javafx-sdk-11.0.1\lib` as the **Variable value** and click **OK**
+* Set `PATH_TO_FX` as the **Variable name** and `C:\Java\javafx-sdk-17.0.1\lib` as the **Variable value** and click **OK**
 * Click **OK** and then **OK** again
 
 # Configure IntelliJ
-Begin by closing all IntelliJ projects so that you see the **Welcome to IntelliJ IDEA** window. The following steps all begin by selecting **Configure** in the lower right corner of the window.
 
-## Set a path variable to JavaFX
-* Close all open IntelliJ projects to get to the **Welcome to IntelliJ IDEA** window
-* Go to **Configure** -> **Settings** -> **Appearance & Behavior** -> **Path Variables**
-* Click <kbd>+</kbd> to add a path variable using:
-    + `PATH_TO_FX` for the **Name**
-    + `C:\bin\Java\javafx-sdk-11.0.1\lib` for the **Value** 
+## Set the **Project SDK** to `C:\Java\jdk-17.0.1`
+* Go to **File** -> **New Projects Setup** -> **Structure**
+* Select **Project** under **Project Settings** on the left side
+* Under **Project SDK**: Select **17** (if available); otherwise:
+   + Click **Add SDK**
+   + Select JDK and browse to `C:\Java\jdk-17.0.1`
+* Under **Project language level** select **17 - Sealed types, always-strict floating-point semantics**
 * Click **OK**
 
-## Set the **Project SDK** to `C:\bin\Java\jdk-11.0.1`
-* Close all open IntelliJ projects to get to the **Welcome to IntelliJ IDEA** window
-* Go to **Configure** -> **Project Defaults** -> **Project Structure**
-* Under **Project SDK**: Select **11** (if available); otherwise:
-   + Click **New...**
-   + Select JDK and browse to `C:\bin\Java\jdk-11.0.1`
-* Under **Project language level** select **11 - Local variable syntax for lambda parameters**
+## Add JavaFX to **Global Library**
+* Go to **File** -> **New Projects Setup** -> **Structure**
+* Select **Global Libraries** under **Platform Settings** on the left side
+* Click the **+** (plus symbol) in the upper left of the second column
+* Select **Java** from the menu
+* Browse to `C:\Java\javafx-sdk-17.0.1\lib`
 * Click **OK** twice
 
-## Set Run Configuration
-* Go to **Configure** -> **Project Defaults** -> **Run Configurations**
-* Expand **Templates** and select **Application**
+## Set Run Configuration Template for **Application**
+* Go to **File** -> **New Projects Setup** -> **Run Configuration Templates...**
+* Select **Application**
+* Click **Modify options** (or type <kbd>Alt</kbd>+<kbd>M</kbd>) and ensure **Add VM options** is checked
 * Paste the following in **VM options**: 
 ```
---module-path ${PATH_TO_FX} --add-modules=javafx.controls,javafx.fxml
+--module-path C:\Java\javafx-sdk-17.0.1\lib --add-modules=javafx.controls,javafx.fxml
 ```
 * Click **OK**
 
@@ -68,15 +65,15 @@ All of the steps above must be implemented once, but you'll need to do the follo
 
 * Create a **Java** (__not__ JavaFX) project, if you create a JavaFX project, you will need to set the run configuration (as described above).
 
-## Add the JavaFX 11 SDK library
+## Add the JavaFX 17 SDK library
 * Go to **File** -> **Project Structure...** (<kbd>CTRL</kbd>+<kbd>ALT</kbd>+<kbd>SHIFT</kbd>+<kbd>S</kbd>)
 * Select **Modules**
 * Open the **Dependencies** tab and click <kbd>+</kbd>
-* Select **JARs or directories...**
-* Select `C:\bin\Java\javafx-sdk-11.0.1\lib`
-* Click **OK** twice
+* Select **Library...**
+* Select **lib**
+* Click **Add Selected** and then **OK**
 
-[^jdkpath]: If the version of the JDK is different, you will need to use the new version number in the rest of the instructions. E.g., if the version of JDK is 11.0.2, you should replace `jdk-11.0.1` with `jdk-11.0.2`.
+[^jdkpath]: If the version of the JDK is different, you will need to use the new version number in the rest of the instructions. E.g., if the version of JDK is 17.0.2, you should replace `jdk-17.0.1` with `jdk-17.0.2`.
 
 [^javafxpath]: You may need to update the version number on the javafx-sdk in a similar way to a JDK version change.
 
