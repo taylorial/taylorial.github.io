@@ -63,7 +63,7 @@ For example, the GUI layout above could be described using
 JavaFX's FXML as shown below:
 
 ~~~~ Java
-&lt&#xFEFF;StackPane fx:controller="ClickMeController" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1">
+&lt&#xFEFF;StackPane fx:controller="ClickMeController" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    &lt&#xFEFF;children>
       &lt&#xFEFF;Label fx:id="message" text="Here is some text that can be manipulated with the button above." />
       &lt&#xFEFF;Button text="Click Me!" onAction="#handleClickMe" />
@@ -71,8 +71,8 @@ JavaFX's FXML as shown below:
 &lt&#xFEFF;/StackPane>
 ~~~~
 
-We'll get into the details below, but you should see that we
-have declared that we have a `StackPane` that contains children
+You should see we
+have declared that we want a `StackPane` that contains children
 within it: a `Label` and a `Button`.  Looking more closely,
 we see that the label contains the text "Here is some text
 that can be manipulated with the button above." and the button
