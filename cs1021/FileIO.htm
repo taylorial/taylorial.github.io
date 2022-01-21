@@ -75,7 +75,8 @@ Here are a few methods that will likely prove useful to you:
 * The following code appends some data to a file.  The file is created if it did not exist prior to running this code:
 ~~~~ Java
     public static void writeBytes(Path path, boolean append) {
-        try (FileOutputStream out = new FileOutputStream(path.toFile(), append)) {
+        OpenOption openOption = append ? StandardOpenOption.APPEND : StandardOpenOption.CREATE;
+        try (OutputStream out = Files.newOutputStream(path, openOption)) {
             out.write('a');
             out.write('d');
             out.write(1000000);
@@ -100,7 +101,7 @@ Here are a few methods that will likely prove useful to you:
 * The following code reads some data from a file:
 ~~~~ Java
     public static void readBytes(Path path) {
-        try (FileInputStream in = new FileInputStream(path.toFile())) {
+        try (InputStream in = Files.newInputStream(path)) {
             int i = in.read();
             int j = in.read();
             int k = in.read();
@@ -124,26 +125,6 @@ Here are a few methods that will likely prove useful to you:
     }
 ~~~~
 
-Alternatively, we can use the `Files` class to request an `InputStream` to read from a file and an `OutputStream` to write from a file:
-
-~~~~ Java
-    public static void readBytes(Path path) {
-~~~~ Java highlight
-        try (InputStream in = Files.newInputStream(path)) {
-~~~~ Java
-            int i = in.read();
-            // ...
-~~~~
-
-~~~~ Java
-    public static void writeBytes(Path path, boolean append) {
-~~~~ Java highlight
-        OpenOption openOption = append ? StandardOpenOption.APPEND : StandardOpenOption.CREATE;
-        try (OutputStream out = Files.newOutputStream(path), openOption)) {
-~~~~ Java
-            out.write('a');
-            // ...
-~~~~
 
 # High-Level File I/O
 
