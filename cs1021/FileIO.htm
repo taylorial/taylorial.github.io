@@ -172,7 +172,7 @@ Here are a few methods that will likely prove useful to you:
     }
 
     public static void readPrimitives(Path path) {
-        try (InputStream in = Files.newInputStream(path)) {
+        try (InputStream in = Files.newInputStream(path);
              DataInputStream dIn = new DataInputStream(in)) {
             int i = dIn.readInt();
             boolean j = dIn.readBoolean();
