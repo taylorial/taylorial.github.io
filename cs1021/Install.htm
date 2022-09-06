@@ -5,43 +5,27 @@
 # Installing Java 17 Open JDK and JavaFX
 
 ## Install Java 17 Open JDK
-* Download Windows/x64 `.zip` build from [here](https://download.oracle.com/java/17/latest/jdk-17_windows-x64_bin.zip)
-* Create a folder at `C:\Java`
-* Copy the `jdk-17.0.1`[^jdkpath] folder from the `.zip` file to `C:\Java\`
+* Download Windows/x64 `.msi` build from [here](https://www.oracle.com/java/technologies/downloads/#jdk17-windows)
+* Open the `.msi` file to install JDK17
 
-## Install JavaFX 17
-* Download x64 **JavaFX Windows SDK** from [here](https://gluonhq.com/products/javafx/) and unzip the file
-* Copy the `javafx-sdk-17.0.1`[^javafxpath] folder from the `.zip` file to `C:\Java\`
+## Install JavaFX 18
+* Apparently JavaFX 17 is no longer available for download.
+* Download x64 **JavaFX 18 Windows SDK** from [here](https://gluonhq.com/products/javafx/) and unzip the file
+* Copy the `javafx-sdk-18.0.2`[^javafxpath] folder from the `.zip` file to `C:\Program Files\Java\`
 
-# Configure Environment Variables (Windows)
-In order to use Java from the command line, it is useful to set the following environment variables.
-
-## Set `JAVA_HOME` and environment variable and update`PATH`
-* Press the Windows key and type **advanced system settings**
-* Select **View advanced systems settings**
-* Click the **Environment Variables** button under the **Advanced** tab
-* Click the lower **New...** button under the list of **System variables**
-* Set `JAVA_HOME` as the **Variable name** and `C:\Java\jdk-17.0.1` as the **Variable value** and click **OK**
-* Select the `Path` entry and click **Edit...**
-* Add `C:\Java\jdk-17.0.1\bin\`
-* Click **OK**, then **OK**, and then **OK** again
-
-## Set `PATH_TO_FX` environment variable
-* Select **View advanced systems settings**
-* Click the **Environment Variables** button under the **Advanced** tab
-* Click the lower **New...** button under the list of **System variables**
-* Set `PATH_TO_FX` as the **Variable name** and `C:\Java\javafx-sdk-17.0.1\lib` as the **Variable value** and click **OK**
-* Click **OK** and then **OK** again
+## Install Scene Builder 18
+* Download Scene Builder Windows Installer from [here](https://glounhq.com/products/scene-builder/#download)
+* Open the `.msi` file to install Scene Builder
 
 # Configure IntelliJ
 
-## Set the **Project SDK** to `C:\Java\jdk-17.0.1`
+## Set the **Project SDK**
 * Go to **File** -> **New Projects Setup** -> **Structure**
 * Select **Project** under **Project Settings** on the left side
-* Under **Project SDK**: Select **17** (if available); otherwise:
+* Set **SDK** to **17** (if available); otherwise:
    + Click **Add SDK**
-   + Select JDK and browse to `C:\Java\jdk-17.0.1`
-* Under **Project language level** select **17 - Sealed types, always-strict floating-point semantics**
+   + Select JDK and browse to `C:\Program Files\Java\jdk-17.0.4`
+* Under **Project language level** select **SDK default (17 - Sealed types, always-strict floating-point semantics)**
 * Click **OK**
 
 ## Add JavaFX to **Global Library**
@@ -49,7 +33,7 @@ In order to use Java from the command line, it is useful to set the following en
 * Select **Global Libraries** under **Platform Settings** on the left side
 * Click the **+** (plus symbol) in the upper left of the second column
 * Select **Java** from the menu
-* Browse to `C:\Java\javafx-sdk-17.0.1\lib`
+* Browse to `C:\Program Files\Java\javafx-sdk-18.0.2\lib` (adjust to match version)
 * Click **OK** twice
 
 ## Set Run Configuration Template for **Application**
@@ -58,8 +42,9 @@ In order to use Java from the command line, it is useful to set the following en
 * Click **Modify options** (or type <kbd>Alt</kbd>+<kbd>M</kbd>) and ensure **Add VM options** is checked
 * Paste the following in **VM options**: 
 ```
---module-path C:\Java\javafx-sdk-17.0.1\lib --add-modules=javafx.controls,javafx.fxml
+--module-path "C:\Program Files\Java\javafx-sdk-18.0.2\lib --add-modules=javafx.controls,javafx.fxml
 ```
+Here too, ensure that the version number matches what you downloaded
 * Click **OK**
 
 # New IntelliJ Project
@@ -67,7 +52,7 @@ All of the steps above must be implemented once, but you'll need to do the follo
 
 * Create a **Java** (__not__ JavaFX) project, if you create a JavaFX project, you will need to set the run configuration (as described above).
 
-## Add the JavaFX 17 SDK library
+## Add the JavaFX SDK library
 * Go to **File** -> **Project Structure...** (<kbd>CTRL</kbd>+<kbd>ALT</kbd>+<kbd>SHIFT</kbd>+<kbd>S</kbd>)
 * Select **Modules**
 * Open the **Dependencies** tab and click <kbd>+</kbd>
@@ -75,7 +60,7 @@ All of the steps above must be implemented once, but you'll need to do the follo
 * Select **lib**
 * Click **Add Selected** and then **OK**
 
-[^jdkpath]: If the version of the JDK is different, you will need to use the new version number in the rest of the instructions. E.g., if the version of JDK is 17.0.2, you should replace `jdk-17.0.1` with `jdk-17.0.2`.
+[^jdkpath]: If the version of the JDK is different, you will need to use the new version number in the rest of the instructions. E.g., if the version of JDK is 17.0.5, you should replace `jdk-17.0.4` with `jdk-17.0.5`.
 
 [^javafxpath]: You may need to update the version number on the javafx-sdk in a similar way to a JDK version change.
 
