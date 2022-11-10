@@ -8,13 +8,13 @@
 * Download Windows/x64 `.msi` build from [here](https://www.oracle.com/java/technologies/downloads/#jdk17-windows)
 * Open the `.msi` file to install JDK17
 
-## Install JavaFX 18
+## Install JavaFX 19
 * Apparently JavaFX 17 is no longer available for download.
-* Download x64 **JavaFX 18 Windows SDK** from [here](https://gluonhq.com/products/javafx/) and unzip the file
-* Copy the `javafx-sdk-18.0.2`[^javafxpath] folder from the `.zip` file to `C:\Program Files\Java\`
+* Download x64 **JavaFX 19 Windows SDK** from [here](https://gluonhq.com/products/javafx/) and unzip the file
+* Copy the `javafx-sdk-19`[^javafxpath] folder from the `.zip` file to `C:\Program Files\Java\`
 
-## Install Scene Builder 18
-* Download Scene Builder Windows Installer from [here](https://glounhq.com/products/scene-builder/#download)
+## Install Scene Builder 19
+* Download Scene Builder Windows Installer from [here](https://gluonhq.com/products/scene-builder/#download)
 * Open the `.msi` file to install Scene Builder
 
 # Configure IntelliJ
@@ -24,7 +24,7 @@
 * Select **Project** under **Project Settings** on the left side
 * Set **SDK** to **17** (if available); otherwise:
    + Click **Add SDK**
-   + Select JDK and browse to `C:\Program Files\Java\jdk-17.0.4`[^jdkpath]
+   + Select JDK and browse to `C:\Program Files\Java\jdk-17.0.5`[^jdkpath]
 * Under **Project language level** select **SDK default (17 - Sealed types, always-strict floating-point semantics)**
 * Click **OK**
 
@@ -33,7 +33,7 @@
 * Select **Global Libraries** under **Platform Settings** on the left side
 * Click the **+** (plus symbol) in the upper left of the second column
 * Select **Java** from the menu
-* Browse to `C:\Program Files\Java\javafx-sdk-18.0.2\lib` (adjust to match version)
+* Browse to `C:\Program Files\Java\javafx-sdk-19\lib` (adjust to match version)
 * Click **OK** twice
 
 ## Set Run Configuration Template for **Application**
@@ -42,7 +42,7 @@
 * Click **Modify options** (or type <kbd>Alt</kbd>+<kbd>M</kbd>) and ensure **Add VM options** is checked
 * Paste the following in **VM options**: 
 ```
---module-path "C:\Program Files\Java\javafx-sdk-18.0.2\lib" --add-modules=javafx.controls,javafx.fxml
+--module-path "C:\Program Files\Java\javafx-sdk-19\lib" --add-modules=javafx.controls,javafx.fxml
 ```
 Here too, ensure that the version number matches what you downloaded
 * Click **OK**
@@ -60,7 +60,7 @@ All of the steps above must be implemented once, but you'll need to do the follo
 * Select **lib**
 * Click **Add Selected** and then **OK**
 
-[^jdkpath]: If the version of the JDK is different, you will need to use the new version number in the rest of the instructions. E.g., if the version of JDK is 17.0.5, you should replace `jdk-17.0.4` with `jdk-17.0.5`.
+[^jdkpath]: If the version of the JDK is different, you will need to use the new version number in the rest of the instructions. E.g., if the version of JDK is 17.0.6, you should replace `jdk-17.0.5` with `jdk-17.0.6`.
 
 [^javafxpath]: You may need to update the version number on the javafx-sdk in a similar way to a JDK version change.
 
