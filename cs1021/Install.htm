@@ -5,16 +5,19 @@
 # Installing Java 17 Open JDK and JavaFX
 
 ## Install Java 17 Open JDK
-* Download Windows/x64 `.msi` build from [here](https://www.oracle.com/java/technologies/downloads/#jdk17-windows)
+* Download [Windows/x64 `.msi` build](https://download.oracle.com/java/17/latest/jdk-17_windows-x64_bin.msi) from [here](https://www.oracle.com/java/technologies/downloads/#jdk17-windows) (be sure to click on the Java 17 tab to ensure you are getting the correct version)
 * Open the `.msi` file to install JDK17
 
 ## Install JavaFX 19
 * Apparently JavaFX 17 is no longer available for download.
-* Download x64 **JavaFX 19 Windows SDK** from [here](https://gluonhq.com/products/javafx/) and unzip the file
+* Download [x64 JavaFX 19 Windows SDK](https://download2.gluonhq.com/openjfx/19/openjfx-19_windows-x64_bin-sdk.zip) from [here](https://gluonhq.com/products/javafx/) and unzip the file
+    - Select **Windows** for the Operating System
+    - Select **x64** for the Architecture
+    - Select **SDK** for the Type
 * Copy the `javafx-sdk-19`[^javafxpath] folder from the `.zip` file to `C:\Program Files\Java\`
 
 ## Install Scene Builder 19
-* Download Scene Builder Windows Installer from [here](https://gluonhq.com/products/scene-builder/#download)
+* Download [Scene Builder Windows Installer](https://download2.gluonhq.com/scenebuilder/19.0.0/install/win/SceneBuilder-19.0.0.msi) from [here](https://gluonhq.com/products/scene-builder/#download)
 * Open the `.msi` file to install Scene Builder
 
 # Configure IntelliJ
@@ -44,7 +47,8 @@
 ```
 --module-path "C:\Program Files\Java\javafx-sdk-19\lib" --add-modules=javafx.controls,javafx.fxml
 ```
-Here too, ensure that the version number matches what you downloaded
+
+* Here too, ensure that the version number matches what you downloaded
 * Click **OK**
 
 # New IntelliJ Project

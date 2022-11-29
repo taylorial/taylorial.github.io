@@ -36,7 +36,7 @@ highlight.min.js 9.13.1 (C) 2017 Ivan Sagalaev https://highlightjs.org/*/
 'use strict';
 
 let TAYLORIAL_HEADER = '<header><a href="index.htm">More</a></header>';
-let TAYLORIAL_FOOTER = '<footer><p>Please send feedback, suggestions, and requests to &#623;o&#596;&#729;l&#592;&#7433;&#633;ol&#654;&#592;&#647;@&#7433;&#613;</p>&#169; 2001-2022 <a href="http://msoe.us/taylor">Dr. Chris Taylor</a>, professor and program director for the Software Engineering program at the <a href="https://msoe.edu">Milwaukee School of Engineering</a>.</footer>';
+let TAYLORIAL_FOOTER = '<footer><p>Please send feedback, suggestions, and requests to &#623;o&#596;&#729;l&#592;&#7433;&#633;ol&#654;&#592;&#647;@&#7433;&#613;</p>&#169; 2001-2023 <a href="http://msoe.us/taylor">Dr. Chris Taylor</a>, professor and EECS Department Vice Chair at the <a href="https://msoe.edu">Milwaukee School of Engineering</a>.</footer>';
 
 // For minification. This is admittedly scary.
 var _ = String.prototype;
