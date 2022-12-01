@@ -1,0 +1,65 @@
+<meta charset="utf-8" lang="en" /><style class="fallback">body{visibility:hidden;}</style>
+
+**Two Dimensional Arrays**
+
+# Introduction
+
+* This page assumes you are familar with [one-dimensional arrays](https://taylorial.com/cs1011/Arrays.htm)
+* Java supports multi-dimensional arrays.
+* A two-dimensional array can be thought of as an array of arrays.
+   + A 2D array is also known as a matrix.
+   + The size of the 2D array is specified by a **height** and **width**.
+
+``` Java
+int[][] matrix = new int[4][3];
+```
+
+Produces a matrix with height of 4 and width of 3.
+
+     | col0 | col1 | col2
+---- | ---- | ---- | ----
+row0 |   0  |   0  |   0
+row1 |   0  |   0  |   0
+row2 |   0  |   0  |   0
+row3 |   0  |   0  |   0
+
+``` Java
+matrix[0][0] = 1;
+matrix[0][1] = 2;
+matrix[0][2] = 3;
+matrix[3][1] = 9;
+```
+
+Modifies the matrix like this:
+
+     | col0 | col1 | col2
+---- | ---- | ---- | ----
+row0 |   1  |   2  |   3
+row1 |   0  |   0  |   0
+row2 |   0  |   0  |   0
+row3 |   0  |   9  |   0
+
+We can get determine the height and width of a 2D array as follows.
+
+``` Java
+final int height = matrix.length;
+final int width = matrix[0].length;
+```
+
+## Example
+
+The following method finds the largest value in the matrix.
+
+``` Java
+public static double max(double[][] matrix) {
+    double max = Double.MIN_VALUE;
+    for(int row = 0; row < matrix.length; row++) {
+        for(int col = 0; col < matrix[0].length; col++) {
+            max = Math.max(max, matrix[row][col]);
+        }
+    }
+    return max;
+}
+```
+
+<!-- Markdeep: --><script src="../markdeep.js?taylorial"></script>
